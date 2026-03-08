@@ -1,0 +1,21 @@
+-- SELECT DISTINCT frm.Nazev,
+--        frm.MENUNODE,
+--        frm.id "ID Formuláø"
+
+SELECT *
+
+
+FROM isum.v_bi_UMSFormular frm
+INNER JOIN isum.v_bi_UMZVyzvaForm vf ON vf.id_formular = frm.id
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=vf.id_vyzva 
+
+WHERE v."Èíslo výzvy" is not null
+AND vf."Poøadí obrazovky v rámci úlohy" is not null
+
+
+
+
+
+
+
+

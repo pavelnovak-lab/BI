@@ -1,0 +1,19 @@
+select	 "V_BI_UMZVYZVA"."Název výzvy" as "Název výzvy",
+	 "V_BI_UMZVYZVA"."Èíslo výzvy" as "Èíslo výzvy",
+	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" as "Registraèní èíslo projektu",
+	 "V_BI_UMZPROJEKT"."KODWFSTAV" as "KODWFSTAV"
+--	 "V_BI_UMSCISODBORNOST"."Název" as "Název" 
+
+from	"ISUM"."V_BI_UMZVYZVA" "V_BI_UMZVYZVA",
+--	"ISUM"."V_BI_UMSCISODBORNOST" "V_BI_UMSCISODBORNOST",
+	"ISUM"."V_BI_UMVHODNNOSODBORNOST" "V_BI_UMVHODNNOSODBORNOST",
+	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT" 
+
+where   
+	 "V_BI_UMVHODNNOSODBORNOST"."ID_NOSHODNOCENI"="V_BI_UMZPROJEKT"."ID 
+ and	"V_BI_UMZPROJEKT"."ID_VYZVA"="V_BI_UMZVYZVA"."ID"
+ and	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" in ('CZ.01.1.02/0.0/0.0/19_262/0019102','CZ.01.1.02/0.0/0.0/19_262/0019071')
+
+
+-- and	 "V_BI_UMVHODNNOSODBORNOST"."ID_ODBORNOST"="V_BI_UMSCISODBORNOST"."ID"
+-- and 	 "V_BI_UMZVYZVA"."Èíslo výzvy" in ('01_19_262','01_19_261','01_19_297') 

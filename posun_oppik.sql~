@@ -1,0 +1,6 @@
+SELECT sum(rf.CASTKASCHVALENA) "Proplacená dotace" 
+
+FROM isum.v_bi_UmzProjekt p 
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby AND platba.kodwfstav in ('P10','P11')
+INNER JOIN isum.v_bi_UmpRozpisFin rf ON rf.id_platba = platba.id AND rf.id_ukazatel in ( 361356 ) -- øádky 10a   
+ 

@@ -1,0 +1,23 @@
+SELECT p."Registraèní èíslo projektu" ,
+       SUBSTR(p.kompetencniutvar, 6 ) AS "Program podpory" ,
+       do.dopad as "Kraj dopadu",
+       re.realizace as "Kraj realizace"
+
+
+FROM isum.v_bi_UmzPrjGGII p
+LEFT JOIN (SELECT listagg(uk."Název", '; ') as realizace,
+	p.id
+FROM isum.v_bi_UmzPrjGGII p
+INNER JOIN isum.v_bi_UmzPrjUmisteniKraj uk ON uk.id_projekt = p.id
+WHERE uk.typ = 'Realizace'
+GROUP BY p.id) re ON re.id = p.id
+
+LEFT JOIN (SELECT listagg(uk."Název", '; ') as dopad,
+	p.id
+FROM isum.v_bi_UmzPrjGGII p
+INNER JOIN isum.v_bi_UmzPrjUmisteniKraj uk ON uk.id_projekt = p.id
+WHERE uk.typ = 'Dopad'
+GROUP BY p.id) do ON do.id = p.id
+
+WHERE  p."Registraèní èíslo projektu" is not null 
+

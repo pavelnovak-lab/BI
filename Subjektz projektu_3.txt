@@ -1,0 +1,31 @@
+SELECT 	p."Registraèní èíslo projektu",
+	p."Název projektu CZ",
+        p."KODWFSTAV",
+	p."ZADATEL",
+	p."IÈ",
+	pgg.CZV,
+	pgg.EU,
+	fp."PROC_EU",	
+--	sum(castky.EuVyuctCelkem),
+	LISTAGG(vs."IÈ", '; ') AS  "IÈ partnerù"
+--	cis."Název"
+--	LISTAGG(cis."Název", '; ')
+
+
+FROM	isum.v_bi_UmpPlatbaPrj platba
+  inner join	isum.v_bi_UmpCastkySchval castky ON platba.id_SchvaleneCastky=castky.id
+  inner join  	isum.v_bi_UmzProjekt p ON p.id=platba.id_NositelPlatby
+  inner join	isum.v_bi_UmzPrjGG pgg ON p.id=pgg.id
+  inner join 	isum.v_bi_UmfPfCelkem fp ON fp.id_projekt=p.id
+  right join	isum.v_bi_UmzPrjGGvs vs ON vs.id_prjgg=p.id
+--  inner join	isum.v_bi_UmsCisZakladni cis ON vs.id_typsubjektu=cis.id
+
+WHERE 	
+--	p."Registraèní èíslo projektu" is not null	
+	p."Registraèní èíslo projektu"='CZ.01.1.02/0.0/0.0/15_019/0004353'
+and	fp."ID_FAZE"='99991000000000005'	
+
+
+-- and	castky.VyuctCzvCelk > 0
+
+GROUP BY p."Registraèní èíslo projektu", p."Název projektu CZ", p."ZADATEL", p."IÈ", 	pgg.CZV, pgg.EU, fp."PROC_EU", p."KODWFSTAV"

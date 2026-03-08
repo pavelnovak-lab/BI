@@ -1,0 +1,57 @@
+SELECT 	posledni.*,
+	posledni."CREATE_CAS"-predposledni."CREATE_CAS"	AS "Poèet dní"
+
+
+FROM
+
+ (SELECT *
+
+	FROM (SELECT	p."Registraèní èíslo projektu",
+		hs."STAVDO",
+		hs."STAVDONAZEV",	
+		hs."STAVZ",
+		hs."STAVZNAZEV",	
+		p."KODWFSTAV",
+		hs."CREATE_CAS",
+		hs."CREATE_UZIVATEL",
+		p.id,
+		(row_number() OVER (ORDER BY hs."CREATE_CAS" DESC)) as "Poøadí"
+
+		FROM isum.v_bi_umzprojekt p 
+		INNER JOIN   isum.v_bi_umswfhistoriestavu hs ON hs.nositelid=p.id
+		INNER JOIN   isum.v_bi_umzvyzva v ON v.id=p.id_vyzva
+
+		WHERE 	v."Èíslo výzvy"='01_15_014'
+		 AND	hs."STAVZNAZEV" not like 'Pøedbìžná%'
+		 AND 	p."KODWFSTAV" = 'PN20b') 
+
+	WHERE "Poøadí" = 1) posledni
+
+INNER JOIN 
+
+ (SELECT *
+
+	FROM (SELECT	p."Registraèní èíslo projektu",
+		hs."STAVDO",
+		hs."STAVDONAZEV",	
+		hs."STAVZ",
+		hs."STAVZNAZEV",	
+		p."KODWFSTAV",
+		hs."CREATE_CAS",
+		hs."CREATE_UZIVATEL",
+		p.id,
+		(row_number() OVER (ORDER BY hs."CREATE_CAS" DESC)) as "Poøadí"
+
+		FROM isum.v_bi_umzprojekt p 
+		INNER JOIN   isum.v_bi_umswfhistoriestavu hs ON hs.nositelid=p.id
+		INNER JOIN   isum.v_bi_umzvyzva v ON v.id=p.id_vyzva
+
+		WHERE 	v."Èíslo výzvy"='01_15_014'
+		AND	hs."STAVZNAZEV" not like 'Pøedbìžná%'
+		AND 	p."KODWFSTAV" = 'PN20b') 
+
+	WHERE "Poøadí" = 2) predposledni
+
+ON posledni.id=predposledni.id
+
+

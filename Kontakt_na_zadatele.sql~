@@ -1,0 +1,42 @@
+/* Pùvodní sestava */
+
+select 	A."IÈ",
+	A."ZADATEL",
+	A."KOMPETENCNIUTVAR",
+	A."KODWFSTAV",
+	A."WFSTAV",
+	A."reg_cislo_A",
+	B."Email",
+	B."Jméno",
+	B."Pøíjmení",
+	B."Mobil"
+	
+from 
+
+(select	 "V_BI_UMZPROJEKT"."IÈ" as "IÈ",
+	 "V_BI_UMZPROJEKT"."ZADATEL" as "ZADATEL",
+         "V_BI_UMZPROJEKT"."KOMPETENCNIUTVAR" as "KOMPETENCNIUTVAR",
+	 "V_BI_UMZPROJEKT"."KODWFSTAV" as "KODWFSTAV", 
+	 "V_BI_UMZPROJEKT"."WFSTAV" as "WFSTAV", 
+	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" as "reg_cislo_A"
+
+ from	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT" 
+
+ where	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" is not null ) A
+
+inner join
+
+(select	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" as "reg_cislo_B",
+	 "V_BI_UMSRSVERZEOSOBY"."Email" as "Email",
+	 "V_BI_UMSRSVERZEOSOBY"."Jméno" as "Jméno",
+	 "V_BI_UMSRSVERZEOSOBY"."Pøíjmení" as "Pøíjmení",
+	 "V_BI_UMSRSVERZEOSOBY"."Mobil" as "Mobil" 
+ from	"ISUM"."V_BI_UMSRSVERZEOSOBY" "V_BI_UMSRSVERZEOSOBY",
+	"ISUM"."V_BI_UMSRSVERZESUBJEKTU" "V_BI_UMSRSVERZESUBJEKTU",
+	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT" 
+ where   "V_BI_UMSRSVERZESUBJEKTU"."ID"="V_BI_UMZPROJEKT"."ID_ZADATEL"
+ and	 "V_BI_UMSRSVERZEOSOBY"."ID"="V_BI_UMSRSVERZESUBJEKTU"."ID_HLKONTAKTOSOBA"
+  and 	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" like 'CZ.01%' ) B
+
+
+on A."reg_cislo_A"=B."reg_cislo_B"

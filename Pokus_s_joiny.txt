@@ -1,0 +1,17 @@
+select	vyzva."Název výzvy" as "Název výzvy",
+	vyzva."Èíslo výzvy" as "Èíslo výzvy",
+	projekt."Registraèní èíslo projektu" as "Registraèní èíslo projektu",
+	projekt."Název projektu CZ" as "Název projektu CZ" 
+
+from	"ISUM"."V_BI_UMZVYZVA" vyzva
+outer join 	"ISUM"."V_BI_UMZPRJGG" projekt on vyzva.id=projekt.id_vyzva
+join	"ISUM"."V_BI_UMZVYZVASTRATEGIE" strategie on strategie.id_vyzva=vyzva.id
+join 	"ISUM"."V_BI_UMZVYZVAKATEGORIE" kategorie on kategorie.id_vyzva=vyzva.id
+
+
+where	 vyzva."Èíslo výzvy" in ('01_17_095','01_19_295')
+ and	 projekt."KODWFSTAV" in ('PP30','PP36','PP37','PP40','PP41','PP42') 
+ and	 projekt."Registraèní èíslo projektu" is not null 
+ and	 vyzva."OP kod" ='01' 
+ and	 kategorie."INTEGROVANY" ='Ano'
+ and     strategie."ID_STRATEGIE" is not null

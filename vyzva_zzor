@@ -1,0 +1,14 @@
+SELECT v."Budou projekty pou¾ívat závìr" "Zatr¾ený check ZZoR/ZZoU",
+       v.kodwfstav,
+       v.wfstav ,
+       v."Èíslo výzvy",
+       v."Název výzvy"
+       
+FROM isum.v_bi_UmzVyzva v
+
+WHERE exists
+(SELECT *
+ from isum.v_bi_UmzProjekt p
+ where p.id_vyzva = v.id
+ AND kodwfstav = 'PP41')
+AND v."Èíslo výzvy" = '01_19_253'

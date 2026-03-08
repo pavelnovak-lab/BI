@@ -1,0 +1,17 @@
+SELECT p."Registraèní èíslo projektu" ,
+       poz.*
+
+FROM isum.v_bi_UmzProjekt p 
+INNER JOIN isum.v_bi_UMSDBPoznamky poz ON poz.id_nositel = p.id
+
+WHERE p."Registraèní èíslo projektu" in ('CZ.31.5.0/0.0/0.0/22_010/0003065', 'CZ.31.5.0/0.0/0.0/22_010/0003063', 'CZ.31.5.0/0.0/0.0/22_010/0003038')
+
+
+
+
+SELECT *
+
+FROM isum.v_bi_UMSDBPoznamky
+
+WHERE id = 1668169044
+

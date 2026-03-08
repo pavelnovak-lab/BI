@@ -1,0 +1,16 @@
+SELECT SUBSTR(p.kompetencniutvar, 9) AS "Program podpory" ,
+       v."Název výzvy",
+       v."Èíslo výzvy" ,
+       v."Poèet ZoU"
+
+FROM isum.v_bi_UmzProjekt p
+left JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva
+
+WHERE p.KodPrioritniOsa in ('31.1', '31.2', '31.3', '31.4','31.5','31.9','31.14','31.22')
+
+ORDER BY p.kodprioritniosa
+
+GROUP BY SUBSTR(p.kompetencniutvar, 9)  ,
+       v."Název výzvy",
+       v."Èíslo výzvy" ,
+       v."Poèet ZoU"

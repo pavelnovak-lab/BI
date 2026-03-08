@@ -1,0 +1,12 @@
+SELECT
+	-- sml."Platnost od",
+        -- sml."Platnost do",
+	max(sml."Platnost od"),
+	h.id
+
+FROM isum.v_bi_UMVHodnotitelPrg h
+INNER JOIN isum.v_bi_UMVHodnSmlouva sml ON sml.id_hodnotitelprg = h.id
+
+WHERE h.id = 791174801
+
+GROUP BY h.id

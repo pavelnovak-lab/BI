@@ -1,0 +1,14 @@
+select	 "V_BI_UMZVYZVA"."Název výzvy" as "Název výzvy",
+	 "V_BI_UMZVYZVA"."PREDPOMERYPROVP" as "PREDPOMERYPROVP",
+	 "V_BI_UMZVYZVA"."Èíslo výzvy" as "Èíslo výzvy",
+	 count("V_BI_UMZPROJEKT"."Registraèní èíslo projektu") as "Registraèní èíslo projektu",
+	 "V_BI_UMZVYZVA"."Datum ukonèení pøíjmu žádosti" as "Datum ukonèení pøíjmu žádosti",
+	 "V_BI_UMZVYZVA"."Datum zahájení pøíjmu žádosti" as "Datum zahájení pøíjmu žádosti",
+	 "V_BI_UMZVYZVA"."WFSTAV" as "WFSTAV" 
+ from	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT",
+	"ISUM"."V_BI_UMZVYZVA" "V_BI_UMZVYZVA" 
+ where   "V_BI_UMZPROJEKT"."ID_VYZVA"="V_BI_UMZVYZVA"."ID"
+   and	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" is not null 
+   and	 "V_BI_UMZVYZVA"."OP kod" ='01' 
+
+group by "V_BI_UMZVYZVA"."Název výzvy", "V_BI_UMZVYZVA"."PREDPOMERYPROVP", "V_BI_UMZVYZVA"."Èíslo výzvy", "V_BI_UMZVYZVA"."Datum ukonèení pøíjmu žádosti", "V_BI_UMZVYZVA"."Datum zahájení pøíjmu žádosti", "V_BI_UMZVYZVA"."WFSTAV"

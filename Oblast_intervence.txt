@@ -1,0 +1,14 @@
+SELECT 	p."Registraèní èíslo projektu",
+	cis."Kód",
+	ki.*
+
+FROM 		isum.v_bi_UmzProjekt p
+INNER JOIN	isum.v_bi_UmzPrjKI ki ON ki.id_projekt=p.id
+INNER JOIN	isum.v_bi_UmsCisZakladni cis ON ki.id_ki=cis.id 
+
+
+WHERE	p.id = 610558326
+-- p."Registraèní èíslo projektu" is not null 
+AND 	ki."Typ kategorie intervencí" = 0
+AND	p.KodPrioritniOsa = '01.1'
+

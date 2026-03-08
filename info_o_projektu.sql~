@@ -1,0 +1,90 @@
+SELECT	cis."Název" AS "Právní forma",
+	cis_2."Název" AS "Kraj realizace",
+	p."Registraèní èíslo projektu",
+	p.KODWFSTAV,
+	p.wfstav ,
+	p.ZADATEL,
+	REPLACE(p.KodPrioritniOsa,'01.','') AS "Prioriní osa",
+	p.prioritniosa ,
+	p.kodspecifcil,
+	SUBSTR(p.kompetencniutvar, 6) AS "Program podpory" ,
+	p.specifcil,
+	p.velikostpodniku,
+	p."Datum ukonèení pøedp",
+	p."Datum ukonèení skut",
+	p."Datum zahájení pøedp",
+	p."Datum zahájení skut",
+   	p."Název projektu CZ",
+
+        v."Název výzvy",
+	v."Èíslo výzvy",
+	pggvs."IÈ",
+ 	pggvs."Poèet zamìstnancù",
+	gg."EU" AS "Po¾adovaná dotace",
+	gg."CZV" AS "Celkové zpùsobilé výdaje",
+
+	uzjed."Název" AS "Název územní jednotky",
+	uzjed.urovennazev
+
+	-- LISTAGG(ci."Kód",'; ') AS "Kód CZ NACE",
+	-- LISTAGG(ci."Název",'; ') AS "Název CZ NACE",
+	
+	-- o1.nazev as "hl.k.o",
+	-- o1.mail as "Email",
+	-- o1.telefon as "Tel",
+	-- o1.mobil as "MobilniTel",
+	-- o2.nazev2 as "Statutari",
+	-- o2.mail2 as "MailStatut",
+        -- o2.telefon2 as "TelStatut",
+	-- o2.mobil2 as "MobilStatut"
+
+
+FROM 		isum.v_bi_umzprojekt p
+INNER JOIN	isum.v_bi_umzprjggvs pggvs ON pggvs.id=p.id_zadatel  
+INNER JOIN	isum.v_bi_umzvyzva v ON p.id_vyzva=v.id
+-- INNER JOIN	isum.v_bi_umsrscznace n ON n.id_projekt=p.id
+-- INNER JOIN 	isum.v_bi_umsciszakladni ci ON ci.id=n.id_cznace
+INNER JOIN	isum.v_bi_umzprjgg gg ON gg.id=p.id
+INNER JOIN 	isum.V_BI_UMZPRJUMISTENI umist ON umist.id_projekt=p.id AND umist.typ = 1
+INNER JOIN 	isum.V_BI_UMSCisUzemniJednotky uzjed ON umist.id_uzemnijednotky=uzjed.id
+INNER JOIN	isum.v_bi_UmsCisZakladni cis ON pggvs.id_HOSPPRAVFORMA=cis.id
+INNER JOIN	isum.V_BI_UMZPRJKI ki ON ki.id_projekt=p.id
+INNER JOIN	isum.v_bi_UmsCisZakladni cis_2 ON ki.id_ki=cis_2.id AND cis_2.id_CisSeznam=198443
+      
+LEFT JOIN isum.v_bi_umsrsverzeadresy adr on pggvs.id_oficialniadresa=adr.id
+-- LEFT JOIN 
+-- 	(select
+-- 		(LISTAGG (CONCAT(o."Jméno", (concat(' ',o."Pøíjmení"))), ', ') WITHIN GROUP (ORDER BY CONCAT(o."Jméno", (concat(' ',o."Pøíjmení")))) ) AS nazev,
+-- 		(LISTAGG (o."Email", ', ') WITHIN GROUP (ORDER BY CONCAT(o."Jméno", (concat(' ',o."Pøíjmení")))) ) AS mail,
+-- 		(LISTAGG (o."Telefon", ', ') WITHIN GROUP (ORDER BY CONCAT(o."Jméno", (concat(' ',o."Pøíjmení")))) ) AS telefon,
+-- 		(LISTAGG (o."Mobil", ', ') WITHIN GROUP (ORDER BY CONCAT(o."Jméno", (concat(' ',o."Pøíjmení")))) ) AS mobil,
+-- 		o.id_verzesubjektu as vazba
+-- 		FROM isum.v_bi_umsrsverzeosoby o
+-- 		INNER JOIN isum.v_bi_umzprjggvs vs ON vs.id_verzesubjektu=o.id_verzesubjektu
+-- 		WHERE o."Hlavní kontaktní osoba" ='A'
+-- 		GROUP BY o.id_verzesubjektu
+-- 		) o1 on o1.vazba=pggvs.id_verzesubjektu
+-- LEFT JOIN 
+-- 	(select
+-- 		(LISTAGG (CONCAT(ox."Jméno", (concat(' ',ox."Pøíjmení"))), ', ') WITHIN GROUP (ORDER BY CONCAT(ox."Jméno", (concat(' ',ox."Pøíjmení")))) ) AS nazev2,
+-- 		(LISTAGG (ox."Email", ', ') WITHIN GROUP (ORDER BY CONCAT(ox."Jméno", (concat(' ',ox."Pøíjmení")))) ) AS mail2,
+-- 		(LISTAGG (ox."Telefon", ', ') WITHIN GROUP (ORDER BY CONCAT(ox."Jméno", (concat(' ',ox."Pøíjmení")))) ) AS telefon2,
+-- 		(LISTAGG (ox."Mobil", ', ') WITHIN GROUP (ORDER BY CONCAT(ox."Jméno", (concat(' ',ox."Pøíjmení")))) ) AS mobil2,
+-- 		ox.id_verzesubjektu as vazba2
+-- 		FROM isum.v_bi_umsrsverzeosoby ox
+-- 		INNER JOIN isum.v_bi_umzprjggvs vs on vs.id_verzesubjektu=ox.id_verzesubjektu
+-- 		WHERE ox."Statutární zástupce"='A'
+-- 		GROUP BY ox.id_verzesubjektu
+-- 		) o2 on o2.vazba2=pggvs.id_verzesubjektu
+
+WHERE p."Registraèní èíslo projektu" is not null 
+AND p.KodPrioritniOsa in ('01.1', '01.2', '01.3', '01.4','01.5')
+
+-- GROUP BY p."Registraèní èíslo projektu", p.specifcil, p.kodspecifcil, pggvs."IÈ", pggvs."Poèet zamìstnancù", v."Èíslo výzvy", v."Název výzvy", gg."EU", gg."CZV", p."Název projektu CZ", p."Anotace projektu", p.ZADATEL, p.KODWFSTAV, uzjed."Název", p.velikostpodniku, uzjed.urovennazev, cis."Název", cis_2."Název", p.kompetence, p.wfstav, p."Datum ukonèení pøedp", p."Datum ukonèení skut", p."Datum zahájení pøedp", p."Datum zahájení skut", p.KodPrioritniOsa, o1.nazev, o1.mail, o1.telefon, o1.mobil, o2.nazev2, o2.mail2, o2.telefon2, o2.mobil2 
+
+/*
+Bude je¹tì potøeba
+- ohlídat zahranièní IÈO
+*/
+
+ORDER BY substr(p."Registraèní èíslo projektu",-5,5) ASC 

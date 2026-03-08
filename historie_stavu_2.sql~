@@ -1,0 +1,24 @@
+SELECT p."Registraèní èíslo projektu",
+       hs.stavdo,
+       hs.stavz,
+       SUBSTR(p.kompetencniutvar, 6 ) AS "Program podpory" 
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.NositelId = p.id
+
+WHERE hs.stavz = 'V5'
+AND hs.stavdo like 'PN%'
+
+
+---------------------------------
+
+SELECT fc.*
+
+FROM
+-- isum.v_bi_UmzPrjGGII p 
+-- isum.v_bi_UmpPlatbaPrj platba  --- ON p.id=platba.id_NositelPlatby
+-- INNER JOIN
+INNER JOIN isum.V_BI_UmfPFCelkem fc
+-- ON fc.id_projekt = p.id
+
+WHERE fc.id_projekt = 1407172226

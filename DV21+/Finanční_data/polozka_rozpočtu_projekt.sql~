@@ -1,0 +1,34 @@
+-- CREATE VIEW "tak-novak-dotace-na-polo¾ce-rozpoètu-rozpad-na-partnery" FOLDER = '/06_data_models/01_op_tak/mpo/novak-pavel/finanèní_data' AS
+SELECT --v."Èíslo výzvy",
+       -- v."Název výzvy",
+       
+       p."Registraèní èíslo projektu",
+       -- s."IÈ",
+       -- s."Název subjektu",
+       w."Kód" AS "Kód stavu",
+       pr."Kód",
+       pr."Název",
+       pr."Èástka celkem"
+FROM projekt AS p
+INNER JOIN subjekt AS s ON (s.id_prjgg = p.id AND s.id_typsubjektuedit = 413462)
+INNER JOIN ciselnik_stav_workflow AS w ON p.id_wfstav = w.id
+INNER JOIN vyzva AS v ON v.id = p.id_vyzva
+INNER JOIN vyzva_hierarchie vh ON vh.id_vyzva = v.id
+INNER JOIN v_rav_umshisc op on op.id=vh.id_speccil 
+INNER JOIN rozpocet_hlavicka AS hr ON hr.id_nrozpocet = p.id
+INNER JOIN rozpocet_polozka AS pr ON pr.id_hlavicka = hr.id
+
+WHERE 
+              hr."Aktuální" = 'A'
+              -- AND w."Kód" NOT LIKE 'PN%'
+              AND p."Registraèní èíslo projektu" IS NOT NULL
+      AND op.nazev = 'Aplikace'
+      AND pr."Název" LIKE 'Osobní náklady%'
+
+
+ORDER BY "Èíslo výzvy" ASC,   "Registraèní èíslo projektu" ASC;
+
+
+
+
+

@@ -1,0 +1,8 @@
+Dobrý den, 
+
+a) do pøíloh pøikládám zmiòovaný dokument ''M070a Vnitøní hlášení nesrovnalostí_øádky_NOK.xls''. 
+b) U konkrétní ŽoP CZ.01.1.02/0.0/0.0/15_002/0000005/18/001 v CSSF vùbec nedokážu nahlédnout, že probìhla certifikace 4x a nedokážu si vysvìtlit proè. Øešením je tedy omezení na jeden záznam a to minimem pro položku datum certifikace. Ale pozor, potøebujeme jak info o ''typu zápis'' tak o ''typu storno''. Neboli, kdy bylo certifikováno a kdy bylo vymoženo. Kdyby bylo ještì tìeba upøesnit, ozvìte se, prosím.
+c) Omezení na Typ položka v první reklamaci prosím ignorujte. Netušili jsme, že pøíèina opakování øádkù je v nìkolika záznamech certifikace.
+
+S pozdravem a pøáním hezkého dne,
+Pavel Novák

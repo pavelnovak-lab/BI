@@ -1,0 +1,36 @@
+select	p."Registraèní èíslo projektu",
+	p."Název projektu CZ" as "Název projektu",
+	v."Èíslo výzvy",
+	v."Název výzvy",
+	hd.ciskod as "Kód hodnotitele",
+	c.username as "Jméno hodnotitele",
+	c.uzivatel as uzivatel,
+	h."Datum vyjádøení",
+	h."Lhùta vyjádøení",
+	h."Datum odeslání žádosti",
+
+
+	komp."Nominace pøijata",
+	komp."Náhradník",
+	komp."Vyjádøení"
+--	k."Název" as krok,
+--	d."Název" as druh,
+--	gg."EU" AS "Požadovaná dotace",
+--	gg."CZV" AS "Celkové zpùsobilé výdaje"
+
+from 	isum.v_bi_umvhodnotitelkompprj h
+	inner join isum.v_bi_umzprjggii p on p.id=h.id_noshodnoceni
+--	inner join isum.v_bi_umzprjgg gg ON gg.id=p.id
+	inner join isum.v_bi_umzvyzva v ON p.id_vyzva=v.id
+	inner join isum.v_bi_umvhodnotitel hd on hd.id=h.id_hodnotitel
+	inner join isum.v_bi_cuzivatel c on c.id=hd.id_cuzivatel
+--	inner join isum.v_bi_umsciszakladni k on k.id=h.id_krokvechodn
+--	inner join isum.v_bi_umsciszakladni d on d.id=h.id_druhhodn
+	inner join isum.v_bi_UMVHodnotitelKomp komp on p.id=komp.id_noshodnoceni
+
+
+where p."Registraèní èíslo projektu" is not null
+--	and p.id_vyzva = '576949000'
+	and hd."Externí hodnotitel" ='A'
+	and h."Datum odeslání žádosti" is not null
+	and komp.id = 930784811

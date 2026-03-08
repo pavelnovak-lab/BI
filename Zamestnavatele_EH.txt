@@ -1,0 +1,22 @@
+SELECT 		h."Kód",
+		h.create_uzivatel as "Uživatelské jméno",
+		h.SeznamPrgSchv,
+		u.uzivatel,
+		h."Externí hodnotitel",
+		verze."Název subjektu",
+--		verze.zamestnavatel,
+		verze."IÈ",	
+		verze."Datum od",
+		verze."Datum do"
+		
+
+FROM		isum.v_bi_UmvHodnotitel h
+INNER JOIN	isum.v_bi_CUzivatel u ON h.id_cuzivatel=u.id
+INNER JOIN 	isum.v_bi_UmvHodnVerzeSubjektu verze ON verze.id_hodnotitel=h.id
+
+WHERE		h.SeznamPrgSchv like '%OP PIK%'	
+AND 		h."Externí hodnotitel" ='A'
+AND		verze."Název subjektu" is not null
+-- AND		verze.zamestnavatel = 'A'
+
+ORDER BY h."Kód"

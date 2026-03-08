@@ -1,0 +1,188 @@
+SELECT	ak.nazev "Manažer projektu" ,
+	count(CASE WHEN p.kodwfstav in ('PP20','PP21','PP22','PP23a','PP23b','PP27a','PP27b','PP29','PU21','PU27','V2','V5','Z1','Z3') then p.id ELSE null END) "Před RoPD, PP",
+       count(CASE WHEN p.kodwfstav in ('PN20a','PN20b','PN21','PN22','PN29') then p.id ELSE null END) "Před RoPD, PN",
+       count(CASE WHEN p.kodwfstav in ('PP30') then p.id ELSE null END) "V PP30",
+       count(CASE WHEN p.kodwfstav in ('PN40a','PN40b') then p.id ELSE null END) "Po RoPD, PN",
+       count(CASE WHEN p.kodwfstav in ('PP30','PP36','PP37','PP40','PP41','PP42','PP43','PU30') then p.id ELSE null END) "Po PP36 včetně",
+       count(hs.NositelId) "Neadministrovaných ŽoP",
+       avg(hs."Dní v P4 (nevrácena)") "Průměnrně dní ŽoP P4",
+       max(hs."Dní v P4 (nevrácena)") "Nejdelší doba ŽoP P4",
+       (select Cisloplatbyzkr FROM hs WHERE ROWNUM = 1  ORDER BY "Dní v P4 (nevrácena)" DESC) "Nedéle stojící platba",
+       count(zoz.NositelId) "Neadministrovaných ŽoZ",
+       avg(zoz."Dní v P1 (nevrácena)") "Průměnrně dní ŽoZ P1",
+       count(p.id) "Celkem projektů"
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva 
+INNER JOIN isum.v_bi_UMZProjOdpovedn ak ON ak.ID_PRJGG = p.id AND ak.PLATNYUZIVATEL = 'A' AND ak.DATUMDO is null 
+LEFT JOIN (
+     SELECT hs.NositelId, platba.id_nositelplatby,
+     platba."Číslo žádosti o platbu",
+     platba.CISLOPLATBYZKR,
+     trunc(sysdate) - trunc(datumod) "Dní v P4 (nevrácena)" ,
+     count(hs.id) 
+     FROM isum.v_bi_UmpPlatbaPrj platba 
+     INNER JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.nositelid = platba.id 
+     WHERE stavdo = 'P4'
+     AND platba.kodwfstav = 'P4'
+     AND platba."Číslo žádosti o platbu" like 'CZ.31.3%'
+     HAVING count(hs.id)=1
+     GROUP BY hs.NOSITELID,
+     	trunc(sysdate) - trunc(datumod),
+ 	platba."Číslo žádosti o platbu" ,
+	platba.id_nositelplatby,
+ 	platba.CISLOPLATBYZKR
+	) hs ON  hs.id_nositelplatby = p.id
+
+LEFT JOIN (
+     SELECT hs.NositelId, zoz.id_zad,
+     zoz."Pořadové číslo ŽoZ",
+     trunc(sysdate) - trunc(datumod) "Dní v P1 (nevrácena)" ,
+     count(hs.id) 
+     FROM isum.v_bi_UmzZoZProjekt zoz -- ON zoz.id_zad = p.id
+     INNER JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.nositelid = zoz.id 
+     WHERE stavdo = 'P1'
+     AND zoz.kodwfstav = 'P1'
+     AND zoz.id_vyzva in (1482646063, 1535151127) -- 31_22_001, 31_22_005
+     HAVING count(hs.id)=1
+     GROUP BY  hs.NositelId, zoz.id_zad,
+     zoz."Pořadové číslo ŽoZ",
+     trunc(sysdate) - trunc(datumod)
+     ) zoz ON  zoz.id_zad = p.id
+
+
+
+WHERE v."Číslo výzvy" in ('31_22_001', '31_22_005') 
+-- AND p."Registrační číslo projektu" = 'CZ.31.3.0/0.0/0.0/22_001/0003409'
+-- AND ak.nazev = 'Svobodová Kateřina, Ing.'
+
+
+GROUP BY ak.nazev
+
+ORDER BY count(p.id) DESC 
+
+----------------------------------------
+SELECT	p."Registrační číslo projektu" ,
+	-- platba."Číslo žádosti o platbu" ,
+	platba.*
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva 
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby 
+INNER JOIN
+( SELECT hs.NositelId,
+  	 trunc(sysdate) - trunc(datumod) "Dní v P4 (nevrácena)" ,
+  	 count(hs.id)
+  FROM isum.v_bi_UmsWFHistorieStavu hs
+  WHERE stavdo = 'P4'
+  HAVING count(hs.id)=1
+  GROUP BY hs.NOSITELID,
+  	"Dní v P4 (nevrácena)") hs ON  hs.NositelId = platba.id
+  
+WHERE v."Číslo výzvy" = '31_22_001'
+AND platba.kodwfstav = 'P4'
+
+ORDER BY platba."Číslo žádosti o platbu"
+
+
+--------------------------------------------------
+SELECT p."Registrační číslo projektu" ,
+       p.wfstavdatum ,
+       sysdate,
+       sysdate - p.wfstavdatum ,
+       trunc(sysdate) - trunc(p.wfstavdatum) 
+       
+
+FROM isum.v_bi_UmzProjekt p
+
+WHERE p."Registrační číslo projektu" = 'CZ.31.3.0/0.0/0.0/22_001/0003409'
+
+
+----------------------------------------
+SELECT *
+FROM isum.v_bi_UmzZoZProjekt zoz -- ON zoz.id_zad = p.id
+
+----------------------------------------
+SELECT p."Registrační číslo projektu"
+       hs.*
+
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva 
+INNER JOIN isum.v_bi_UMZProjOdpovedn ak ON ak.ID_PRJGG = p.id AND ak.PLATNYUZIVATEL = 'A' AND ak.DATUMDO is null 
+LEFT JOIN (
+     SELECT platba.id_nositelplatby,
+     	    hs.NositelId,
+     	    platba."Číslo žádosti o platbu",
+     	    trunc(sysdate) - trunc(datumod) "Dní v P4 (nevrácena)" ,
+     	    count(hs.id) 
+     FROM isum.v_bi_UmpPlatbaPrj platba 
+     INNER JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.nositelid = platba.id 
+     WHERE stavdo = 'P4'
+     AND platba.kodwfstav = 'P4'
+     AND platba."Číslo žádosti o platbu" like 'CZ.31.3%'
+     HAVING count(hs.id)=1
+     GROUP BY hs.NOSITELID,
+     	trunc(sysdate) - trunc(datumod),
+ 	platba."Číslo žádosti o platbu",
+	platba.id_nositelplatby
+	) hs ON  hs.id_nositelplatby = p.id
+
+LEFT JOIN (
+     SELECT hs.NositelId, zoz.id_zad,
+     zoz."Pořadové číslo ŽoZ",
+     trunc(sysdate) - trunc(datumod) "Dní v P1 (nevrácena)" 
+     count(hs.id) 
+     FROM isum.v_bi_UmzZoZProjekt zoz -- ON zoz.id_zad = p.id
+     INNER JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.nositelid = zoz.id 
+     WHERE stavdo = 'P1'
+     AND zoz.kodwfstav = 'P1'
+     AND zoz.id_vyzva = 1482646063 -- 31_22_001
+     HAVING count(hs.id)=1
+     GROUP BY  hs.NositelId, zoz.id_zad,
+     zoz."Pořadové číslo ŽoZ",
+     trunc(sysdate) - trunc(datumod)
+     ) hs ON  hs.id_zad = p.id
+
+
+WHERE v."Číslo výzvy" = '31_22_001'
+
+
+----------------------------------------
+SELECT p."Registrační číslo projektu" ,
+       hs.*
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva 
+INNER JOIN isum.v_bi_UMZProjOdpovedn ak ON ak.ID_PRJGG = p.id AND ak.PLATNYUZIVATEL = 'A' AND ak.DATUMDO is null 
+LEFT JOIN (
+     SELECT hs.NositelId, zoz.id_zad,
+     zoz."Pořadové číslo ŽoZ",
+     trunc(sysdate) - trunc(datumod) "Dní v P1 (nevrácena)" 
+     count(hs.id) 
+     FROM isum.v_bi_UmzZoZProjekt zoz -- ON zoz.id_zad = p.id
+     INNER JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.nositelid = zoz.id 
+     WHERE stavdo = 'P1'
+     AND zoz.kodwfstav = 'P1'
+     AND zoz.id_vyzva = 1482646063 -- 31_22_001
+     HAVING count(hs.id)=1
+     GROUP BY  hs.NositelId, zoz.id_zad,
+     zoz."Pořadové číslo ŽoZ",
+     trunc(sysdate) - trunc(datumod)
+     ) hs ON  hs.id_zad = p.id
+
+
+WHERE v."Číslo výzvy" = '31_22_001'
+-- AND p."Registrační číslo projektu" = 'CZ.31.3.0/0.0/0.0/22_001/0003409'
+AND ak.nazev = 'Svobodová Kateřina, Ing.'
+
+----------------------------------------
+
+SELECT p."Registrační číslo projektu",
+       p.create_cas ,
+       (select prj.kodwfstav from prj WHERE rownum = 1) "stav"
+       
+FROM isum.v_bi_UmzProjekt prj
+
+WHERE p.KodPrioritniOsa in ('31.3') 
+AND p."Registrační číslo projektu" is not null 
+AND rownum = 1
+ORDER BY p.create_cas

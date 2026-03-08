@@ -1,0 +1,14 @@
+SELECT platba."»Ìslo æ·dosti o platbu" ,
+       CASE WHEN rf.id_ukazatel = 361346 THEN rf.CASTKAPOZADOVANA END "Poæadovan· Ë·stka"
+       CASE WHEN rf.id_ukazatel = 361346 THEN rf.CASTKASCHVALENA END "Schv·len· Ë·stka",
+       CASE WHEN rf.id_ukazatel = 361346 THEN rf.CASTKASCHVALENASZPCO END "Schv·leno pro SÆ PCO",
+       CASE WHEN rf.id_ukazatel = 361357 THEN rf.CASTKAPOZADOVANA END "Poæadovan· Ë·stka"
+       CASE WHEN rf.id_ukazatel = 361357 THEN rf.CASTKASCHVALENA END "Schv·len· Ë·stka",
+       CASE WHEN rf.id_ukazatel = 361357 THEN rf.CASTKASCHVALENASZPCO END "Schv·leno pro SÆ PCO",
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby
+INNER JOIN isum.v_bi_UmpRozpisFin rf ON rf.id_platba = platba.id AND rf.id_ukazatel in ( 361346, 361357) -- ¯·dky cis.
+
+where p.KodPrioritniOsa in ('01.1', '01.2', '01.3', '01.4','01.5')
+AND platba."»Ìslo æ·dosti o platbu" = 'CZ.01.1.02/0.0/0.0/17_147/0020565/2023/003/POST'

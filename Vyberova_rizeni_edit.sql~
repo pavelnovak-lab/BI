@@ -1,0 +1,72 @@
+SELECT	p."Registraèní èíslo projektu",
+	p."IÈ" AS "IÈ ®adatele",
+	p.zadatel AS "®adatel",
+	vz.nazev AS "Název zakázky"
+--	vz.poradovecislo AS "Poøadové èíslo zakázky",
+
+	/* UmsRSVerzeSubjektu */
+   	vs."IÈ" AS "IÈ dodavatele VS",
+	vs.ICZAHRANICNI,
+	vs."Název subjektu" AS "Název dodavatele VS"
+
+	/* UMzPrjGGVS */
+	-- vs."IÈ" AS "IÈ dodavatele VS",
+	-- vs."IÈ zahranièní / REGON",
+	-- vs."Název subjektu" AS "Název dodavatele VS"
+	
+FROM 	isum.v_bi_UmzProjekt p
+	INNER JOIN isum.v_bi_UmvVyberovaRizeni vz ON vz.id_nositelvr=p.id
+	INNER JOIN isum.v_bi_UMSCisZakladni cis ON cis.id=vz.id_vrstav and cis."Název" in ('Zadána','Splnìna')
+
+	/* Tato vazba neprojde v¾dy */
+	INNER JOIN isum.v_bi_UMVVRDodavatel dod ON dod.id_vyberovarizeni=vz.id
+	
+	/* Tato vazba není v poøádku, nefunguje u v¹ech dodavatelù - napø. CZ.01.1.02/0.0/0.0/15_002/0000006 */
+	INNER JOIN isum.v_bi_UmsrsVerzeSubjektu vs ON dod.id_verzesubjektu=vs.id
+--	INNER JOIN isum.v_bi_UmzPrjGGVS vs ON dod.id_verzesubjektu=vs.id
+	
+WHERE
+-- p."Registraèní èíslo projektu"  is not null
+p."Registraèní èíslo projektu" in ('CZ.01.1.02/0.0/0.0/15_002/0000006','CZ.01.1.02/0.0/0.0/15_002/0000026')
+
+-- ORDER BY p."Registraèní èíslo projektu"
+
+
+
+/* Od Kotouèka, nedotahuje správnì vazba na Projektu 26 */
+
+SELECT
+p."Registraèní èíslo projektu",
+p."Název projektu CZ",
+p.zadatel,
+vz.nazev as nazevvz,
+vz.poradovecislo as cislovz,
+(select s."Název subjektu"
+	from isum.v_bi_UMVVRDodatek d
+	inner join isum.v_bi_umsciszakladni typd on typd.id=d.id_typ and typd."Kód"='2'
+	inner join isum.v_bi_umsrsverzesubjektu s on s.id=d.ID_VERZESUBJEKTU
+ where d.id_vyberovarizeni=vz.id and d.ID_VERZESUBJEKTU>0 and rownum=1) as vdod
+
+FROM isum.v_bi_umzprojekt p
+inner join isum.v_bi_umvvyberovarizeni vz on vz.id_nositelvr=p.id
+
+WHERE p."Registraèní èíslo projektu"='CZ.01.1.02/0.0/0.0/15_002/0000006'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

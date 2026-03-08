@@ -1,0 +1,8 @@
+SELECT 		v."Odesílat do DotInfo",
+		cis.*
+
+FROM 		isum.v_bi_UmzVyzva v
+INNER JOIN 	isum.V_BI_UMZVYZVATYPPRILDI di ON di.id_vyzva=v.id
+INNER JOIN	isum.v_bi_UMSCisZakladni cis ON cis.id=di.id_typpril
+
+WHERE v.id=576949000

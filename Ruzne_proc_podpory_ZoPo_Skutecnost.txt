@@ -1,0 +1,40 @@
+select 	zopo.procento1,
+	skutecnost.procento2,
+	zopo.reg_cis1,
+	zopo.nazev1,
+	zopo.wf,
+        zopo.zadatel1,
+        zopo.ico
+
+from
+
+(select	"V_BI_UMFPFCELKEM"."PROC_EU" as procento1,
+ 	"V_BI_UMZPROJEKT"."ZADATEL" as zadatel1,
+	"V_BI_UMZPROJEKT"."IÈ" as ico,
+	"V_BI_UMZPROJEKT"."Registraèní èíslo projektu" as reg_cis1,
+	"V_BI_UMZPROJEKT"."Název projektu CZ" as nazev1, 
+	"V_BI_UMZPROJEKT"."ID" as id1,
+	"V_BI_UMZPROJEKT"."KODWFSTAV" as wf
+
+ from	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT",
+	"ISUM"."V_BI_UMFPFCELKEM" "V_BI_UMFPFCELKEM" 
+ where   "V_BI_UMFPFCELKEM"."ID_PROJEKT"="V_BI_UMZPROJEKT"."ID"
+ /*  and 	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" in   ('CZ.01.4.04/0.0/0.0/15_005/0000091','CZ.01.2.07/0.0/0.0/15_004/0000092') */
+ and 	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" like ('CZ.01%')
+ and "V_BI_UMFPFCELKEM"."ID_FAZE"='99991000000000001' ) zopo
+
+inner join
+
+(select	"V_BI_UMFPFCELKEM"."PROC_EU" as procento2,
+	"V_BI_UMZPROJEKT"."Registraèní èíslo projektu" as reg_cis2, 
+	"V_BI_UMZPROJEKT"."ID" as id2
+ from	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT",
+	"ISUM"."V_BI_UMFPFCELKEM" "V_BI_UMFPFCELKEM" 
+ where  "V_BI_UMFPFCELKEM"."ID_PROJEKT"="V_BI_UMZPROJEKT"."ID"
+ /*  and 	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" in  ('CZ.01.4.04/0.0/0.0/15_005/0000091','CZ.01.2.07/0.0/0.0/15_004/0000092') */
+ and "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" like ('CZ.01%')
+ and "V_BI_UMFPFCELKEM"."ID_FAZE"='99991000000000005' ) skutecnost
+
+on zopo.id1=skutecnost.id2
+
+where zopo.procento1<>skutecnost.procento2

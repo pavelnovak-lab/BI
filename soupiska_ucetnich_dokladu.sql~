@@ -1,0 +1,44 @@
+select	"V_BI_UMZPRJGG"."Registraèní èíslo projektu" as "Registraèní èíslo projektu",
+	"V_BI_UMPPLATBA"."Èíslo ¾ádosti o platbu" as "Èíslo ¾ádosti o platbu",
+	"V_BI_UMFSOUPISKADOKLAD"."Celková èástka bez DPH \nuvede" as "Celková èástka bez DPH \nuvede",
+	"V_BI_UMFSOUPISKADOKLAD"."Celková èástka DPH \nuvedená n" as "Celková èástka DPH \nuvedená n",
+	"V_BI_UMFSOUPISKADOKLAD"."Celková èástka \nuvedená na do" as "Celková èástka \nuvedená na do",
+--	"V_BI_UMFSOUPISKADOKLAD"."Poøadové èíslo" ,
+	"V_BI_UMFSOUPISKADOKLAD"."Datum vystavení dokladu" as "Datum vystavení dokladu",
+	"V_BI_UMFSOUPISKADOKLAD"."IÈO Dodavatele" as "IÈO Dodavatele",
+	"V_BI_UMFSOUPISKADOKLAD"."Název Dodavatele" as "Název Dodavatele",
+	"V_BI_UMFSOUPISKADOKLAD"."Èíslo úèetního dokladu \nv úèe" as "Èíslo úèetního dokladu \nv úèe",
+	"V_BI_UMFSOUPISKADOKLAD"."ID" as "ID",
+	"V_BI_UMFSOUPISKADOKLAD"."Poøadové èíslo" as "Poøadové èíslo ®oP",
+	"V_BI_UMZPRJGG"."Název projektu CZ" as "Název projektu CZ",
+	"V_BI_UMFSOUPISKADOKLAD"."TYPDOKLADU" as "TYPDOKLADU",
+	"V_BI_UMFROZPOLOZKY"."Název" as "Název",
+	"V_BI_UMFSOUPISKADOKLAD"."NEZPUSOBILE" as "NEZPUSOBILE",
+	"V_BI_UMFSOUPISKADOKLAD"."Èástka bez DPH pøipadající na" as "Èástka bez DPH pøipadající na",
+	"V_BI_UMFSOUPISKADOKLAD"."Èástka DPH pøipadající na \nPr" as "Èástka DPH pøipadající na \nPr",
+	"V_BI_UMFSOUPISKADOKLAD"."VYDAJEPROKAZ" as "VYDAJEPROKAZ",
+	"V_BI_UMFSOUPISKADOKLAD"."VYDAJESCHVAL" as "VYDAJESCHVAL",
+	"V_BI_UMVVYBEROVARIZENI"."PORADOVECISLO" as "PORADOVECISLO",
+	"V_BI_UMFSOUPISKADOKLAD"."SNIZENIVZ" as "SNIZENIVZ",
+	"V_BI_UMFSOUPISKADOKLAD"."SNIZENIPLOSNE" as "SNIZENIPLOSNE",
+	"V_BI_UMFSOUPISKADOKLAD"."Sní¾ení prokazovaných zpùsobil" as "Sní¾ení prokazovaných zpùsobil",
+	REPLACE(REPLACE("V_BI_UMFSOUPISKADOKLAD"."Popis pøíjmu",CHR(10),' '),CHR(13),' ') as "Popis",
+	to_char("V_BI_UMFSOUPISKADOKLAD"."DATUMUHRADY" , 'dd.mm.yyyy') as "DATUMUHRADY",
+	"V_BI_UMFSOUPISKADOKLAD"."Poøadové èíslo",
+	to_char	("V_BI_UMFSOUPISKADOKLAD"."Datum uskuteènìní \nzdanitelné" , 'dd.mm.yyyy')as "Datum uskuteènìní \nzdanitelné"
+from	"ISUM"."V_BI_UMFROZPOLOZKYPRJ" "V_BI_UMFROZPOLOZKY",
+	"ISUM"."V_BI_UMZPRJGG" "V_BI_UMZPRJGG",
+	"ISUM"."V_BI_UMPPLATBAPRJ" "V_BI_UMPPLATBA",
+	"ISUM"."V_BI_UMFSOUPISKADOKLADPRJ" "V_BI_UMFSOUPISKADOKLAD", 
+	"ISUM"."V_BI_UMVVYBEROVARIZENI" "V_BI_UMVVYBEROVARIZENI" 
+ where "V_BI_UMPPLATBA"."ID"="V_BI_UMFSOUPISKADOKLAD"."ID_PLATBA"
+	and	 "V_BI_UMZPRJGG"."ID"="V_BI_UMPPLATBA"."ID_NOSITELPLATBY"
+	and	"V_BI_UMFROZPOLOZKY"."ID"="V_BI_UMFSOUPISKADOKLAD"."ID_POLOZKA"
+	and "V_BI_UMVVYBEROVARIZENI"."ID"="V_BI_UMFSOUPISKADOKLAD"."ID_VZ"
+--	and "V_BI_UMPPLATBA"."Èíslo ¾ádosti o platbu" =:È_®oP  
+	and	"V_BI_UMFSOUPISKADOKLAD"."TYPDOKLADU" = 1
+	and	("V_BI_UMFSOUPISKADOKLAD"."Typ úpravy dokladu" is null or "V_BI_UMFSOUPISKADOKLAD"."Typ úpravy dokladu" in ('0','1'))
+	AND V_BI_UMZPRJGG."Registraèní èíslo projektu" in ('CZ.01.2.07/0.0/0.0/15_004/0000972')
+
+
+ORDER BY "V_BI_UMPPLATBA"."Èíslo ¾ádosti o platbu", V_BI_UMFSOUPISKADOKLAD."Poøadové èíslo"

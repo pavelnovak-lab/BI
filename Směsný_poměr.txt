@@ -1,0 +1,11 @@
+SELECT 	p."Registraèní èíslo projektu",
+	pomer."Název",
+	pomer."Použit smìsný pomìr"
+
+FROM		isum.v_bi_UmzProjekt p
+INNER JOIN	isum.v_bi_UmzVyzva v ON p.id_vyzva=v.id
+INNER JOIN 	isum.v_bi_UmfPomeryHlavicka pomer ON pomer.id_nositelpompf=p.id
+
+WHERE 
+-- 	p."Registraèní èíslo projektu" = 'CZ.01.3.10/0.0/0.0/18_183/0015432'
+v."Èíslo výzvy" = '01_18_183'

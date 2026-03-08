@@ -1,0 +1,36 @@
+select	schval."Èíslo pøípadu",
+	schval.CasPrepnuti,
+	sch."Název pøíjemce",
+	sch."Název koneèného pøíjemce",
+	sch."TYP",
+	sch."STAVDO", 
+	sch."CREATE_UZIVATEL" 
+
+from
+
+(select	 nesr."Èíslo pøípadu",
+	 min(hs."CREATE_CAS") as CasPrepnuti
+from	isum.v_bi_umznesrovnalost nesr
+	inner join isum.v_bi_umswfhistoriestavu hs on nesr.id=hs.nositelid
+where   
+/* 	nesr."Èíslo pøípadu" in ('CZ.01.2.06/0.0/0.0/15_038/0006617/18/001','CZ.01.1.02/0.0/0.0/15_002/0000344/18/001','CZ.01.4.04/0.0/0.0/15_005/0001460/18/001
+') and	 */
+	(hs."STAVDO" ='SCHV' or	hs."STAVDO" ='SCHVAL') and
+	hs."CREATE_UZIVATEL" <> 'JOAHEL' and
+	nesr."Èíslo pøípadu" is not null
+group by nesr."Èíslo pøípadu") schval
+
+join
+
+(select	 nesrovnalost."Èíslo pøípadu",
+	 nesrovnalost."Název pøíjemce",
+	 nesrovnalost."Název koneèného pøíjemce",
+  	 nesrovnalost."TYP",
+	 hsta."STAVDO",
+	 hsta."CREATE_CAS" as CasPrepnuti,
+	 hsta."CREATE_UZIVATEL"
+
+from	isum.v_bi_umznesrovnalost nesrovnalost
+	inner join isum.v_bi_umswfhistoriestavu hsta on nesrovnalost.id=hsta.nositelid) sch
+
+on (sch."Èíslo pøípadu"=schval."Èíslo pøípadu" AND sch.CasPrepnuti=schval.CasPrepnuti)

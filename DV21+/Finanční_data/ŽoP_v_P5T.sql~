@@ -1,0 +1,37 @@
+SELECT w.*, Chybí mi historie stavù
+       prg."Kód" "Kód Priority",
+       v."Název výzvy" ,
+       pl."Èíslo platby" ,
+       s."Název subjektu" "Pøíjemce",
+       CASE WHEN cuk."Kód" in ('7') THEN rf."Schválené vyúètování ZS/ØO v této ®oP" 
+       	    END "Výdaje EU",
+       CASE WHEN cuk."Kód" in ('8','9','10','11','12','13') THEN rf."Schválené vyúètování ZS/ØO v této ®oP" 
+       	    END "Soukromé + národní zdroje",
+
+       pl."Partnerství zakládající refundaci do jiné kapitoly OSS",
+       pl."Zálohová platba",
+       platba."Závìreèná platba" ,
+       CASE WHEN cuk."Kód" in ('8','9','10','11','12') THEN rf."Schválené vyúètování ZS/ØO v této ®oP" 
+       	    END "Národní veøejné zdroje",
+       CASE WHEN cuk."Kód" in ('13') THEN rf."Schválené vyúètování ZS/ØO v této ®oP" 
+       	    END "Soukromé zdroje",
+
+       p."Registraèní èíslo projektu" ,
+       op.nazev as "Opatøení",
+       v."Èíslo výzvy" 
+       
+FROM projekt p
+INNER JOIN vyzva v on v.id = p.id_vyzva 
+INNER JOIN vyzva_hierarchie vh ON vh.id_vyzva = v.id
+INNER JOIN v_rav_umshisc op on op.id=vh.id_speccil 
+INNER JOIN v_rav_umshisc sc on sc.id=op.id_hierarchie
+INNER JOIN programova_linie prg ON prg.id = sc.id_osa
+INNER JOIN platba pl ON pl.id_nositelplatby = p.id
+INNER JOIN rozpis_financovani rf ON rf.id_platba = pl.id 
+INNER JOIN ciselnik_ukazatel_rozpis_financovani cuk ON cuk.id = rf.id_ukazatel AND cuk."Kód" in ('7','8','9','10','11','12','13') -- øádek F1-C EU celkem
+INNER JOIN ciselnik_stav_workflow w ON pl.id_wfstav = w.id 
+INNER JOIN subjekt s ON s.id_prjgg = p.id AND s."Neplatný od" is null AND s.id_typsubjektuedit IN (413462) -- ¾adatel, partner s FP
+-- INNER JOIN ciselnik_typ_subjektu ts ON ts.id = s.id_typsubjektuedit 
+
+WHERE pl."Èíslo platby" IN ( 'CZ.01.01.01/02/22_003/0000133/2025/001/POST','CZ.01.04.01/01/22_006/0000001/2024/001/POST')
+AND w."Kód" IN ('P5T','P8T')

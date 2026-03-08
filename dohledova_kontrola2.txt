@@ -1,0 +1,28 @@
+select    	p."Registraèní èíslo projektu",
+		p."Název projektu CZ",
+		p."ZADATEL",
+		p."KODWFSTAV",
+		p."WFSTAVDATUM",
+		p."KOMPETENCNIUTVAR",
+		p."DatumURealPred",
+		p."DatumURealSkut",
+		v."Název výzvy",
+		v."Èíslo výzvy",
+                sum(r.castkaschvalena) as dotace
+
+		
+                
+from         	isum.v_bi_umzprojekt p
+inner join 	isum.v_bi_umzvyzva v on v.id=p.id_vyzva
+inner join      isum.v_bi_umpplatbaprj pl on p.id=pl.id_nositelplatby
+inner join      isum.v_bi_umprozpisfin r on r.id_platba=pl.id
+inner join      isum.v_bi_umsciszakladni cis on r.id_ukazatel=cis.id
+inner join      isum.v_bi_umswfhistoriestavu h on h.nositelid= pl.id
+
+
+where  	cis."Kód"= '10a'
+and     h.stavdo in ('P10','P11')
+and 	p."KODWFSTAV" = 'PP41'
+
+
+group by p."Registraèní èíslo projektu", p."Název projektu CZ", p."ZADATEL", p."KODWFSTAV", p."WFSTAVDATUM", 	p."KOMPETENCNIUTVAR", v."Název výzvy", v."Èíslo výzvy"

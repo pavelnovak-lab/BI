@@ -1,0 +1,10 @@
+SELECT	p."Registraèní èíslo projektu",
+	hod.poradi,
+	hod.agregat
+
+FROM isum.v_bi_UmzPrjGGII p 
+INNER JOIN isum.v_bi_UmvHodnoceniPrj hod ON hod.id_noshodnoceni = p.id --  AND hod.id_krokvechodn = 171213 -- 1. krok vh 
+
+WHERE p."Registraèní èíslo projektu" = 'CZ.01.1.02/0.0/0.0/20_321/0024535'
+
+ORDER BY hod.poradi

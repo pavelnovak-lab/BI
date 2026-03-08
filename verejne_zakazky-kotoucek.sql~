@@ -1,0 +1,38 @@
+
+/* Od Kotouèka, nedotahuje správnì vazba na Projektu 26 */
+
+SELECT
+p."Registraèní èíslo projektu",
+p."Název projektu CZ",
+p.zadatel,
+vz.nazev as nazevvz,
+vz.poradovecislo as cislovz,
+(select s."Název subjektu"
+	from isum.v_bi_UMVVRDodatek d
+	inner join isum.v_bi_umsciszakladni typd on typd.id=d.id_typ and typd."Kód"='2'
+	inner join isum.v_bi_umsrsverzesubjektu s on s.id=d.ID_VERZESUBJEKTU
+ where d.id_vyberovarizeni=vz.id and d.ID_VERZESUBJEKTU>0 and rownum=1) as vdod
+
+FROM isum.v_bi_umzprojekt p
+inner join isum.v_bi_umvvyberovarizeni vz on vz.id_nositelvr=p.id
+
+WHERE p."Registraèní èíslo projektu"='CZ.01.1.02/0.0/0.0/15_002/0000006'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

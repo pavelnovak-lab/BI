@@ -1,0 +1,10 @@
+select 	v."AlokaceCelkem" as v_alok,
+	v."Kod",
+	v."Nazev",
+	p."EU",
+	p."Registraèní èíslo projektu"
+
+from 	v_bi_umzvyzva v 
+join	v_bi_umzprjgg p on p.id_vyzva=v.id
+
+where v."Kod"='01_17_176'

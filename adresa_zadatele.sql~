@@ -1,0 +1,34 @@
+SELECT	p."Registraèní èíslo projektu" ,
+	p."Název projektu CZ", 
+	vs."Název subjektu",
+	vs."IÈ" ,
+	p.kodwfstav ,
+	p.eu,
+	p.czv, 
+       LISTAGG(distinct va."Adresa uvedená textovì", '; ') "Adresy sídla"
+
+FROM isum.v_bi_UmzPrjgg p 
+INNER JOIN isum.v_bi_UmzPrjGGvs vs ON vs.id_prjgg=p.id AND vs.neplatny is null AND vs.id_typsubjektu = 300784 AND vs.id_typsubjektuEdit = 300798 -- zadatel 
+INNER JOIN isum.v_bi_UMSRSVerzeAdresy va ON va.id_verzesubjektu = vs.id
+
+WHERE va.KODYTYPUADRESY like '%A%'
+-- AND va."Typ adresy" = 'Adresa místa realizace'
+-- AND vs.neplatny is null
+-- AND vs.id_typsubjektu = 300784
+-- AND vs.id_typsubjektuEdit = 300798 -- zadatel
+-- AND vs."IÈ" = '25273221'
+AND p."Registraèní èíslo projektu" is not null 
+AND p.id_vyzva = 1482646063
+AND p."Registraèní èíslo projektu" = 'CZ.31.3.0/0.0/0.0/22_001/0000002'
+
+
+GROUP BY p."Registraèní èíslo projektu" ,
+	p."Název projektu CZ", 
+	vs."Název subjektu",
+	vs."IÈ" ,
+	p.kodwfstav ,
+	p.eu,
+	p.czv
+
+
+ORDER BY substr(p."Registraèní èíslo projektu",-5,5) ASC 

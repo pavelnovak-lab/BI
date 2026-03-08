@@ -1,0 +1,635 @@
+#+TITLE: ToDo List - říjen 2025 - chybí červen 
+#+COLUMNS: %25ITEM %10CLOCKSUM
+* NPO                                                                   :NPO:
+** OPS Ukončení ŽoP v P7                      :ukončení:odstoupení:OPS:36259:
+:LOGBOOK:
+CLOCK: [2025-08-04 po 14:43]--[2025-08-04 po 16:09] =>  1:26
+CLOCK: [2025-08-04 po 14:39]--[2025-08-04 po 14:39] =>  0:00
+CLOCK: [2025-03-06 čt 13:07]--[2025-03-06 čt 13:11] =>  0:04
+:END:
+Dobrý den,
+jak bychom měli postupovat pokud chceme ŽoP v P7 převést do negativního stavu?
+
+Důvod, po schválení v obou stupních nám příjemce napsal, že společnost byla prodána a proplacení ŽoP odmítají. Kolegové tedy z ÚIS poslali ŽoP zpět do MS2014+. 
+
+Jde o ŽoP NPO CZ.31.3.0/0.0/0.0/22_001/0005199/2024/001/POST.
+
+Předem díky za odpověď,
+Pavel Novák
+
+----------------------------------------
+Ahoj / Dobrý den, 
+už pár měsíců přenáším v seznamu úkolů tento dotaz (týká se NPO, tedy MS2014+). Neproplacená ŽoP vrácená z EIS (tedy ve stavu P7) se pak může objevovat v různých sestavách o pokroku plnění MiCílu v komponetě NPO 7.1 …. 
+
+Dotaz na správce MS2014+ OPS 36259, 6. března 2025: 
+Dobrý den,
+jak bychom měli postupovat pokud chceme ŽoP v P7 převést do negativního stavu?
+Důvod: po schválení v obou stupních nám příjemce napsal, že společnost byla prodána a proplacení ŽoP odmítají. Kolegové tedy z ÚIS poslali ŽoP zpět do MS2014+. 
+Jde o ŽoP NPO CZ.31.3.0/0.0/0.0/22_001/0005199/2024/001/POST žadatele RELOS s.r.o.
+Předem díky za odpověď,
+Pavel Novák  
+Odpověď, 7. března 2025
+Dobrý den,
+konzultovala jsem situaci s kolegou za proces 8. Vzhledem k pokročilosti administrace ŽoP již nelze provést zamítnutí. Doporučení je doadministrovat ŽoP standardně - ale s nulovými částkami.
+S pozdravem
+Karolína Schindlerová
+
+Nyní schválená a tedy dosud neproplacená dotační částka v ŽoP je více než 300 tisíc Kč. 
+
+ŽoP doporučuji doadministrovat a projekt převést do nějakého konečného stavu (nejlépe PN40b – ukončen ŘO, případně alespoň PU30 – projekt pozastaven). Nevím, co Vám umožňuje metodika pro NPO. Pokud byste šli cestou pokrácení ŽoP na nulu, jak za správce MS2014+ z MMR navrhuje paní Schindlerová, pak:
+a)	Předpokládám, že na nulové ŽoP (s nenulovou požadovanou částkou) vygenerované DP pro zdroj RRF po schválení ŽoP v P9 (analogie stavu P6 pokud byla ŽoP vrácena z EIS) rovnou přepnou do stavu Propalacena a na DP se naplní skutečné datum a skutečná „částka proplacení“. Nedojde tedy již k přenosu do EIS. ŽoP s vyplněnou nulovou skutečnostií se automaticky přepíná do P11. 
+b)	Stav projektu se všemi vypořádanými ŽoP se asi v desetiminutových intervalech přepíná ze stavu PP40 -> PP41. 
+c)	Po přepnutí do PP41 se na projektu vygeneruje se harmonogram ZoU a na žadatele/příjemce budou odchátet automatické depeše upozorňující ho na podání ZoU….  Na záložce Detail projektu | Doplňkové informace se dá do stavu projektu PP40 měnit vyplněný počet ZoU (na nulu – pokud nemá být HMG ZoU generován, nyní je vyplněno 5). 
+Pokud na projektu není vygenerovaný HMG ZoU, přepne se stav projektu z PP41 automatikou do PP42 a následně do PP43. 
+
+
+Pavel Novák 
+** OPS Chybný počet bodů v posudku               :hodnocení:1_4:LS:OPS:39532:
+:LOGBOOK:
+CLOCK: [2025-09-01 po 14:40]--[2025-09-01 po 15:00] =>  0:20
+CLOCK: [2025-09-01 po 12:24]--[2025-09-01 po 12:32] =>  0:08
+CLOCK: [2025-08-27 st 14:18]--[2025-08-27 st 14:18] =>  0:00
+:END:
+Šlo o podnět Jany Nikodémové
+
+Dobrý den,
+dobrý den, hlášení chyby OPS 39532 už je na straně TSC a má přiřazeného řešitele.
+
+S pozdravem a přáním hezkého dne
+Pavel Novák 
+
+** TODO Není možné podat ZZoR                            :2_5:ŽoP:ZoR:OPS:JS:
+:LOGBOOK:
+CLOCK: [2025-09-11 čt 12:47]--[2025-09-11 čt 13:52] =>  1:05
+:END:
+Týká se komponenty 5.2.
+** DONE Prověření šablon DP                              :šablony:DP:1_3:1_4:
+:LOGBOOK:
+CLOCK: [2025-09-30 út 10:32]--[2025-09-30 út 10:45] =>  0:13
+:END:
+Vyzvaro.kod IN ['31_23_079','31_23_098','31_24_152','31_24_126','31_23_080','31_23_100','31_23_082','31_23_085','31_23_117','31_24_135','31_24_143','31_23_078']
+* Platby                                                      :P8:platby:ŽoP:
+** OPS Nesprávná částka dotace - státní fondy :dotace:státní:fondy:VPo:OPS:40221:
+:LOGBOOK:
+CLOCK: [2025-10-01 st 16:27]--[2025-10-01 st 16:27] =>  0:00
+CLOCK: [2025-10-01 st 14:01]--[2025-10-01 st 15:27] =>  1:26
+CLOCK: [2025-09-25 čt 13:27]--[2025-09-25 čt 17:51] =>  4:24
+:END:
+Dobrý den, 
+ 
+obracím se na Vás se žádostí týkající se projektu číslo CZ.01.01.01/05/24_042/0007828  (Výzva inovační vouchery – Ochrana práv průmyslového vlastnictví – výzva III.), kde je příjemcem firma The Extreme Light Infrastructure ERIC.  
+Právní forma společnosti je konsorcium evropské výzkumné infrastruktury.
+ 
+Jedná se nám o částku de minimis ve výši  74 132,00 Kč a podíl spolufinancování příjemce. V příloze přikládám vygenerované RoPD a Tiskovou verzi žádosti.
+
+
+Dobrý den,
+na projektu CZ.01.01.01/05/24_042/0007828 je míra EU podpory z dotačních zdrojů 75 %.
+Vlastním zdrojem podpory jsou veřejné prostředky ze státních fondů.
+V PZF jsou 
+
+
+Dobrý den, paní Maierová,
+taky jsme si projeli všechny projekty OP TAK a platí, že:
+- zdroj financování ze státních fondů má jen tento jediný projekt
+- nikde jinde se v de minimis neděje to, že vlastní zdroj financování ze SF + EU zdroj = celková poskytnutá de minimis.
+Nedalo mi to a podíval jsem se ještě na období 14+. Tam už takové projekty existují, ale nikoli v OP TAK, ale v IROP (v MS2014+ je vidím, protože jde o integrované nástroje). Viz příloha.
+Z toho soudím, že se podobné nastavení přeneslo z nastavení MS2014+, kde se zdroj státní fondy u žadatelů z řad měst a obcí počítal do celkové výše de minimis.
+Na nastavení v MS2021+ se ptáme dodavatele MS2021+ v ServiceDesku21+ OPS 40221.
+Vydání RoPD ale nic nebrání - částku de minimis, která odpovídá EU dotačnímu zdroji do něj můžete dopsat "ručně". Tuto částku budete také reportovat do RDM. Mezitím s dodavatelem MS2021+ najdeme způsob, jak situaci narovnat.
+Pokud jde o ruční editaci výše poskytnuté de minimis přímo v MS2021+, nedoporučuji ho, protože by zřejmě znamenalo ponížení CZV na ŽoP.
+
+POZN: Požadavek zakládám v ServiceDesku MPO, kam automatikou propadne i tato reakce. 
+
+S pozdravem a přáním hezkého dne
+Pavel Novák 
+
+* Vytěžování dat                                                    :sestava:
+** ROZPRACOVÁNO Práskací tabulka                       :LS:PM:report:kvartál:
+:LOGBOOK:
+CLOCK: [2025-09-30 út 12:07]--[2025-09-30 út 16:17] =>  4:10
+:END:
+Z formululáře Přehled zaměstnantců si vyfiltruji platnost od, pak tyhle lidi hledám v XLS
+
+
+STAMAR25_INT
+BARLEN11_INT
+POSMON1_INT
+KOTPAV7_INT
+KRALIN_INT
+STOROM1_INT
+KOVPAV4_INT
+VACLUC4_INT
+KOVLEN2_INT
+SPIVER_INT
+FROKLA_INT
+SRPJAN_INT
+SPIPET2_INT
+
+
+| Uživatelské jméno | Jméno    | Příjmení   | Zkratka organizační jednotky | Úroveň 2                                              | Úroveň 3                                                         | Vedoucí organizační jednotky | Pracovní pozice                  |
+|-------------------+----------+------------+------------------------------+-------------------------------------------------------+------------------------------------------------------------------+------------------------------+----------------------------------|
+| FILPET            | Petr     | Filipi     |                        61400 | Odbor inovativních a digitálních řešení               |                                                                  | PRAVDA                       | ředitel/ka odboru/vedoucí odboru |
+| NOVTER            | Tereza   | Novotná    |                        61500 | Odbor infrastruktury pro MSP a energetických programů |                                                                  | NEPRAVDA                     | zaměstnanec/referent             |
+| JIRLEN_INT        | Lenka    | Jirásková  |                        61400 | Odbor inovativních a digitálních řešení               |                                                                  | NEPRAVDA                     | zaměstnanec/referent             |
+| SKAJAN            | Jan      | Skalník    |                        61410 | Odbor inovativních a digitálních řešení               | Oddělení Průmyslu 4.0                                            | PRAVDA                       | zaměstnanec/referent             |
+| WENROB            | Robert   | Wenzel     |                        61460 | Odbor inovativních a digitálních řešení               | Oddělení infrastruktury VaV                                      | PRAVDA                       | zaměstnanec/referent             |
+| HAVJAN            | Jan      | Havel      |                        61430 | Odbor inovativních a digitálních řešení               | Oddělení digitalizace                                            | PRAVDA                       | vedoucí oddělení                 |
+| KONJAR            | Jaromír  | Konderla   |                        61540 | Odbor infrastruktury pro MSP a energetických programů | Oddělení bankovních nástrojů (ČMZRB)                             | PRAVDA                       | vedoucí oddělení                 |
+| SAWBLA            | Blanka   | Sawkins    |                        61450 | Odbor inovativních a digitálních řešení               | Oddělení výzkumu                                                 | PRAVDA                       | zaměstnanec/referent             |
+| PFEKAT            | Kateřina | Pfeiferová |                        61510 | Odbor infrastruktury pro MSP a energetických programů | Oddělení revitalizace brownfieldů a infrastruktury MSP           | PRAVDA                       | zaměstnanec/referent             |
+| ZDEPAV            | Pavel    | Zděnek     |                        61530 | Odbor infrastruktury pro MSP a energetických programů | Oddělení cirkulární ekonomiky, úspor vody a alternativní dopravy | PRAVDA                       | zaměstnanec/referent             |
+| KLODAV            | David    | Kloz       |                        61470 | Odbor inovativních a digitálních řešení               | Oddělení inovací                                                 | PRAVDA                       | zaměstnanec/referent             |
+
+
+| Uživatelské jméno | Jméno | Příjmení | Zkratka organizační jednotky | Úroveň 2                                | Úroveň 3              | Vedoucí organizační jednotky | Pracovní pozice      |
+| SKAJAN            | Jan   | Skalník  |                        61410 | Odbor inovativních a digitálních řešení | Oddělení Průmyslu 4.0 | PRAVDA                       | zaměstnanec/referent |
+** Přílohy projektu
+   :LOGBOOK:
+   CLOCK: [2025-10-02 Čt 06:52]
+   :END:
+Požadavek Lucky Fialové na stahování příloh k VK - jde o to že EH nevidí na hodnocení projektu. 
+** OPS Chyby v 01-001 Informace z hodnocení :vytěžování:dat:sestava:DL:LS:OPS:
+:LOGBOOK:
+CLOCK: [2025-09-24 st 19:12]--[2025-09-24 st 19:46] =>  0:34
+CLOCK: [2025-09-24 st 17:55]--[2025-09-24 st 19:12] =>  1:17
+:END:
+Ahoj Lukáši, 
+mohl bys prosím nahlásit chyby a nepřesnosti v sestavě 01-001 Informace z hodnocení? 
+1. Pokud vyberu výzvu Aplikací Deep Tech nenabídne se mi výběr kritérií – pokud nezadám žádná, vygeneruje se prázdná sestava. Pokud jsem zadal současně i Aplikace I, nabídlo mi to kritéria i za Deep TECH. Vždy jsem měl asi nastavené VH. 
+2. V DL máme blbě uvedené body za výsledek kroku VH – máme zadané body z posudku (UMVHodnoceni.PocetBodu), ale status má být UMVHodnStatusDH.PocetBodu (je jiný pro každý krok VH – rozliší se to id_krokvechodn)
+3. Nice-to have je doplnění sloupce – Pořadí posudku, to je UMVHodnoceni.Poradi – tohle bude potřeba doplnit do listů DL, kde je definice parametrů + list s ukázkovými daty ….. 
+
+Díky, 
+Pavel N 
+
+≥ PM ppm ±  
+** ROZPRACOVÁNO Nesrovnalosti - reklamace 00-069 :sestava:vytěžování:dat:SD:47847:
+:LOGBOOK:
+CLOCK: [2025-09-29 po 13:21]--[2025-09-29 po 13:52] =>  0:31
+:END:
+"Každý řádek sestavy představuje výši potvrzené nesrovnalosti na vnitřní úrovni za daný projekt/hlášení nesrovnalostí/žádost o platbu/skupinu výdajů, která není vůči rozpočtu EU vyřešena zaúčtováním finanční opravy, nebo provedením zápočtu (nebo nahrazením u FN) vůči nějaké následující ŽoP projektu.
+Detailněji, kumulativně platí všechny podmínky níže: 
+1) uživatel při generování zvolí právě jeden operační program (UMZNesrovnalost.NazevPRG) a přávě jeden účetní rok (UMPEKPlatba.UcetniRok), přičemž sestava bere v potaz pouze data z hlášení nesrovnalostí vnitřní úroveň za daný program a pouze ty dotčené ŽoP (UMZNesrFinDopad.Platba) v hlášeních, které jsou navazané na účetní rok vybraný v parametru sestavy.
+2) sestava bere v potaz pouze typ hlášení ""Individuální HN"" nebo ""FN - konečný příjemce"" (UMZNesrovnalost.Typ)
+3) platí, že pokud se jedná o 1. verzi hlášení (UMZNesrovnalost.Verze) musí být ve stavu (UMZNesrovnalost.WFStav) ""Schváleno"", nebo ""Schváleno po vyřešení"", anebo mít verzi hlášení vyšší než 1
+4) platí, že stav případu (UMZNesrovnalost.StavPripadu) je ""Potvrzená nesrovnalost""
+5) následuje hlavní ""výpočet sestavy"", kdy se za dané Číslo dotčené ŽoP (UMZNesrFinDopad.Platba) a případně také skupinu výdajů (UMZNesrFinDopad.SkupVydaj) vezme 
+a) částka uvedená v poli Celkové způsobilé výdaje (UMZNesrFinDopad.CelkVydaj), pro kterou platí, že v poli Typ položky je uvedeno Dotčená ŽoP (UMZNesrFinDopad.TypFinDopad = Dotčená ŽoP)
+b) od částky v bodě a) se odečte částka uvedená v poli Celkové způsobilé výdaje (UMZNesrFinDopad.CelkVydaj), pro kterou platí, že v poli Typ položky je uvedeno ""Finanční oprava vůči rozpočtu EU"" (UMZNesrFinDopad.TypFinDopad = Finanční oprava vůči rozpočtu EU) a zároveň platí, že v poli Nadřazená položka (UMZNesrFinDopad.FinDopad) odkazuje na stejnou ŽoP, která je uvedena v poli Číslo dotčené ŽoP (UMZNesrFinDopad.Platba) záznamu z bodu a)
+c) od částky v bodě a) se dále odečte částka uvedená v poli Celkové způsobilé výdaje (UMZNesrFinDopad.CelkVydaj), pro kterou platí, že v poli Typ položky je uvedeno ""Započteno příjemci"" nebo ""Nahrazeno"" (UMZNesrFinDopad.TypFinDopad = ""Započteno příjemci"" nebo ""Nahrazeno"") a zároveň platí, že v poli Nadřazená položka (UMZNesrFinDopad.FinDopad) odkazuje na stejnou ŽoP, která je uvedena v poli Číslo dotčené ŽoP (UMZNesrFinDopad.Platba) záznamu z bodu a) a zároveň musí také platit, že žop uvedená v poli ""Číslo ŽoP, vůči které byl zápočet provedený"" (UMZNesrFinDopad.Platba) má vazbu na stejný účetní rok, jaký je vybrán v parametru sestavy
+6) do sloupce J Typ finanční opravy se vyplní hodnota z pole Typ finanční opravy (UMZNesrFinDopad.FinOprava) ze záznamu v bodě 5 b)"					
+
+** ROZPRACOVÁNO Analýza hodnocení - Deep Tech :aplikace:deep_tech:Pr1:hodnocení:VH:
+:LOGBOOK:
+CLOCK: [2025-09-23 út 22:00]--[2025-09-24 st 02:00] =>  4:00
+:END:
+Cílem je vytvořit sestavu s anylýzou hodnocení pro jednotlivé hodnotitele. Požaduje Petr Filipi.
+
+| Kód hodnotitel | Počet hodnocení | Průměrný počet bodů | Minimum bodů | Maximum bodů |
+|            355 |               7 | 63,57               |           77 |           45 |
+|            363 |               1 | 52,00               |           52 |           52 |
+|            383 |               9 | 52,22               |           63 |           29 |
+|            384 |               1 | 46,00               |           46 |           46 |
+|            399 |               3 | 60,67               |           72 |           51 |
+|            403 |               5 | 69,80               |           76 |           61 |
+|            426 |              13 | 54,69               |           61 |           42 |
+|            440 |               5 | 59,40               |           70 |           45 |
+|            448 |              12 | 52,67               |           64 |           43 |
+|            455 |               6 | 62,50               |           68 |           54 |
+|            460 |              10 | 62,50               |           75 |           53 |
+|            461 |               2 | 46,50               |           55 |           38 |
+|            482 |               5 | 65,40               |           72 |           61 |
+|            503 |               1 | 70,00               |           70 |           70 |
+|            526 |               8 | 64,63               |           76 |           52 |
+|            529 |              14 | 58,14               |           81 |           28 |
+|            533 |               1 | 55,00               |           55 |           55 |
+|            540 |               3 | 58,67               |           61 |           57 |
+|            542 |               6 | 56,17               |           76 |           46 |
+|            547 |               5 | 66,60               |           72 |           56 |
+|            549 |               6 | 67,17               |           75 |           62 |
+|            551 |               4 | 44,75               |           61 |           29 |
+|            553 |               6 | 58,67               |           68 |           38 |
+|            554 |               1 | 29,00               |           29 |           29 |
+|            555 |              14 | 61,79               |           80 |           42 |
+|            557 |               8 | 61,63               |           81 |           45 |
+|            566 |               8 | 40,63               |           51 |           20 |
+|            567 |              18 | 56,22               |           69 |           33 |
+|            575 |               4 | 54,25               |           66 |           46 |
+|            578 |               9 | 77,67               |           81 |           75 |
+|            582 |              10 | 68,60               |           74 |           51 |
+|            588 |               8 | 58,38               |           70 |           48 |
+|            603 |              14 | 60,93               |           72 |           50 |
+|            604 |               3 | 56,00               |           59 |           52 |
+|            606 |               7 | 55,29               |           66 |           49 |
+|            613 |               1 | 47,00               |           47 |           47 |
+|            622 |               3 | 64,00               |           71 |           54 |
+|            625 |               2 | 65,50               |           73 |           58 |
+|            629 |               2 | 48,00               |           52 |           44 |
+|            633 |              11 | 65,00               |           76 |           52 |
+|            637 |               3 | 70,33               |           71 |           69 |
+|            642 |               5 | 61,80               |           70 |           45 |
+|            655 |               8 | 67,50               |           74 |           54 |
+|            656 |               5 | 64,40               |           76 |           54 |
+|            662 |               1 | 66,00               |           66 |           66 |
+|            664 |               9 | 55,44               |           63 |           49 |
+|            675 |               4 | 65,00               |           68 |           60 |
+|            680 |               1 | 53,00               |           53 |           53 |
+|            694 |               7 | 55,71               |           63 |           49 |
+|            705 |               1 | 63,00               |           63 |           63 |
+|            718 |               9 | 49,56               |           67 |           38 |
+|            727 |               8 | 62,50               |           75 |           40 |
+|            728 |               6 | 72,67               |           80 |           63 |
+|            746 |               3 | 78,67               |           82 |           77 |
+|            779 |               2 | 58,00               |           70 |           46 |
+|            884 |               2 | 63,50               |           65 |           62 |
+|            919 |               5 | 72,80               |           82 |           68 |
+|            936 |               4 | 52,00               |           67 |           44 |
+|          1 061 |               1 | 72,00               |           72 |           72 |
+|          1 076 |               1 | 62,00               |           62 |           62 |
+|          1 078 |              15 | 76,53               |           84 |           67 |
+|          1 080 |               4 | 58,50               |           74 |           42 |
+|          1 144 |               7 | 64,57               |           78 |           47 |
+|          1 150 |               9 | 46,22               |           65 |           29 |
+|          1 168 |              11 | 48,00               |           68 |           32 |
+|          1 170 |               3 | 63,33               |           69 |           56 |
+|          1 759 |               8 | 47,25               |           84 |           21 |
+|          1 760 |               3 | 46,33               |           55 |           42 |
+|          1 788 |               6 | 68,00               |           77 |           53 |
+|          1 841 |               3 | 59,00               |           63 |           55 |
+|          1 886 |               7 | 65,00               |           74 |           56 |
+|          1 893 |               9 | 69,56               |           77 |           46 |
+|          2 013 |               3 | 61,33               |           66 |           56 |
+|          2 035 |               2 | 73,50               |           78 |           69 |
+|          2 068 |               5 | 68,20               |           80 |           51 |
+|          2 074 |               2 | 44,50               |           67 |           22 |
+|          2 079 |               5 | 71,40               |           76 |           62 |
+|          2 218 |               4 | 67,00               |           75 |           52 |
+|          2 250 |               9 | 58,11               |           71 |           46 |
+|          2 313 |               5 | 45,60               |           57 |           29 |
+|          2 348 |               7 | 52,86               |           68 |           42 |
+|          2 353 |               2 | 79,50               |           80 |           79 |
+|          2 377 |               1 | 72,00               |           72 |           72 |
+|          2 387 |               1 | 67,00               |           67 |           67 |
+|          2 523 |               1 | 60,00               |           60 |           60 |
+|          2 535 |               7 | 55,57               |           72 |           41 |
+|          2 560 |               1 | 69,00               |           69 |           69 |
+|          2 594 |               7 | 68,14               |           78 |           55 |
+|          2 678 |              12 | 52,08               |           62 |           43 |
+|          2 690 |              10 | 60,70               |           75 |           49 |
+|          2 750 |               2 | 57,50               |           59 |           56 |
+|          2 797 |              10 | 65,40               |           77 |           52 |
+|          2 887 |               2 | 42,00               |           59 |           25 |
+|          2 918 |               4 | 66,75               |           75 |           58 |
+|          2 921 |               2 | 49,50               |           51 |           48 |
+|          2 935 |               3 | 57,33               |           62 |           52 |
+|          3 013 |               1 | 41,00               |           41 |           41 |
+|          3 119 |              10 | 58,20               |           67 |           45 |
+|----------------+-----------------+---------------------+--------------+--------------|
+|         Celkem |             544 | 60,11               |              |              |
+
+ciskod IN ['2887','566','2074','551','733','1760','2313','717','384','554','680','3013','461','1759','1150','1168','629','736','2921','575','718','383','936','363','2678','613','448','2348','667','426','2935','567','2535','533','664','2750','399','694','542','606','604','632','529','779','588','2 720','705','2250','3119','1080','1841','540','1 839','553','440','2013','642','662','2690','555','2523','1144','460','547','557','549','603','1076','727','455','438','1170','656','884','355','622','1 728','633','526','1886','675','482','2797','625','2068','655','2918','2079','2218','582','1788','2387','2594','919','403','2560','1893','503','637','2377','1061','728','2035','1078','578','746','2353']
+** ROZPRACOVÁNO Dodavatelé v OP PIK                       :dodavatel:sestava:
+:LOGBOOK:
+CLOCK: [2025-09-23 út 15:34]--[2025-09-23 út 19:47] =>  4:13
+CLOCK: [2025-09-11 čt 15:10]--[2025-09-11 čt 18:43] =>  3:33
+CLOCK: [2025-09-10 st 14:43]--[2025-09-10 st 18:48] =>  4:05
+CLOCK: [2025-09-10 st 10:04]--[2025-09-10 st 13:07] =>  3:03
+CLOCK: [2025-09-10 St 02:26]--[2025-09-10 St 03:21] =>  0:55
+CLOCK: [2025-09-09 Út 19:56]--[2025-09-10 St 02:26] =>  6:30
+CLOCK: [2025-09-09 út 14:04]--[2025-09-09 út 19:09] =>  5:05
+CLOCK: [2025-09-08 po 16:15]--[2025-09-08 po 17:38] =>  1:23
+:END:
+Číselník počtu zaměstnantců podle OECD
+https://apl2.czso.cz/iSMS/cisdet.jsp?kodcis=579&razeni=nd
+| Kód | Počet zaměstnanců | Velikost podniku | MSP |
+|-----+-------------------+------------------+-----|
+| 000 |         Neuvedeno |                  |     |
+| 110 |                 O | Mikropodnik      | A   |
+| 120 |               1-5 | Mikropodnik      | A   |
+| 130 |               6-9 | Mikropodnik      | A   |
+| 210 |             10-19 | Malý podnik      | A   |
+| 220 |             20-24 | Malý podnik      | A   |
+| 230 |             25-49 | Malý podnik      | A   |
+| 240 |             50-99 | Střední podnik   | A   |
+| 310 |           100-199 | Střední podnik   | A   |
+| 320 |           200-249 | Střední podnik   | A   |
+| 330 |           250-499 | Velký podnik     | N   |
+| 340 |           500-999 | Velký podnik     | N   |
+| 410 |         1000-1499 | Velký podnik     | N   |
+| 420 |         1500-1999 | Velký podnik     | N   |
+| 430 |         2000-2499 | Velký podnik     | N   |
+| 440 |         2500-2999 | Velký podnik     | N   |
+| 450 |         3000-3999 | Velký podnik     | N   |
+| 460 |         4000-4999 | Velký podnik     | N   |
+| 470 |         5000-9999 | Velký podnik     | N   |
+| 510 |     10 000 a více | Velký podnik     | N   |
+                                                                                              
+
+
+
+| IN ENERGIE Servis s.r.o.         | IN ENERGIE Servis s.r.o.         | 000 | 05082021 |                |
+| MEDIPLAST CZ, s.r.o.             | MEDIPLAST CZ, s.r.o.             | 130 | 27176240 | Mikropodnik    |
+| iNEGT SOLUTIONS s.r.o.           | iNEGT SOLUTIONS s.r.o.           | 210 | 05082013 | Malý podnik    |
+| CCOE s.r.o.                      | CCOE s.r.o.                      | 210 | 04422066 | Malý podnik    |
+| ECO Finance Group s.r.o.         | ECO Finance Group                | 220 | 27693953 | Malý podnik    |
+| M.I.T. Consulting, s.r.o.        | M.I.T. Consulting, s.r.o.        | 220 | 25689240 | Malý podnik    |
+| Systematic a.s.                  | Systematic a.s.                  | 230 | 27116484 | Malý podnik    |
+| COMPEX, spol. s r.o.             | COMPEX, spol. s r.o.             | 230 | 12164739 | Malý podnik    |
+| POZEMNÍ KOMUNIKACE BOHEMIA, a.s. | POZEMNÍ KOMUNIKACE BOHEMIA, a.s. | 240 | 27900096 | Střední podnik |
+| SPRINT TRADING s.r.o.            | SPRINT TRADING s.r.o.            | 310 | 25361040 | Střední podnik |
+| OPOP s.r.o.                      | OPOP s.r.o.                      | 310 | 14091704 | Střední podnik |
+| Y Soft Corporation, a.s.         | Y Soft Corporation, a.s.         | 320 | 26197740 | Střední podnik |
+| MD logistika, a.s.               | MD logistika, a.s.               | 330 | 60108703 | Střední podnik |
+| LUKOV Plast spol. s r.o.         | LUKOV Plast spol. s r.o.         | 330 | 25023063 | Velký podnik   |
+|                                  |                                  |     |          |                |
+
+
+05082021|
+27176240|Mikropodnik
+05082013|Malý podnik
+04422066|Malý podnik
+27693953|Malý podnik
+25689240|Malý podnik
+27116484|Malý podnik
+12164739|Malý podnik
+27900096|Střední podnik
+25361040|Střední podnik
+14091704|Střední podnik
+26197740|Střední podnik
+60108703|Střední podnik
+25023063|Velký podnik
+
+
+
+Ahoj Bohouši, zkusil jsem se podívat na ty dodavatele v projektech PO1 pod OP PIK. 
+1) Beru jen projekty PO1 ve stavech PP40-43. 
+2) SQL kód DM vkládám do přílohy. 
+3) Bohužel v MS2021+ nejsou u dodavatelů vyplněný údaje o velikosti podniku. => Dotahuji informace z aktuálních dat podle IČ dodavatlů z ARES. Status MSP vyvozuji jen z velikosti podniku, finančí data podniků neřeším. Ty jsou ale aktuální, nikoli k době VZ.
+4) Překlepy v IČ a názvu dodavatele povoluji jen pro 75% shodu textového řetězce. Týká se to hlavně nevalidovaných dat na soupiskách dokladů. 
+5) Zatím se omezuji jen na VZ, údaje o dodavatelích z ŽoZ mám ale také připravené. 
+6) S VZ beru cenu související se ZV projektu z ceny zakázky ve smlouvě bez DPH.
+7) Některé částky jsou v EUR. => Přepočítávám EUR na CZK průměrným měsíčním kurzem mezi 1.1.2025 až 31.12.2024.
+8) Kontroluji duplicity vazby projekt a jeden dodavatel v různých VŘ. Jsou. => kontingenčkou sčítám částky s a bez vyloučení duplicit.
+9) U některých IČ chybí v ARES údaj o počtu zaměstnantců, na taková data neberu ohled.
+
+Celkem tak z asi z 5700 VZ je rozložení podle MSP následující: 
+
+
+
+
+PodobnostTextu(AC5;R5)
+=KDYŽ(AC5="";"";(KDYŽ(PodobnostTextu(AC5;R5)>=0,95;"Stejný";
+KDYŽ(PodobnostTextu(AC5;R5)>=0,87;"Pravděpodobně stejný";
+KDYŽ(PodobnostTextu(AC5;R5)>=0,75;"Možná stejný";"Nesouhlasí"))
+
+
+České vysoké učení technické v Praze
+České vysoké účení techické v Praze
+
+
+=KDYŽ(COUNTIF(Z$2:Z2;Z2)>1;"ANO";"NE")
+
+
+
+=KDYŽ(A(
+    VLOOKUP(A2;příjemci!A:D;4;FALSE)<>"";
+    VLOOKUP(A2;příjemci!A:D;4;FALSE)<>"Nerelevantní"
+);
+VLOOKUP(A2;příjemci!A:D;4;FALSE);
+""
+)
+
+
+=KDYŽ(A(SVYHLEDAT(A4;příjemci;5;0)<>"";SVYHLEDAT(A4;příjemci;5;0)<>"Nerelevantní");SVYHLEDAT(A4;příjemci;5;0);"")
+
+
+=KDYŽ(PodobnostTextu(AC5;R5)>=0,95,"Stejný", KDYŽ(PodobnostTextu(AC5;R5)>=0,87,"Pravděpodobně stejný", KDYŽ(PodobnostTextu(A1,B1)>=0,75,"Možná stejný","Nesouhlasí")))
+
+
+
+
+
+
+*** Nahradit CZ[číslo] jenom číslo
+:LOGBOOK:
+CLOCK: [2025-09-12 pá 10:15]--[2025-09-12 pá 12:36] =>  2:21
+:END:
+
+
+=KDYŽ(JE.CHYBA(NAJÍT("CZ";K4));K4;ČÁST(K4;NAJÍT("CZ";K4)+2;DÉLKA(K4)))
+
+49192396
+680446186
+682809511
+682809511
+682809511
+683707540
+16191820
+16191820
+26425173
+49437151
+26173972
+46713603
+69060053
+00176109
+684202267
+680481575
+26295474
+68081731
+28972350
+682809511
+812988687
+00216305
+683214286
+682720366
+682186520
+682809511
+00547425
+005474525
+682809511
+25326287
+682809511
+682809511
+682809511
+680473475
+417
+382809511
+680793524
+680793524
+680627533
+682809511
+682809511
+682809511
+682809511
+,s.r.o.
+49435388
+A
+26965542
+26019388
+682809511
+682809511
+8002155337
+25687191
+25687191
+25687191
+7907050261
+25687191
+01732544
+682695943
+682980583
+684839555
+682999944
+25780697
+24193712
+24193712
+680627533
+02673703
+26030721
+47910381
+64088332
+7061187331
+682809511
+680793524
+680793524
+682980583
+682809511
+08976295
+00532304
+682809511
+14890925
+17190231
+25366963
+48035122
+682186520
+A
+682809511
+682809511
+25283669
+25607324
+25918508
+7851071833
+41324226
+69060053
+685723871
+25858653
+26821532
+685296189
+682809511
+61989100
+62968041
+61388971
+49617052
+29038669
+27182151
+26295059
+04568095
+0944561
+682809511
+25013751
+25247468
+682809511
+K
+K
+K
+K
+682809511
+680473475
+
+
+
+
+ULTRAZVUK, s.r.o.
+ULTRAZVUK s. r. o.
+
+** TODO Projekty ve vzorku pro KnM                            :KnM:vzorek:AR:
+:LOGBOOK:
+CLOCK: [2025-09-02 út 12:59]--[2025-09-02 út 13:25] =>  0:26
+:END:
+Petr Skalický reklamuje hlavní sestavu pro vzorkování KnM, protože v ní nejsou projekty:
+
+CZ.01.1.02/0.0/0.0/17_176/0015614|CZ.01.1.02/0.0/0.0/17_176/0015614|CZ.01.1.02/0.0/0.0/17_176/0015614|CZ.01.1.02/0.0/0.0/20_321/0024633|CZ.01.1.02/0.0/0.0/20_321/0024633|CZ.01.1.02/0.0/0.0/21_374/0027290|CZ.01.1.02/0.0/0.0/21_374/0027290|CZ.01.3.10/0.0/0.0/20_370/0024285
+
+** TODO Analýza Šoltés                               :aplikace:PO1:hodnocení:
+** ROZPRACOVÁNO [#C] Projekt OP TAK pod OP PIK                    :OPS:39288:
+:LOGBOOK:
+CLOCK: [2025-08-12 út 10:25]--[2025-08-12 út 10:52] =>  0:27
+CLOCK: [2025-08-11 po 09:31]--[2025-08-11 po 10:58] =>  1:27
+:END:
+Honza Srp zadával jako OPS
+
+* Projekt / žádost                                                    :P4:p7:
+** DOBRÉ_MÍT Nepodporované kategorie CZ NACE                      :rozvoj:FK:
+** ROZPRACOVÁNO Nelze provést finanční rozpad na ŽoZ         :ŽoZ:PZF:FP:VRI:
+:LOGBOOK:
+CLOCK: [2025-09-08 po 10:28]--[2025-09-08 po 13:11] =>  2:43
+CLOCK: [2025-09-04 čt 12:13]--[2025-09-04 čt 12:33] =>  0:20
+:END:
+Ahoj Pavle,
+
+projekt *6090 ve výzvě 01_23_034 má problém při podání ŽoZ, hází jim to následující chybovou hlášku. Kontrovaly jsme seznam obrazovek proti testové verzi výzvy a vypadá to ok, nicméně měli jsme s žadatelem videohovor a má zašedlou záložku Finanční plán, i když je obrazovka FP na ŽoZ přidaná a on si ji vybral.
+----------------------------------------
+Ahoj Zuzko,
+OPS 39 571 je sice zatím bez reakce na straně správce MS2021+, ale znovu se dívám do té ŽoP projektu a vidím, že není vybraná VPo pro článek GBER 52d. Je sice vidět, že je na rozpočtu nulová, ale algoritmus výpočtu rozadů poměr financování na ŽoZ (narozdíl od ŽoPo) vyžaduje přiřazené všechny VPo, které se na rozpočtu objevují (byť částky v nich jsou nulové). Bylo by tedy možné dohodnout se s žadatzelem, aby na ŽoP ještě vybral VPo podle GBER 52d?
+
+Pavel N
+........................................
+Dobrý den,
+na ŽoZ 0KtfDV projektu  nelze provést finanční rozpad. Jde o SR s VPo navázanou na položkách, položka 1.1.1.2 je závazná rozpočtová položka pro nepřímé náklady, dopočítávaná 7 % z PN.
+- na nenulových rozpočtových položkách je VPo: VRI - článek 52, je vybraná na formuláři VPo na ŽoZ.
+- na nulových položkách je VPo: VRI - článek 52d, je vybraná na formuláři VPo na ŽoZ, ale v CSSF u ní nejsou vidět poměry financování.
+
+Jde o výzvu, u které nyní nelze zfinalizovat ŽoP, protože položka NN je přiřazena k investicím. O opravu (tedy přesun z NN do NEINV žádáme v OPS 39571).
+
+Zadávám s vysokou prioritou, protože stejnou chybu čekáme i na ŽoZ jiných projektů, které budou měnit finanční data. 
+
+Předem díky za opravu a vysvětlení, proč nešel rozpad financí provést.
+
+S pozdravem a přáním hezkého dne
+Pavel Novák 
+** OPS Změna správce přístupu      :spráce:přístupu:ISKP:ISD:OPS:
+
+:LOGBOOK:
+CLOCK: [2025-07-14 po 14:42]--[2025-07-14 po 16:20] =>  1:38
+:END:
+Projekt 
+** DOBRÉ_MÍT CZ NACE - dotaz                          :CZ_NACE:OPS:34630:
+:LOGBOOK:
+CLOCK: [2024-12-11 st 14:36]--[2024-12-11 st 14:51] =>  0:15
+CLOCK: [2024-09-02 po 15:40]--[2024-09-02 po 16:02] =>  0:22
+:END:
+Dobrý den,
+od 1. 1. 2025 dochází k aktualizaci číselníku CZ NACE.
+a) Rádi bychom věděli, jestli je s touto aktualizací počítáno i v MS2021+.
+b) Změny se projeví v Registru ekonomických subjektů (RES) až od o rok později 1. 1. 2026. Vybraná CZ NACE na projektu kontrolujeme ve FNaP právě proti RES. Bude tedy v MS2021+ číselník obsahovat staré i nové CZ NACE?
+
+Předem díky za odpověď,
+Pavel Novák 
+** DOBRÉ_MÍT Ukončování projektu a PA v P3                       :PA:projekt:
+:LOGBOOK:
+CLOCK: [2025-03-11 út 17:41]--[2025-03-11 út 17:41] =>  0:00
+CLOCK: [2024-12-02 po 16:40]--[2024-12-02 po 18:52] =>  2:12
+:END:
+Dohledám si PA s RoPD o ukončení. Dohledám si takový projekt. Sestavou
+
+** DOBRÉ_MÍT Návodka k elektronickému podpisu             :podpis:certifikát:
+:LOGBOOK:
+CLOCK: [2025-02-18 út 10:16]--[2025-02-18 út 10:36] =>  0:20
+:END:
+
+** ROZPRACOVÁNO Rozvoj - podklady pro VK   :VK:tiskové:sestavy:rozvoj:RFC:42:
+:LOGBOOK:
+CLOCK: [2024-09-16 po 10:10]--[2024-09-16 po 10:30] =>  0:20
+:END:
+Dobrý den,
+hlavní motivací k zapracování je předání členům VK vytištěné tiskové verze podkladů k jednání komise, na kterých by bylo "na první dobrou" vidět, u kterých porojetků je dobré se zaměřit na hodnocení v konkrétních kritériích. Proto není vhodny XLSX výstup.
+
+Automatikou je myšlena automatizace procesu, který nyní provádí jeden uživatel manuální úpravou a analýzou z MS2021+ stažených dat. Automatické generování sestavy nepožadujeme, generování by bylo dobré řešit např. tlačítkem na záznamu výběrové komise ve formuláři DaHOS -> Komise.
+
+S pozdravem a přáním hezkého dne
+Pavel Novák 
+
+** DONE Ověření funkčnosti MS2021+                           :PK:SD:48037:GL:
+:LOGBOOK:
+CLOCK: [2025-10-01 st 11:16]--[2025-10-01 st 11:59] =>  0:43
+:END:

@@ -1,0 +1,42 @@
+SELECT	p."Registraèní èíslo projektu",
+	p."IÈ" AS "IÈ ®adatele",
+	p.zadatel AS "®adatel",
+	vz.nazev AS "Název zakázky",
+	vz.CASTKAPREDPZV AS "Cena VZ pøedpokládaná",
+	vz.CENADLESMLOUVY AS "Cena VZ dle smlouvy",
+
+--	vz.poradovecislo AS "Poøadové èíslo zakázky",
+
+	/* Info o subjektu z tøídy UmsRSVerzeSubjektu */
+   	vs."IÈ" AS "IÈ dodavatele VS",
+	vs.ICZAHRANICNI,
+	vs."Název subjektu" AS "Název dodavatele VS",
+
+   	s."IÈ" AS "IÈ dodavatele_2",
+	s.ICZAHRANICNI AS "ICZAHRANICNI_2",
+	s."Název subjektu" AS "Název dodavatele_2"
+
+
+	/* Info o subjektu z tøídy UMzPrjGGVS */
+	-- vs."IÈ" AS "IÈ dodavatele VS",
+	-- vs."IÈ zahranièní / REGON",
+	-- vs."Název subjektu" AS "Název dodavatele VS"
+	
+FROM	isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmvVyberovaRizeni vz ON vz.id_nositelvr=p.id
+INNER JOIN isum.v_bi_UMSCisZakladni cis ON cis.id=vz.id_vrstav and cis."Název" in ('Zadána','Splnìna')
+/* Vá¾u UmvVyberovaRizeni -> UMVVRDodavatel (pou¾ívalo se do roku 2017) -> Umsrsverzesubjektu, nefunguje napøíklad u projektu CZ.01.1.02/0.0/0.0/15_002/0000006  */
+INNER JOIN isum.v_bi_UMVVRDodavatel dod ON dod.id_vyberovarizeni=vz.id
+INNER JOIN isum.v_bi_UmsrsVerzeSubjektu vs ON dod.id_verzesubjektu=vs.id
+
+/* Typ kontraktu výbìrového øízení je 'Smlouva' od pana Kotouèka (plnìno od roku 2017) */
+LEFT JOIN 	isum.v_bi_UMVVRDodatek d ON d.id_vyberovarizeni=vz.id AND d.ID_VERZESUBJEKTU>0 
+LEFT JOIN 	isum.v_bi_UmsCisZakladni typd on typd.id=d.id_typ and typd."Kód"='2'
+LEFT JOIN 	isum.v_bi_UmsrsVerzeSubjektu s ON s.id=d.id_verzesubjektu
+
+
+WHERE
+-- p."Registraèní èíslo projektu"  is not null
+p."Registraèní èíslo projektu" in ('CZ.01.1.02/0.0/0.0/15_002/0000006','CZ.01.1.02/0.0/0.0/15_002/0000026')
+
+-- ORDER BY p."Registraèní èíslo projektu"

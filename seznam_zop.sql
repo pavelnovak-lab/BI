@@ -1,0 +1,13 @@
+SELECT p."Registraèní èíslo projektu" ,
+       platba.CISLOPLATBYZKR,
+       platba.kodwfstav ,
+       platba.wfstav 
+
+FROM isum.v_bi_UmzPrjGGII p
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby
+
+WHERE p."Registraèní èíslo projektu" is not null 
+AND p.id_vyzva = 1371717714 -- Výzva tornádo, aktivita A
+-- p."Registraèní èíslo projektu" in ('CZ.01.1.02/0.0/0.0/17_140/0015226','CZ.01.1.02/0.0/0.0/19_278/0018692','CZ.01.1.02/0.0/0.0/20_326/0023404','CZ.01.1.02/0.0/0.0/20_326/0023346','CZ.01.1.02/0.0/0.0/20_362/0025657','CZ.01.1.02/0.0/0.0/20_362/0025680','CZ.01.1.02/0.0/0.0/20_362/0025685','CZ.01.1.02/0.0/0.0/19_278/0018692')
+AND platba.kodwfstav is not null 
+

@@ -1,0 +1,21 @@
+
+SELECT p."Registraèní èíslo projektu" ,
+       d."Zmìnil/a",
+       d."Datum odeslání",
+       d."Naposledy zmìnìno",
+       d."Zaøazení odesílatele"
+       -- d."Datum odeslání",
+       -- d."Rozhodné datum doruèení",
+       -- d."Fikce" "Fikce doruèení"
+       
+FROM projekt p
+INNER JOIN depese d ON d.id_nositelzpravy = p.id
+
+
+
+where d."Zaøazení odesílatele" like '%OP TAK'
+
+-- p."Registraèní èíslo projektu" = ('CZ.01.01.01/05/23_009/0001673','CZ.01.01.01/05/22_004/0000107','CZ.01.01.01/02/22_003/0000141','CZ.01.01.01/05/22_004/0001997')
+
+-- AND d."Pøedmìt depe¹e" =  'Bylo vydáno Rozhodnutí o poskytnutí dotace'
+-- AND Fikce = 'A'

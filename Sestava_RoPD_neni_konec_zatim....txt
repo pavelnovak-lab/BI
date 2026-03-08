@@ -1,0 +1,53 @@
+select 	A."Registraèní èíslo projektu",
+	A."CZV_PODANI", 
+	A."DATUM_PODANI",
+	A."CZV_AKTUALNI",
+	A."DATUM_AKTUALNI",
+	A."CZV_SKUTECNOST",
+	A."DATUM_SKUTECNOST",
+	B.Datum_RoPD,
+	B.CZV_RoPD
+
+from
+
+(select	p."Registraèní èíslo projektu", 
+	max(decode(r."Žádost o podporu",'A',pol."Èástka celkem")) as "CZV_PODANI",
+	max(decode(r."Žádost o podporu",'A',r."DATUMPROJEKT#Datum")) as "DATUM_PODANI",
+	max(decode(r."Aktuální",'A',pol."Èástka celkem")) as "CZV_AKTUALNI",
+	max(decode(r."Aktuální",'A',r.CREATE_CAS)) as "DATUM_AKTUALNI",
+	max(decode(r."Skuteènost",'A',pol."Èástka celkem")) as "CZV_SKUTECNOST",
+	max(decode(r."Skuteènost",'A',r."DATUMSKUTECNOST#Datum")) as "DATUM_SKUTECNOST"
+from
+
+isum.v_bi_umfrozhlavicka r inner join isum.v_bi_umfrozpolozky pol on pol.id_hlavicka=r.id inner join isum.v_bi_umzprojekt p on p.id=r.ID_NROZPOCET
+
+where 	pol."Název"='Celkové zpùsobilé výdaje'
+and 	(r."Žádost o podporu"='A' or r."Aktuální"='A' or r."Skuteènost"='A')
+and 	p."Registraèní èíslo projektu" is not null
+group by p."Registraèní èíslo projektu") A
+
+left outer join
+
+(select	s."Datum uzavøení" as Datum_RoPD,
+	p."Registraèní èíslo projektu",
+	pol."Èástka celkem" as CZV_RoPD
+
+from
+
+
+(select 	umfsmlouva.id_nositelsml,
+	min(umfsmlouva."Datum uzavøení") as datum
+from 	isum.v_bi_umfsmlouva umfsmlouva
+where 	umfsmlouva.typ = 'Rozhodnutí o poskytnutí dotace'
+group by umfsmlouva.id_nositelsml) sml
+
+
+
+inner join isum.v_bi_umfsmlouva s on sml.id_nositelsml=s.id_nositelsml and sml.datum=s."Datum uzavøení" inner join isum.v_bi_umzprojekt p on s.id_nositelsml=p.id inner join isum.v_bi_umfrozhlavicka r on r.id=s.id_rozpocet inner join isum.v_bi_umfrozpolozky pol on pol.id_hlavicka=r.id
+
+where 	
+
+
+pol."Název"='Celkové zpùsobilé výdaje') B
+
+on B."Registraèní èíslo projektu"=A."Registraèní èíslo projektu"

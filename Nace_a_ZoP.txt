@@ -1,0 +1,37 @@
+select    "V_BI_UMPPLATBA"."Datum pøedložení" as "Datum pøedložení",
+                "V_BI_UMZVYZVA"."Název výzvy" as "Název výzvy",
+                "V_BI_UMZPROJEKT"."ZADATEL" as "ZADATEL",
+                "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" as "Registraèní èíslo projektu",
+"V_BI_UMZPROJEKT"."Název projektu CZ" as "Název projektu CZ",
+"V_BI_UMZPROJEKT"."Doba trvání projektu (mìs)" as "Doba trvání projektu (mìs)",
+"V_BI_UMSCISZAKLADNI"."Kód" as "Kód",
+"V_BI_UMSCISZAKLADNI"."Název" as "Název",
+"V_BI_UMPPLATBA"."DATPROPLACENAPRIJ" as "DATPROPLACENAPRIJ",
+                "V_BI_UMPPLATBA"."VYUCTPLAN#Vyúètování plán" as "VYUCTPLAN#Vyúètování plán",
+                "V_BI_UMFPFCELKEM"."PROC_EU" as "Pøíspìvek Unie",
+        "V_BI_UMPPLATBA"."VYUCTPLAN#Vyúètování plán"* "V_BI_UMFPFCELKEM"."PROC_EU"/100 as "Dotace Žop",
+                "V_BI_UMFPFCELKEM"."Pøíspìvek Unie" as "Dotace Projektu",
+                "V_BI_UMPPLATBA"."PORADI#Poøadí finanèního plánu" as "PORADI#Poøadí finanèního plánu",
+                "V_BI_UMPPLATBA"."WFSTAV" as "Stav Žopl",
+                "V_BI_UMZPROJEKT"."KODWFSTAV" as "KODWFSTAV"
+
+
+ from           "ISUM"."V_BI_UMSRSVERZESUBJEKTU" "V_BI_UMSRSVERZESUBJEKTU",
+                "ISUM"."V_BI_UMFPFCELKEM" "V_BI_UMFPFCELKEM",
+                "ISUM"."V_BI_UMPPLATBA" "V_BI_UMPPLATBA",
+                "ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT",
+"ISUM"."V_BI_UMSCISZAKLADNI" "V_BI_UMSCISZAKLADNI",
+"ISUM"."V_BI_UMSRSCZNACE" "V_BI_UMSRSCZNACE",
+                "ISUM"."V_BI_UMZVYZVA" "V_BI_UMZVYZVA" 
+
+
+where   "V_BI_UMZPROJEKT"."ID_VYZVA"="V_BI_UMZVYZVA"."ID"
+and       "V_BI_UMPPLATBA"."ID_NOSITELPLATBY"="V_BI_UMZPROJEKT"."ID"
+and       "V_BI_UMFPFCELKEM"."ID_PROJEKT"="V_BI_UMZPROJEKT"."ID"
+
+   and      ("V_BI_UMZPROJEKT"."KODWFSTAV" like 'PP3_' or "V_BI_UMZPROJEKT"."KODWFSTAV" like 'PP4_')
+   and     "V_BI_UMPPLATBA"."SOUCTOVYRADEK" IS NULL 
+   and     "V_BI_UMFPFCELKEM"."ID_FAZE" ='99991000000000005'
+and "V_BI_UMSCISZAKLADNI"."ID"="V_BI_UMSRSCZNACE"."ID_CZNACE"
+and "V_BI_UMSRSCZNACE"."ID_PROJEKT"="V_BI_UMZPROJEKT"."ID"
+and "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" IS NOT NULL

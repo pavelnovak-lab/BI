@@ -1,0 +1,36 @@
+SELECT DISTINCT
+    A."Číslo výzvy",
+    A."Název výzvy",
+    A."Check VP po staru",
+    B."Kód",
+    B."Název"  ,
+    b.r
+from (SELECT 
+            v."Číslo výzvy" as "Číslo výzvy",
+            v."Název výzvy" as "Název výzvy",
+            v."PREDPOMERYPROVP" as "Check VP po staru",
+            i."Název" as "Název hodnoty z číselníku",
+            m."Název" as r,
+            i."ID"
+        FROM isum.V_BI_UMZVYZVA v
+            inner join isum.V_BI_UMZVYZVAMD d on d.ID_VYZVA=v.id
+            inner join isum.V_BI_UMSCISZAKLADNI i on i.id=d.ID_CISZAKLADNI
+            inner join isum.V_BI_UMSCISSEZNAM m on m.id=d.ID_CISSEZNAM        
+        WHERE m."Název"='Skupina rozpočtu'
+            and (d."Pro plnou žádost"='A' or d."Pro plnou žádost" is null)
+            and d."Platnost"='A'
+            and d."ID_CISSEZNAM" <>'150032') A
+left join (select "V_BI_UMFROZPOLOZKY"."Kód" as "Kód",
+                    "V_BI_UMFROZPOLOZKY"."Název" as "Název",
+                    "V_BI_UMFROZHLAVICKA"."Název" as r,
+                    "V_BI_UMFROZHLAVICKA"."ID_SKUPINA"
+                from "ISUM"."V_BI_UMFROZPOLOZKYPRJ" "V_BI_UMFROZPOLOZKY",
+                    "ISUM"."V_BI_UMFROZHLAVICKAPRJ" "V_BI_UMFROZHLAVICKA"
+                    --"ISUM"."V_BI_UMZPRJGGII" "V_BI_UMZPROJEKT"
+                 where -- "V_BI_UMFROZHLAVICKA"."ID_NROZPOCET"="V_BI_UMZPROJEKT"."ID"
+                  "V_BI_UMFROZPOLOZKY"."ID_HLAVICKA"="V_BI_UMFROZHLAVICKA"."ID"
+                  and "V_BI_UMFROZPOLOZKY"."LISTOVA" ='A' 
+                  and "V_BI_UMFROZPOLOZKY"."Název" not like '%minimis%' 
+                  and "V_BI_UMFROZPOLOZKY"."Název" not like '%MINIMIS%' ) B
+on A."ID"=B."ID_SKUPINA"
+WHERE A."Číslo výzvy" ='01_18_187'

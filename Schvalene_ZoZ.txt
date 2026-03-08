@@ -1,0 +1,20 @@
+SELECT 	p."Registraèní èíslo projektu",
+	p."Název projektu CZ",
+        p."KODWFSTAV",
+	p."ZADATEL",
+	p."IÈ",
+	pgg.CZV,
+	pgg.EU,
+	fp."PROC_EU",	
+	sum(castky.EuVyuctCelkem)
+
+FROM		isum.v_bi_UmpPlatbaPrj platba
+  inner join	isum.v_bi_UmpCastkySchval castky ON platba.id_SchvaleneCastky=castky.id
+  inner join  	isum.v_bi_UmzProjekt p ON p.id=platba.id_NositelPlatby
+  inner join	isum.v_bi_UmzPrjGG pgg ON p.id=pgg.id
+  inner join 	isum.v_bi_UmfPfCelkem fp ON fp.id_projekt=p.id
+
+WHERE 	p."Registraèní èíslo projektu" is not null	
+AND	fp."ID_FAZE"='99991000000000005'	
+
+GROUP BY p."Registraèní èíslo projektu", p."Název projektu CZ", p."ZADATEL", p."IÈ", 	pgg.CZV, pgg.EU, fp."PROC_EU", p."KODWFSTAV"

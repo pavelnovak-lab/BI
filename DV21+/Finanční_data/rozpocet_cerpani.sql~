@@ -1,0 +1,17 @@
+SELECT pl."Číslo platby" ,
+       pl."Závěrečná platba"  ,
+       pl."Pořadí finančního plánu" ,
+       rp."Kód" ,
+       rp."Název" ,
+       rpc."Zbytek k čerpání včetně aktuální soupisky - schváleno (vč. Zohlednění krácení s dopadem na položce)"
+       
+       
+FROM projekt p
+INNER JOIN platba pl ON pl.id_nositelplatby = p.id 
+INNER JOIN rozpocet_hlavicka_cerpani rhc ON rhc.id_ncerpani = pl.id
+INNER JOIN rozpocet_polozka_cerpani rpc ON rpc.id_hlavicka = rhc.id
+INNER JOIN rozpocet_polozka rp ON rp.id = rpc.id_polozka 
+
+-- WHERE pl."Číslo platby" = 'CZ.01.01.01/02/22_003/0000070/2024/002/POST'
+
+WHERE rpc."Zbytek k čerpání včetně aktuální soupisky - schváleno (vč. Zohlednění krácení s dopadem na položce)" < 0 

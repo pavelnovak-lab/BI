@@ -1,0 +1,7 @@
+SELECT v."Číslo výzvy",
+       v."Název výzvy" ,
+
+
+FROM isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva
+INNER JOIN vyzva_hierarchie vh ON vh.id_vyzva = v.id
+INNER JOIN specificky_cil op on op.id=vh.id_speccil 

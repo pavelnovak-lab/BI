@@ -1,0 +1,19 @@
+select 	 "V_BI_UMZVYZVA"."Èíslo výzvy" as "Èíslo výzvy",
+	 "V_BI_UMZVYZVA"."Název výzvy" as "Název výzvy",
+	 "V_BI_UMFROZPOLOZKY"."Kód" as "Kód",
+	 "V_BI_UMFROZPOLOZKY"."Název" as "Název" 
+
+ from	"ISUM"."V_BI_UMFROZPOLOZKY" "V_BI_UMFROZPOLOZKY",
+	"ISUM"."V_BI_UMFROZHLAVICKA" "V_BI_UMFROZHLAVICKA",
+	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT",
+	"ISUM"."V_BI_UMZVYZVA" "V_BI_UMZVYZVA" 
+
+ where   "V_BI_UMZPROJEKT"."ID_VYZVA"="V_BI_UMZVYZVA"."ID"
+  and	 "V_BI_UMFROZHLAVICKA"."ID_NROZPOCET"="V_BI_UMZPROJEKT"."ID"
+  and	 "V_BI_UMFROZPOLOZKY"."ID_HLAVICKA"="V_BI_UMFROZHLAVICKA"."ID"
+  and 	 "V_BI_UMFROZPOLOZKY"."LISTOVA" ='A' 
+  and	 "V_BI_UMFROZHLAVICKA"."Aktuální" ='A' 
+  and	 "V_BI_UMZVYZVA"."OP kod" ='01'
+  and	 "V_BI_UMZVYZVA"."Èíslo výzvy"='01_15_039' 
+
+order by "V_BI_UMZVYZVA"."Èíslo výzvy" ASC, "V_BI_UMFROZPOLOZKY"."Kód" ASC

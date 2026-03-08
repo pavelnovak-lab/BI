@@ -1,0 +1,49 @@
+SELECT SUBSTR(p.kompetencniutvar, 6) AS "Program podpory", 
+       p."Registraèní èíslo projektu",
+       pol."Kód",
+       pol."Název" "Název polo¾ky",
+       pol."Èástka celkem" "Èástka na rozpoètu",
+       sum(s.VYDAJESCHVAL) "Èástka na ®oP celkem",
+       -- count(platba.id) "Poèet ®oP"
+       listagg(DISTINCT platba."PORADI#Poøadí finanèního plánu", '; ') WITHIN GROUP (ORDER BY platba."PORADI#Poøadí finanèního plánu" ASC) "Èísla ®oP",
+       count(s.id) "Poèet dokladù"
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UMFROZHlavickaPrj hl ON p.id = hl.id_nrozpocet AND hl."Aktuální" = 'A'
+INNER JOIN isum.V_BI_UMFROZPOLOZKYPRJ pol ON pol.id_hlavicka = hl.id 
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id = platba.id_NositelPlatby 
+INNER JOIN isum.V_BI_UMFSOUPISKADOKLADPRJ s ON platba.ID=s.ID_PLATBA AND pol.id = s.id_polozka
+
+WHERE p.KodPrioritniOsa in ('01.1', '01.2', '01.3', '01.4','01.5')
+AND platba.kodwfstav in ('P5','P5T','P6','P6T','P7','P8','P8T','P9T','P9','P10','P11') 
+AND (pol.LISTOVA = 'A' and ( (pol."Èástka celkem" is null) or pol."Èástka celkem" = 0 ) )
+AND platba.id = 200957835
+
+
+GROUP BY p."Registraèní èíslo projektu",
+       pol."Kód",
+       pol."Název",
+       pol."Èástka celkem" ,
+       SUBSTR(p.kompetencniutvar, 6)
+
+HAVING sum(VYDAJESCHVAL) > 0
+
+
+ORDER BY substr(p."Registraèní èíslo projektu",-5,5) asc, pol."Kód", pol."Kód"
+
+
+-- --------------------------------------------
+
+-- SELECT platba."Èíslo ¾ádosti o platbu" ,
+--        platba."PORADI_Poøadí_finanèního_plánu" ,
+--        s."Celková èástka \nuvedená na do" "Èástka celkem"
+--        s.id_polozka
+       
+
+-- FROM
+-- -- isum.v_bi_UmzProjekt p 
+-- INNER JOIN
+-- isum.v_bi_UmpPlatbaPrj platba
+-- -- ON p.id=platba.id_NositelPlatby
+-- INNER JOIN isum.V_BI_UMFSOUPISKADOKLADPRJ s ON platba.ID=s.ID_PLATBA
+
+-- WHERE platba.id = 24842282

@@ -1,0 +1,54 @@
+CREATE or REPLACE view "stav_projektu_bez_z_stavu" FOLDER='/06_Data_models/01_OP_TAK/MPO/novak-pavel/Help_views' AS
+
+WITH VsechnyStavy AS (
+    -- 1. Část: Aktuální stav projektu
+    SELECT 
+    	p.id,   
+    	p."Registrační číslo projektu",
+        p."Datum změny stavu" AS datum,
+        w."Kód" AS kod_stavu,
+        'Aktuální' AS zdroj
+    FROM projekt p
+    INNER JOIN ciselnik_stav_workflow w ON p.id_wfstav = w.id
+    WHERE p."Registrační číslo projektu" is not null 
+    
+
+    UNION ALL
+
+    -- 2. Část: Historie stavů
+    SELECT p.id,
+        p."Registrační číslo projektu",
+        hs."Datum změny" AS datum,
+        pwf."Kód" AS kod_stavu,
+        'Historie' AS zdroj
+    FROM projekt p
+    INNER JOIN historie_stavu hs ON hs.nositelid = p.id
+    INNER JOIN ciselnik_stav_workflow pwf ON pwf.id = hs.id_stavdo
+    WHERE p."Registrační číslo projektu" is not null 
+),
+SerazeneNeZStavy AS (
+    SELECT id,
+        "Registrační číslo projektu",
+        datum,
+        kod_stavu,
+        zdroj,
+        -- Očíslujeme stavy od nejnovějšího po nejstarší
+        ROW_NUMBER() OVER (
+            PARTITION BY "Registrační číslo projektu" 
+            ORDER BY datum DESC
+        ) AS rn
+    FROM VsechnyStavy
+    -- Tady je ten trik: prostě ignorujeme všechny Z stavy.
+    -- Pokud je projekt teď v Z1, tento řádek zmizí a jako první (rn=1) 
+    -- naskočí ten předchozí ne-Z stav.
+    WHERE kod_stavu NOT IN ('Z1', 'Z2', 'Z3', 'Z4')
+)
+
+SELECT
+    id AS id_projekt,
+    "Registrační číslo projektu",
+    kod_stavu AS "Kód stavu",
+    datum AS "Datum změny"
+    -- zdroj
+FROM SerazeneNeZStavy
+WHERE rn = 1 -- Chceme pro každý projekt právě jeden (ten nejnovější)

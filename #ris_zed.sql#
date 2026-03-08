@@ -1,0 +1,43 @@
+
+SELECT p."Registrační číslo projektu" ,
+       p.zed,
+       p.akcezed,
+       ci."Název",
+       ci."Kód" ,
+       p.kodwfstav ,
+       p.KodPrioritniOsa "Komponenta NPO",
+       hs.datumdo
+       
+       
+
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmsCisZakladni ci ON ci.id =  p.ID_AGRAKCEZED
+LEFT JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.NositelId = p.id where hs.stavdo = 'PP29'
+
+
+WHERE p."Registrační číslo projektu" is not null 
+-- AND p.zed in ('A','N')
+AND  p.KodPrioritniOsa in ('31.1', '31.2', '31.3', '31.4','31.5','31.9','31.14','31.22') 
+
+
+----------------------
+SELECT p."Registrační číslo projektu" ,
+       p.zed,
+       p.akcezed,
+       ci."Název",
+       ci."Kód" ,
+       p.kodwfstav ,
+       SUBSTR(p.kompetencniutvar, 6) "Komponenta NPO",
+       hs.datumod,
+       p."Bude se pořizovat EDSSMVS" EDS
+       
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmsCisZakladni ci ON ci.id =  p.ID_AGRAKCEZED
+LEFT JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.NositelId = p.id AND  hs.stavdo = 'PP29'
+
+
+WHERE p."Registrační číslo projektu" is not null 
+AND p.kodwfstav in ('PP27a','PP27b','PP29','PU27','V2','V5','Z1','Z3')
+AND p.KodPrioritniOsa in ('01.1', '01.2', '01.3', '01.4','01.5')
+AND p."Bude se pořizovat EDSSMVS" = 'N'

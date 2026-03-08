@@ -1,0 +1,20 @@
+SELECT p."Registraèní èíslo projektu",
+       -- SUBSTR(p.kompetencniutvar, 6 ) AS "Program podpory",
+       p.zadatel,
+       p."Název projektu CZ", 
+       platba.CISLOPLATBYZKR "Zkrácené èíslo ®oP",
+       platba."Datum zmìny stavu",
+       platba.kodwfstav "Stav ®oP" ,
+       rf.CASTKAPOZADOVANA "Èástka vyúètovaná",
+       rf.CASTKASCHVALENA "Èástka schválená"
+
+FROM isum.v_bi_UmzProjekt p 
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby
+-- INNER JOIN isum.v_bi_UmpCastkySchval castky ON platba.id_SchvaleneCastky=castky.id
+INNER JOIN isum.v_bi_UmpRozpisFin rf ON rf.id_platba = platba.id AND rf.id_ukazatel = 361356 -- øádek 10a
+-- INNER JOIN isum.v_bi_UmsCisZakladni cis ON rf.id_ukazatel=cis.id
+
+WHERE platba.kodwfstav in ('P11') 
+AND rf.CASTKAPOZADOVANA > 0
+AND rf.CASTKASCHVALENA = 0 
+AND p.KodPrioritniOsa in ('01.1', '01.2', '01.3', '01.4') 

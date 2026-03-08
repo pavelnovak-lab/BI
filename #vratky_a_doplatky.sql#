@@ -1,0 +1,31 @@
+SELECT	p."Registrační číslo projektu",
+	p."Název projektu CZ",
+	p.zadatel "Žadatel",
+	p.kompetencniutvar "Kompetenční útvar",
+--	v."Název výzvy",
+	pl.VYUCTSKUT,
+	-- pl."VYUCTPLAN#Vyúčtování plán"
+	pl.CISLOPLATBYZKR "Číslo ŽoP",
+	-- pl.create_uzivatel "ŽoP vytvořil",
+	-- pl.stav_workflow,
+	pl."Datum změny stavu",
+	pl."DATUMVYTVORENI" "Datum vytvoření",
+	-- pl."Částka CZK clk vyu nezkr I",
+	-- pl."Částka CZK dot 14f mimo MS I",
+	pl.wfstav
+
+FROM 	    isum.v_bi_UmzProjekt p
+INNER JOIN  isum.v_bi_UmpPlatba pl ON pl.id_nositelplatby=p.id
+-- INNER JOIN  isum.v_bi_UmpPlatba_v14f pl ON pl.id_nositelplatby=p.id
+-- INNER JOIN  isum.v_bi_UmzVyzva v ON p.id_vyzva=v.id
+
+WHERE p."Registrační číslo projektu" in ('CZ.01.4.04/0.0/0.0/16_076/0009479','CZ.01.5.125/0.0/0.0/15_020/0005785')
+-- AND pl.CISLOPLATBYZKR is not null
+-- AND REGEXP_LIKE (pl.CISLOPLATBYZKR,  '/8[0-9][0-9]/')
+AND pl.vyuctskut < 0 
+
+
+ORDER BY pl.CISLOPLATBYZKR
+
+
+

@@ -1,0 +1,19 @@
+SELECT
+--p."Registraèní èíslo projektu" ,
+--        p.kodwfstav ,
+--        p.zadatel,
+--        p."IÈ",
+--        LISTAGG(sz.jmenonazev||', '||sz.adresa, '; ') "Statutární zástupci"
+  count(sz.jmenonazev)     
+
+FROM isum.v_bi_UmzProjekt p 
+INNER JOIN isum.v_bi_UmzPrjGGvs vs ON vs.id_prjgg=p.id --  AND vs.neplatny is null AND vs.id_typsubjektu = 300784 AND vs.id_typsubjektuEdit = 300798 -- zadatel 
+INNER JOIN isum.v_bi_UMSRSStatutZast sz ON sz.id_subjekt = vs.id
+
+WHERE p."Registraèní èíslo projektu" is not null
+-- AND p.id_vyzva = 1775714122
+AND sz.jmenonazev is not null 
+-- GROUP BY p."Registraèní èíslo projektu" ,
+--        p.kodwfstav ,
+--        p.zadatel,
+--        p."IÈ"

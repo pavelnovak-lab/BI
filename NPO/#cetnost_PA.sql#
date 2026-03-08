@@ -1,0 +1,36 @@
+SELECT	SUBSTR(p.kompetencniutvar, 6) AS "Program podpory" ,
+	-- sml.typ,
+	count(p."Registrační číslo projektu")
+
+FROM isum.v_bi_umfsmlouva sml
+INNER JOIN isum.v_bi_UmzProjekt p ON sml.idprojekt = p.id
+
+WHERE -- p."Registrační číslo projektu" like 'CZ.01.%'
+-- (sml.typ = 'Rozhodnutí o odnětí dotace') 
+-- AND p.wfstavdatum > to_date('2021-04-07','yyyy-mm-dd')
+--AND
+p.KodPrioritniOsa in ('31.1', '31.2', '31.3', '31.4','31.5','31.9','31.14','31.22','31.26') 
+
+group by sml.typ
+
+order by count(p."Registrační číslo projektu") desc
+
+
+----------------------------------------
+
+SELECT	SUBSTR(p.kompetencniutvar, 6) AS "Program podpory" ,
+	(p."Registrační číslo projektu")
+
+FROM isum.v_bi_umfsmlouva sml
+INNER JOIN isum.v_bi_UmzProjekt p ON sml.idprojekt = p.id
+
+WHERE -- p."Registrační číslo projektu" like 'CZ.01.%'
+(sml.typ = 'Dodatek ke smlouvě o poskytnutí dotace') 
+-- AND p.wfstavdatum > to_date('2021-04-07','yyyy-mm-dd')
+--AND
+AND p.KodPrioritniOsa in ('31.1', '31.2', '31.3', '31.4','31.5','31.9','31.14','31.22','31.26') 
+AND p.KodPrioritniOsa in ('31.22)
+
+-- group by SUBSTR(p.kompetencniutvar, 6)
+
+-- order by count(p."Registrační číslo projektu") desc

@@ -1,0 +1,25 @@
+SELECT  v."Èíslo výzvy",
+	v."Název výzvy",
+	pol."Kód" "Kód polo¾ky",
+	pol."Název" "Název polo¾ky",
+	cis."Název" "Èíselníkový název"
+
+FROM isum.v_bi_UmzVyzva v 
+INNER JOIN isum.v_bi_UmzVyzvaMD md ON md.id_vyzva = v.id
+INNER JOIN isum.v_bi_UmsCisZakladni ci ON ci.id = md.id_ciszakladni
+INNER JOIN isum.v_bi_UmfRozSkupina sk ON sk."Kód" = ci."Kód" AND sk."Název skupiny rozpoètu" = ci."Název" 
+INNER JOIN isum.v_bi_UmfRozSkupinaPol pol ON pol.id_predpis = sk.id
+LEFT JOIN isum.v_bi_UmsCisZakladni cis ON cis.id = pol.id_verejnapodpora  
+
+WHERE
+-- REGEXP_LIKE( v."Èíslo výzvy", '3[1-8][0-9]$')
+   md."Platnost" = 'A'
+AND   pol."Platnost" = 'A'
+-- AND   pol."Listová" = 'A'
+-- AND   (pol."Nezpùsobilé výdaje" = 'N' OR pol."Nezpùsobilé výdaje" is null)
+-- AND   cis."Název" <> 'Mimo re¾im veøejné podpory'
+-- AND   cis."Název" <> 'DE MINIMIS'
+AND pol."Název" like '%69%'
+
+
+ORDER BY v."Èíslo výzvy" ASC, pol."Kód" ASC

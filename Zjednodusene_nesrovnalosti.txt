@@ -1,0 +1,30 @@
+select	 nesr."Èíslo pøípadu",
+	 nesr."Název pøíjemce",
+	 nesr."Název koneèného pøíjemce",
+  	 nesr."TYP",
+	 hs."STAVDO",
+	 to_char(min(hs."CREATE_CAS"),'dd.mm.yyyy') as CasPrepnuti,
+	 hs."CREATE_UZIVATEL"
+
+from	isum.v_bi_umznesrovnalost nesr
+	inner join isum.v_bi_umswfhistoriestavu hs on nesr.id=hs.nositelid
+
+where   
+-- PØÍPAD NÍŽE JE PRO TESTOVACÍ ÚÈELY ZOBRAZENÉHO VÝSTUPU	
+-- 	nesr."Èíslo pøípadu" ='CZ.01.4.04/0.0/0.0/15_005/0001460/18/001' and	 
+
+	hs."STAVDO" ='SCHV' and
+
+-- ODSTRANÌNÍ ZÁZNAMÙ SCHÁLENÝCH PANÍ Joachimsthalerovou z OP D 
+	hs."CREATE_UZIVATEL" <> 'JOAHEL'
+	
+
+-- V SESTAVÌ JE ŽÁDOUCÍ, ABY SE ZOBRAZILY I NESROVNALOSTI S NEVYPLNÌNÝM ÈÍSLEM PØÍPADU
+-- 	nesr."Èíslo pøípadu" is not null
+
+group by nesr."Èíslo pøípadu", 
+	nesr."Název pøíjemce", 
+	hs."STAVDO" ,
+	nesr."TYP",	 
+ 	nesr."Název koneèného pøíjemce",
+	hs."CREATE_UZIVATEL"

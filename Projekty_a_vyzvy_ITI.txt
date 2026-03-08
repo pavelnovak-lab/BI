@@ -1,0 +1,13 @@
+select	 "V_BI_UMZVYZVA"."Název výzvy" as "Název výzvy",
+	 "V_BI_UMZVYZVA"."Èíslo výzvy" as "Èíslo výzvy",
+	 "V_BI_UMZVYZVA"."Finanèní alokace Celk" as "Finanèní alokace Celk",
+	 "V_BI_UMZVYZVA"."WFSTAV" as "WFSTAV",
+/*	 round(("V_BI_UMZVYZVA"."Datum ukonèení pøíjmu žádosti"-"V_BI_UMZVYZVA"."Datum zahájení pøíjmu žádosti")/30) as "Vyhlášena mìsícù", */
+	 decode("V_BI_UMZVYZVASTRATEGIE"."ID_STRATEGIE",47207531,'Hradec-Pardubice',52055106,'Plzeò',47466198,'Olomouc',48093763,'Brno',45804583,'Ostrava','Neuvedena') as "Aglomerace" 
+ from	"ISUM"."V_BI_UMZVYZVASTRATEGIE" "V_BI_UMZVYZVASTRATEGIE",
+	"ISUM"."V_BI_UMZVYZVAKATEGORIE" "V_BI_UMZVYZVAKATEGORIE",
+	"ISUM"."V_BI_UMZVYZVA" "V_BI_UMZVYZVA" 
+ where   "V_BI_UMZVYZVAKATEGORIE"."ID_VYZVA"="V_BI_UMZVYZVA"."ID"
+ and	 "V_BI_UMZVYZVASTRATEGIE"."ID_VYZVA"="V_BI_UMZVYZVA"."ID"
+  and 	 "V_BI_UMZVYZVA"."OP kod" ='01' 
+   and	 "V_BI_UMZVYZVAKATEGORIE"."INTEGROVANY" ='Ano'

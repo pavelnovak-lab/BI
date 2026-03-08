@@ -1,0 +1,26 @@
+select
+z."Registrační číslo projektu",
+z."rok-měsíc",
+z."Kód"
+from
+(select
+"Registrační číslo projektu",
+"Datum od",
+formatdate ('YYYY-MM',"Datum od") as "rok-měsíc",
+"Kód",
+max ("Datum od") over (partition by formatdate ('YYYY-MM',"Datum od")) as datumy
+from
+( select
+a."Registrační číslo projektu",
+a."Datum od",
+a."Kód"
+from
+(select *
+--p.id, p."Registrační číslo projektu"
+from projekt p
+inner join historie_stavu hs on hs.nositelid=p.id
+inner join ciselnik_stav_workflow wfp on wfp.id=hs.id_stavdo
+where
+p."Registrační číslo projektu" ='CZ.01.05.01/01/22_013/0000022') zaklad) z
+where z.datumy=z."Datum od"
+order by z."rok-měsíc";

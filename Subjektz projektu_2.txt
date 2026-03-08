@@ -1,0 +1,18 @@
+SELECT 	 LISTAGG("V_BI_UMZPRJGGVS"."IÈ", '; ') AS  "IÈ",
+
+	 "V_BI_UMZPRJGGVS"."Název subjektu" as "Název subjektu", 
+/*	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" as "Registraèní èíslo projektu", */
+
+	 LISTAGG("V_BI_UMSCISZAKLADNI"."Název", '; ') as "Název" 
+
+FROM 	"ISUM"."V_BI_UMSCISZAKLADNI" "V_BI_UMSCISZAKLADNI",
+	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT",
+	"ISUM"."V_BI_UMZPRJGGVS" "V_BI_UMZPRJGGVS" 
+
+WHERE   "V_BI_UMZPRJGGVS"."ID_PRJGG"="V_BI_UMZPROJEKT"."ID"
+ AND	 "V_BI_UMZPRJGGVS"."ID_TYPSUBJEKTU"="V_BI_UMSCISZAKLADNI"."ID"
+
+ AND 	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" ='CZ.01.1.02/0.0/0.0/15_013/0005102'
+ AND "V_BI_UMSCISZAKLADNI"."Název" <> 'Žadatel/pøíjemce'
+
+GROUP BY "V_BI_UMZPROJEKT"."Registraèní èíslo projektu"

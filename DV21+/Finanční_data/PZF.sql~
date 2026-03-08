@@ -1,0 +1,13 @@
+SELECT p."Registraèní èíslo projektu",
+       pf."Pøíspìvek Unie" "Dotace RoPD" , 
+       pfzoz."Pøíspìvek Unie" "Dotace ZoZ"
+
+FROM projekt p
+INNER JOIN vyzva v ON v.id = p.id_vyzva 
+INNER JOIN prehled_zdroju_financovani pf ON pf.id_projekt = p.id AND pf.id_faze = 99991000000000011 -- aktuální stav
+INNER JOIN prehled_zdroju_financovani pfzoz ON pfzoz.id_projekt = p.id AND pfzoz.id_faze = 99991000000000005 -- aktuální stav 
+
+
+
+WHERE  v."Èíslo výzvy" = '01_22_006'
+AND pf."Pøíspìvek Unie" <> pfzoz."Pøíspìvek Unie" 

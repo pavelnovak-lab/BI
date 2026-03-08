@@ -1,0 +1,14 @@
+SELECT p."Registraèní èíslo projektu" ,
+       v."Èíslo výzvy",
+       zou."Poøadové èíslo ZoR/IoP",
+       pril.*
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva
+INNER JOIN isum.v_bi_UMZZIProjekt zou ON zou.id_zad = p.id AND zou.id_cistypzi IN (361331, 361330)
+INNER JOIN isum.v_bi_UMSPrilohyZI pril ON pril.id_nositelpril = zou.id
+
+WHERE p.kodwfstav like 'PP4%'
+AND v."Èíslo výzvy" = '01_18_244'
+
+ORDER BY p."Registraèní èíslo projektu" , zou."Poøadové èíslo ZoR/IoP"

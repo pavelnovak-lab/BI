@@ -1,0 +1,14 @@
+SELECT	p."Registraèní èíslo projektu",
+	cis."Název" AS "Právní forma",
+	cis_2."Název" AS "Kraj realizace"
+
+FROM		isum.v_bi_UMZProjekt p
+INNER JOIN 	isum.V_BI_UMZPRJUMISTENI umist ON umist.id_projekt=p.id AND umist.typ = 1
+INNER JOIN 	isum.V_BI_UMSCisUzemniJednotky uzjed ON umist.id_uzemnijednotky=uzjed.id
+INNER JOIN	isum.v_bi_umzprjggvs pggvs ON pggvs.id=p.id_zadatel
+INNER JOIN	isum.v_bi_UmsCisZakladni cis ON pggvs.id_HOSPPRAVFORMA=cis.id 
+INNER JOIN	isum.V_BI_UMZPRJKI ki ON ki.id_projekt=p.id
+INNER JOIN	isum.v_bi_UmsCisZakladni cis_2 ON ki.id_ki=cis_2.id AND cis_2.id_hierarchie=300827
+
+
+WHERE	p."Registraèní èíslo projektu"='CZ.01.2.06/0.0/0.0/18_240/0016111'

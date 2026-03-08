@@ -1,0 +1,22 @@
+select	 "V_BI_UMZVYZVA"."Název výzvy" as "Název výzvy",
+	 "V_BI_UMZVYZVA"."PREDPOMERYPROVP" as "PREDPOMERYPROVP",
+	 "V_BI_UMZVYZVA"."Èíslo výzvy" as "Èíslo výzvy",
+	 "V_BI_UMZVYZVA"."WFSTAV" as "WFSTAV",
+	 "V_BI_UMZVYZVA"."Datum zahájení pøíjmu žádosti" as "Datum zahájení pøíjmu žádosti",
+	 "V_BI_UMZVYZVA"."Datum ukonèení pøíjmu žádosti" as "Datum ukonèení pøíjmu žádosti",
+	 "V_BI_UMSCISMIRYVP"."ID_KATEGORIE",
+	 "V_BI_UMSCISMIRYVP"."ID_PODKATEGORIE",
+	 "V_BI_UMSCISMIRYVP"."CREATE_UZIVATEL",
+	 "V_BI_UMSCISMIRYVP"."Zmìnil",
+	 "V_BI_UMSCISMIRYVP"."Kombinace veøejné podpory",
+	 "V_BI_UMSCISMIRYVP"."Kód"
+
+ from	"ISUM"."V_BI_UMFPOMERYHLAVICKA" "V_BI_UMFPOMERYHLAVICKA",
+	"ISUM"."V_BI_UMSCISMIRYVP" "V_BI_UMSCISMIRYVP",
+	"ISUM"."V_BI_UMZVYZVA" "V_BI_UMZVYZVA" 
+
+ where   "V_BI_UMFPOMERYHLAVICKA"."ID_NOSITELPOMPF"="V_BI_UMZVYZVA"."ID"
+  and	 "V_BI_UMFPOMERYHLAVICKA"."ID_VEREJNAPODPORA"="V_BI_UMSCISMIRYVP"."ID"
+
+  and	 "V_BI_UMZVYZVA"."OP kod" ='01'
+  and	 "V_BI_UMSCISMIRYVP"."PLATNOST"='A'

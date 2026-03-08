@@ -1,0 +1,23 @@
+select    p."Registraèní èíslo projektu",
+p.kodprioritniosa,
+                v."Název výzvy",
+                pl."VYUCTPLAN#Vyúètování plán",
+                pl."PORADI#Poøadí finanèního plánu",
+                pl.vyuctskut,
+                pl."Závìreèná platba",
+                pl.kodwfstav,
+                h.datumod,
+   		pl.kurz,
+                r.castkaschvalena
+                
+from                     isum.v_bi_umzprojekt p
+inner join            isum.v_bi_umzvyzva v on v.id=p.id_vyzva
+inner join            isum.v_bi_umpplatbaprj pl on p.id=pl.id_nositelplatby
+inner join            isum.v_bi_umpcastky c on pl.id_schvalenecastky=c.id
+inner join            isum.v_bi_umprozpisfin r on r.id_platba=pl.id
+inner join            isum.v_bi_umsciszakladni cis on r.id_ukazatel=cis.id
+inner join            isum.v_bi_umswfhistoriestavu h on h.nositelid= pl.id
+
+where  	cis."Kód"= '10a'
+and    	h.stavdo in ('P10','P11')
+and 	p."Registraèní èíslo projektu" is not null

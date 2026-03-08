@@ -1,0 +1,24 @@
+SELECT  kom."Název" AS "Program podpory",
+	v."Èíslo výzvy",
+	v."Název výzvy",
+	kat.integrovany,
+	p.zadatel,
+	p."IÈ",
+	p."Název projektu CZ",
+	p."Registraèní èíslo projektu",
+	DECODE(st.id_strategie,47466198,'ITI Olomouc',52055106,'ITI Plzeò',48093763,'ITI Brno',47207531,'ITI Hradec-Pardubice',45804583,'ITI Ostrava','Celonárodní výzva') AS "Aglomerace ITI"
+
+FROM		isum.v_bi_UmzVyzva v
+LEFT JOIN	isum.v_bi_UmzVyzvaStrategie st ON v.id=st.id_vyzva
+LEFT JOIN	isum.v_bi_UmzVyzvaKategorie kat ON kat.id_vyzva=v.id
+INNER JOIN 	isum.V_BI_UMZVYZVAUTVAR	utvar ON utvar.id_vyzva=v.id
+INNER JOIN 	isum.V_BI_UMSHIUtvarKomp kom ON kom.id=utvar.id_utvarkomp
+LEFT JOIN	isum.v_bi_UmzProjekt p ON  v.id=p.id_vyzva AND p."Registraèní èíslo projektu" is not null
+
+WHERE 	p."IÈ" = '64573877'	
+AND	(st.id_strategie <> 0 or st.id_strategie is null)
+AND	kom."Kód" <> '01'
+-- AND	kat.integrovany='Ano' 
+-- AND	v.id in (347104268,328617284)
+-- AND p.id=436280853
+-- v."Èíslo výzvy" in ('01_17_162','01_17_157')

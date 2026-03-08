@@ -1,0 +1,45 @@
+SELECT platba."Èíslo ¾ádosti o platbu",
+       platba."Datum zmìny stavu",
+       platba.kodwfstav "Stav ®oP" ,
+       platba."Krácení dokladù provedeno",
+       rf.castkapozadovana "Po¾adovaná dotace",
+       rf.castkaschvalena "Schválená dotace" ,
+       rf.castkapozadovana - rf.castkaschvalena "Kráceno celkem",
+       -- platba."VYUCTPLAN#Vyúètování plán" ,
+       -- platba."VYUCTSKUT",
+       -- platba."VYUCTPLAN#Vyúètování plán" - platba."VYUCTSKUT" AS "Zkráceno o",	
+       -- platba."Èástka CZK dot 14f mimo MS I",
+       -- platba."Èástka CZK dot 14f mimo MS NeI",
+       -- platba.id
+       -- LISTAGG( priloha.nazevpril, '; ') "Název pøíloh",
+       -- LISTAGG( priloha.nazevpril, '; ') "Název pøíloh"
+
+       min(CASE WHEN (UPPER(priloha.nazevpril) like '%MINISTR%' AND UPPER(priloha.nazevpril) not like '%ADMINISTR%') THEN 'Ano'
+       		ELSE 'Ne' END) "Rozhodnutí ministra" ,
+       LISTAGG(DISTINCT REPLACE(REPLACE(k.charakter,CHR(10),' $ '),CHR(13),' $ '), '; ') "Charakter krácení"
+       
+FROM isum.v_bi_UmzPrjGGII p 
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby  
+INNER JOIN isum.v_bi_UMSPrilohyPlatba priloha ON priloha.id_nositelpril = platba.id
+INNER JOIN isum.v_bi_UMPKorekce k ON k.id_platba = platba.id  AND k.souctovyradek is null 
+INNER JOIN isum.v_bi_UmpRozpisFin rf ON rf.id_platba = platba.id AND rf.id_ukazatel in ( 361356 ) -- øádky cis.
+
+WHERE p.id_prioritniosa IN (406085, 406086, 406087, 406088) 
+AND p.kodwfstav in ('PP37','PP40','PP41','PP42','PP43','PU30')
+AND platba.kodwfstav = 'P11'
+-- AND platba.id_wfstav = 171855 -- zop v P10
+AND trunc(platba."Datum zmìny stavu") < to_date('2025-01-01','yyyy-mm-dd')
+AND trunc(platba."Datum zmìny stavu") >= to_date('2024-01-01','yyyy-mm-dd')
+AND platba."Èíslo ¾ádosti o platbu" = 'CZ.01.1.02/0.0/0.0/21_374/0027103/2023/002/POST'
+
+GROUP BY platba."Èíslo ¾ádosti o platbu",
+       platba."Datum zmìny stavu",
+       platba.kodwfstav,
+       platba."Krácení dokladù provedeno" ,
+       rf.castkapozadovana ,
+       rf.castkaschvalena ,
+       rf.castkapozadovana - rf.castkaschvalena       
+       -- platba."VYUCTPLAN#Vyúètování plán" ,
+       -- platba."VYUCTSKUT"
+
+-- ORDER BY platba."Datum zmìny stavu"

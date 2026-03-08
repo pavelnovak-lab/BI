@@ -1,0 +1,23 @@
+SELECT	p."Registraèní èíslo projektu",
+	cis."Název" as "Odbornost na projektu",
+	v."Èíslo výzvy",
+	v."Název výzvy"
+
+FROM	isum.v_bi_umzvyzva v 
+ JOIN	isum.v_bi_umzprojekt p ON v.id=p.id_projekt
+ JOIN	isum.v_bi_umvhodnnosodbornost nos ON nos.id_noshodnoceni=p.id
+ JOIN	isum.v_bi_umscisodbornost cis ON cis.id=nos.id_odbornost
+
+WHERE v."Èíslo výzvy" in ('01_19_297','01_19_261','01_19_262','01_19_264','01_19_265','01_19_337','01_19_263','01_19_313','01_19_314','01_19_315')
+ AND p."Registraèní èíslo projetu" is not null
+
+
+/*
+	"ISUM"."V_BI_UMZVYZVA" "V_BI_UMZVYZVA",
+	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT",
+	"ISUM"."V_BI_UMSCISODBORNOST" "V_BI_UMSCISODBORNOST",
+	"ISUM"."V_BI_UMVHODNNOSODBORNOST" "V_BI_UMVHODNNOSODBORNOST" 
+ where   "V_BI_UMVHODNNOSODBORNOST"."ID_ODBORNOST"="V_BI_UMSCISODBORNOST"."ID"
+ and	 "V_BI_UMVHODNNOSODBORNOST"."ID_NOSHODNOCENI"="V_BI_UMZPROJEKT"."ID"
+ and	 "V_BI_UMZPROJEKT"."ID_VYZVA"="V_BI_UMZVYZVA"."ID"
+  and 	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" ='CZ.01.1.02/0.0/0.0/19_261/0019930' */

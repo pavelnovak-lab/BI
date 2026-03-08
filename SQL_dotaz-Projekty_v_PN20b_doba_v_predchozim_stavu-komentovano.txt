@@ -1,0 +1,50 @@
+/* Princip dotazu je následující: vytvoø dvì tabulky a spoj je podle ID v tøídì UmzProjekt - tabulky se jmenují poslední a pøedposlední a jsou popsané níže */
+
+SELECT  posledni."Registraèní èíslo projektu",
+	posledni."STAVZ" AS "Pøepnuto ze stavu kód",
+	posledni."STAVZNAZEV" AS "Pøepnuto ze stavu název",
+	posledni."CREATE_CAS"  AS "V PN20b od",
+/* Funkce FLOOR - osekává desetinnou èást èísel */
+	FLOOR(posledni."CREATE_CAS"-predposledni."CREATE_CAS") AS "Poèet dní od pøedchozího stavu"
+
+FROM
+
+/* První tabulka obsahuje sloupce z tøídy UmzProjekt, která je navázaná na UmsWfHistorieStavu. Ten první "SELECT *" je jen daò za to, že do WHERE nemùžu napsat ani aliasy (SQL dotaz se vyhodnocuje právì nejprve od WHERE, tedy ještì pøed tím, než jsou aliasy naèteny) ani do WHERE nedám indexovací funkci ROW_NUMBER. */
+
+ (SELECT *
+
+	FROM (SELECT p."Registraèní èíslo projektu",
+	     	     hs."STAVZ",
+		     hs."STAVZNAZEV",
+		     hs."CREATE_CAS",
+		     p.id,
+/* Tenhle øádek je pro mì klíèový - indexuje vytvoøené øádky podle srovnaného (DESC) sloupce "CREATE_CAS". Èíslování rozpadá podle Reg. èísla projektu. */		     
+		     (row_number() OVER (PARTITION BY p."Registraèní èíslo projektu" ORDER BY hs."CREATE_CAS" DESC)) as "Poøadí"
+
+		FROM 	   isum.v_bi_umzprojekt p
+		INNER JOIN isum.v_bi_umswfhistoriestavu hs ON hs.nositelid=p.id
+
+		WHERE hs."STAVZNAZEV"  not like 'Pøedbìžná%'
+		 AND p."KODWFSTAV" = 'PN20b')
+
+/* Od každého projektu beru první záznam podle indexù - viz pøedchozí koment. */
+	WHERE "Poøadí" = 1) posledni
+
+INNER JOIN
+
+/* První tabulku spojím s druhou, klíè/vazba je úplnì poslední øádek - ID v UMZProjekt */
+ (SELECT *
+
+	FROM (SELECT hs."CREATE_CAS",
+		     p.id,
+		     (row_number() OVER (PARTITION BY p."Registraèní èíslo projektu" ORDER BY hs."CREATE_CAS" DESC)) as "Poøadí"
+
+		FROM       isum.v_bi_umzprojekt p
+		INNER JOIN isum.v_bi_umswfhistoriestavu hs ON hs.nositelid=p.id
+
+		WHERE hs."STAVZNAZEV" not like 'Pøedbìžná%'
+		 AND p."KODWFSTAV" = 'PN20b')
+
+	WHERE "Poøadí" = 2) predposledni
+
+ON posledni.id=predposledni.id

@@ -1,0 +1,7 @@
+SELECT	p."Registraèní èíslo projektu" ,
+	rdm.CASTKAEU_KC
+
+FROM isum.v_bi_UmzProjekt p 
+INNER JOIN isum.v_bi_UMSRdMPodpora rdm ON rdm.id_projekt = p.id AND rdm.id_rezimpodpory = 1196334
+
+WHERE p."Registraèní èíslo projektu" = 'CZ.01.4.04/0.0/0.0/21_376/0027467'

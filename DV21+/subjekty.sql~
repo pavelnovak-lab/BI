@@ -1,0 +1,17 @@
+CREATE or REPLACE view "RIS3_OPTAK" FOLDER='/06_Data_models/01_OP_TAK/MPO/novak-pavel/RIS3' AS 
+SELECT p."Registraèní èíslo projektu" ,
+       s."IÈ",
+       s."Jméno a pøíjmení / Název",
+       pf."Právní forma"
+
+FROM  projekt p
+INNER JOIN subjekt s ON s.id_prjgg = p.id AND s.id_typsubjektuedit = 413462 -- ¾adatel 
+INNER JOIN ciselnik_pravni_forma pf ON pf.id = s.id_hosppravforma
+
+
+WHERE p."Registraèní èíslo projektu" is not null 
+-- AND p."Registraèní èíslo projektu" = 'CZ.01.01.01/05/22_004/0001174'
+-- AND id_typsubjektuedit = 413437
+-- AND s."Jméno a pøíjmení / Název" = 'Vysoká ¹kola báòská - Technická univerzita Ostrava'
+
+

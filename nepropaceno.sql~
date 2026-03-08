@@ -1,0 +1,18 @@
+SELECT p."Registraèní èíslo projektu",
+       p.wfstav,
+       p.kodwfstav,
+       p.zadatel,
+       p."Název projektu CZ" ,
+       hs.datumod,
+       hs.stavdo
+       
+
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.NositelId = p.id
+
+WHERE p."Registraèní èíslo projektu" = 'CZ.01.3.14/0.0/0.0/18_185/0018398'
+AND hs.stavdo = 'PP30'
+AND trunc(hs.datumod) <= to_date('2021-06-01','yyyy-mm-dd')
+AND trunc(hs.datumod) >= to_date('2020-01-01','yyyy-mm-dd')
+

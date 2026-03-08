@@ -1,0 +1,10 @@
+select	 "V_BI_UMPPLATBAPRJ"."Èíslo žádosti o platbu" as "Èíslo žádosti o platbu",
+	min( "V_BI_UMSWFHISTORIESTAVU"."DATUMOD") as "DATUMOD",
+	 "V_BI_UMSWFHISTORIESTAVU"."Unikátní kód stavu do" as "Unikátní kód stavu do" 
+ from	"ISUM"."V_BI_UMPPLATBAPRJ" "V_BI_UMPPLATBAPRJ",
+	"ISUM"."V_BI_UMSWFHISTORIESTAVU" "V_BI_UMSWFHISTORIESTAVU" 
+ where   "V_BI_UMSWFHISTORIESTAVU"."NOSITELID"="V_BI_UMPPLATBAPRJ"."ID"
+  and 	 "V_BI_UMPPLATBAPRJ"."Èíslo žádosti o platbu" is not null 
+   and	 "V_BI_UMSWFHISTORIESTAVU"."Unikátní kód stavu do" ='F1_P4'
+   group by "V_BI_UMPPLATBAPRJ"."Èíslo žádosti o platbu","V_BI_UMSWFHISTORIESTAVU"."Unikátní kód stavu do"
+order by "V_BI_UMPPLATBAPRJ"."Èíslo žádosti o platbu" ASC

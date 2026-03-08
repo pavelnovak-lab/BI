@@ -1,0 +1,124 @@
+SELECT
+	p.id_vyzva,
+	-- v."Èíslo výzvy" ,
+       count(p.id) "Poèet pøedlo¾ených projektù",
+       sum(p.eu) "CZV pøedlo¾ených projektù EFRR",
+       sum(p.czv) "CZV pøedlo¾ených projektù",
+
+       sum(indikatory.eu) "CZV schválených projektù EFRR",
+       count(indikatory.id) "Poèet schválených projektù",
+       sum(indikatory.czv) "CZV schválených projektù",
+       sum(indikatory."Indikátor 20000") "Indikátor 20000 po PP30",
+       sum(indikatory."Indikátor 20400") "Indikátor 20400 po PP30",
+       sum(indikatory."Indikátor 20702") "Indikátor 20702 po PP30",
+       sum(indikatory."Indikátor 21200") "Indikátor 21200 po PP30",
+       sum(indikatory."Indikátor 21301") "Indikátor 21301 po PP30",
+       sum(indikatory."Indikátor 21410") "Indikátor 21410 po PP30",
+       sum(indikatory."Indikátor 22501") "Indikátor 22501 po PP30",
+       sum(indikatory."Indikátor 32500") "Indikátor 32500 po PP30",
+       sum(indikatory."Indikátor 32700") "Indikátor 32700 po PP30",
+       sum(indikatory."Indikátor 32802") "Indikátor 32802 po PP30",
+       sum(indikatory."Indikátor 34900") "Indikátor 34900 po PP30",
+       sum(indikatory."Indikátor 34901") "Indikátor 34901 po PP30",
+       sum(indikatory."Indikátor 36010") "Indikátor 36010 po PP30" ,
+
+       sum(udrzitelnost."Indikátor 32500") "Indikátor 32500 po realizaci",
+       sum(udrzitelnost."Indikátor 32700") "Indikátor 32700 udr¾itelnost",
+       sum(udrzitelnost."Indikátor 32802") "Indikátor 32802 udr¾itelnost",
+       sum(udrzitelnost."Indikátor 34900") "Indikátor 34900 po realizaci",
+       sum(udrzitelnost."Indikátor 34901") "Indikátor 34901 po realizaci",
+       sum(udrzitelnost."Indikátor 36010") "Indikátor 36010 udr¾itelnost"
+
+FROM isum.v_bi_UmzPrjGG p 
+-- INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva
+
+LEFT JOIN 
+(SELECT p.id, p.czv, p.eu,
+       max(case when hodn.id_indikator = 667369 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 20000",
+       max(case when hodn.id_indikator = 1341864 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 20400",
+       max(case when hodn.id_indikator = 1341865 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 20702",
+       max(case when hodn.id_indikator = 667402 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 21200",
+       max(case when hodn.id_indikator = 667405 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 21301",
+       max(case when hodn.id_indikator = 1154988 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 21410",
+       max(case when hodn.id_indikator = 1338762 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 22501",
+       max(case when hodn.id_indikator = 667462 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 32500",
+       max(case when hodn.id_indikator = 1587598 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 32700",
+       max(case when hodn.id_indikator = 667471 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 32802",
+       max(case when hodn.id_indikator = 49495645 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 34900",
+       max(case when hodn.id_indikator = 667489 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 34901",
+       max(case when hodn.id_indikator = 1154992 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 36010"
+FROM isum.v_bi_UmzPrjGG p
+INNER JOIN isum.v_bi_UMVIndiHodnotaPrj hodn ON hodn.id_nositelindi = p.id AND hodn."Platnost" = 'A' AND hodn."Dosa¾ená hodnota z projektu" is not null
+WHERE p."Registraèní èíslo projektu" is not null
+AND p.kodwfstav in ('PP30','PP36','PP37','PP40','PP41','PP42','PP43')
+AND p.id_vyzva in ('24247303','24168465','160441634','24180136','575805948','1370741')
+GROUP BY p.id, p.czv, p.eu) indikatory ON p.id = indikatory.id
+
+LEFT JOIN 
+(SELECT p.id,
+       max(case when hodn.id_indikator = 667369 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 20000",
+       max(case when hodn.id_indikator = 1341864 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 20400",
+       max(case when hodn.id_indikator = 1341865 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 20702",
+       max(case when hodn.id_indikator = 667402 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 21200",
+       max(case when hodn.id_indikator = 667405 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 21301",
+       max(case when hodn.id_indikator = 1154988 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 21410",
+       max(case when hodn.id_indikator = 1338762 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 22501",
+       max(case when hodn.id_indikator = 667462 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 32500",
+       max(case when hodn.id_indikator = 1587598 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 32700",
+       max(case when hodn.id_indikator = 667471 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 32802",
+       max(case when hodn.id_indikator = 49495645 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 34900",
+       max(case when hodn.id_indikator = 667489 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 34901",
+       max(case when hodn.id_indikator = 1154992 then hodn."Dosa¾ená hodnota z projektu" end) "Indikátor 36010"
+ FROM isum.v_bi_UmzPrjGGII p 
+ INNER JOIN isum.v_bi_UMVIndiHodnotaPrj hodn ON hodn.id_nositelindi = p.id AND hodn."Platnost" = 'A' AND hodn."Dosa¾ená hodnota z projektu" is not null
+ WHERE p.id_vyzva in ('24247303','24168465','160441634','24180136','575805948','1370741')
+ GROUP BY p.id
+) udrzitelnost ON udrzitelnost.id = p.id AND p.kodwfstav = 'PP42'
+
+WHERE p."Registraèní èíslo projektu" is not null
+WHERE p.id_vyzva in ('24247303','24168465','160441634','24180136','575805948','1370741') -- AND v."Èíslo výzvy" in ('01_16_045','01_16_049','01_17_109','01_15_010','01_16_061','01_19_251')
+
+GROUP BY
+-- v."Èíslo výzvy" 
+p.id_vyzva
+
+-- ORDER BY v."Èíslo výzvy" 
+
+
+--------------------------------------------
+SELECT p."Registraèní èíslo projektu" ,
+       hodn."Dosa¾ená hodnota z projektu",
+      i."Kód NÈI 2014+" 
+
+ FROM isum.v_bi_UmzPrjGGII p 
+ INNER JOIN isum.v_bi_UMVIndiHodnotaPrj hodn ON hodn.id_nositelindi = p.id AND hodn."Platnost" = 'A' AND hodn."Dosa¾ená hodnota z projektu" is not null
+INNER JOIN isum.v_bi_UmvIndikator i ON i.id = hodn.id_indikator
+
+WHERE p."Registraèní èíslo projektu" in ('CZ.01.1.02/0.0/0.0/16_049/0009823')
+-- AND hodn.id_indikator IN (667369,1341864,1341865,667402,667405,1154988,1338762,667462,1587598,667471,49495645,667489,1154992)
+AND i."Kód NÈI 2014+" in ('21410', '22501')
+
+
+--------------------------------------------
+SELECT p."Registraèní èíslo projektu" , '21410', '22501'
+
+from
+(
+SELECT p."Registraèní èíslo projektu" ,
+       hodn."Dosa¾ená hodnota z projektu",
+      i."Kód NÈI 2014+" 
+
+ FROM isum.v_bi_UmzPrjGGII p 
+ INNER JOIN isum.v_bi_UMVIndiHodnotaPrj hodn ON hodn.id_nositelindi = p.id AND hodn."Platnost" = 'A' AND hodn."Dosa¾ená hodnota z projektu" is not null
+INNER JOIN isum.v_bi_UmvIndikator i ON i.id = hodn.id_indikator
+
+WHERE p."Registraèní èíslo projektu" in ('CZ.01.1.02/0.0/0.0/16_049/0009823')
+-- AND hodn.id_indikator IN (667369,1341864,1341865,667402,667405,1154988,1338762,667462,1587598,667471,49495645,667489,1154992)
+-- AND i."Kód NÈI 2014+" in ('21410', '22501')
+) d
+pivot
+(
+  max(p."Registraèní èíslo projektu")
+  for i."Kód NÈI 2014+" in ('21410', '22501')
+) piv;
+       

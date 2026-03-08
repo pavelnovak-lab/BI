@@ -1,0 +1,14 @@
+Mám tabulku datumù a stavù, pøíklad dat by mohl být:
+| datum | stav |
+| 22-08 | A |
+| 22-12 | B |
+|23-02 | C |
+a chtìl bych v Denodo VQL napsat dotaz, kdy bych mìl v chybìjících mìsících poslední dosa¾enou hodnotu ve sloupci stav. Chci tedy takovýto výstup:
+| datum | stav |
+| 22-08 | A |
+| 22-09 | A |
+| 22-10 | A |
+| 22-11 | A |
+| 22-12 | B |
+| 23-01 | B |
+| 23-02 | C |

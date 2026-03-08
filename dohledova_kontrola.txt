@@ -1,0 +1,15 @@
+select    	p."Registraèní èíslo projektu",
+		p."Název projektu CZ",
+		p."ZADATEL",
+		p."KODWFSTAV",
+		p."WFSTAVDATUM",
+		p."KOMPETENCNIUTVAR",
+		v."Název výzvy",
+		v."Èíslo výzvy"
+		
+                
+from         	isum.v_bi_umzprojekt p
+inner join 	isum.v_bi_umzvyzva v on v.id=p.id_vyzva
+
+
+where	p."KODWFSTAV" = 'PP41'

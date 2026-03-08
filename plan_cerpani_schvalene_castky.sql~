@@ -1,0 +1,88 @@
+SELECT	pl."KOD",
+	pl."Název programové linie",
+	SUBSTR(p.kompetencniutvar, 6) AS "Program podpory" ,
+	platba."Datum pøedlo¾ení" as "Datum pøedlo¾ení",
+	v."Název výzvy" as "Název výzvy",
+	p."Registraèní èíslo projektu" as "Registraèní èíslo projektu",
+	p."ZADATEL" as "ZADATEL",
+	platba."PORADI#Poøadí finanèního plánu" as "PORADI#Poøadí finanèního plánu",
+	platba."WFSTAV" as "Stav ®opl",
+	p."KODWFSTAV" as "KODWFSTAV",
+	p."WFSTAV" as "Stav projektu",
+	-- LISTAGG(DISTINCT odpovedni."NAZEV", '; ') as "PM",
+	-- osoba."Email" as "Email",
+	-- osoba."Jméno" as "Jméno",
+	-- osoba."Pøíjmení" as "Pøíjmení",
+	-- osoba."Mobil" as "Mobil",
+	-- platba."SOUCTOVYRADEK" as "SOUCTOVYRADEK",
+	-- odpovedni."ROLE" as "ROLE",
+	-- odpovedni."DATUMDO" as "DATUMDO",
+	platba."Èíslo ¾ádosti o platbu",
+	platba."VYUCTPLAN#Vyúètování plán" as CZV,
+	((platba."VYUCTPLAN#Vyúètování plán"/100)*fp."PROC_EU") as "Dotace",
+	platba."Závìreèná platba" as "Závìreèná platba",
+	czv_schvalene.castkaschvalena "CZV Schválené",
+	eu_schvalene.castkaschvalena "Dotace schválená"	,
+	nvl(platba.kurz, 0) "Kurz",
+	nvl(platba.kurz * czv_schvalene.castkaschvalena, 0) AS "CZV scvhálené EUR",
+ 	nvl(platba.kurz * eu_schvalene.castkaschvalena, 0) AS "Dotace scvhálené EUR",
+	p."Datum navrácení",
+	p.datumvytvoreni "Datum vytvoøení"
+ 	-- LISTAGG(DISTINCT ci."Název", '; ') WITHIN GROUP(ORDER BY ci."Název")  "Tag"
+			
+FROM isum.v_bi_UmzProjekt p 
+INNER JOIN isum.v_bi_UmsHiPLinie pl ON p."ID_PRIORITNIOSA"=pl.id  
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby 
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva 
+-- INNER JOIN isum.v_bi_UmzProjOdpovedn odpovedni ON odpovedni.idprojekt =p.id
+-- INNER JOIN isum.v_bi_UmsRsVerzesubjektu verzes ON verzes.id=p.id_zadatel
+-- INNER JOIN isum.v_bi_UmsRsVerzeosoby osoba ON osoba.id=verzes.id_hlkontaktosoba
+INNER JOIN isum.v_bi_UmfPFCelkem fp ON fp.id_projekt = p.ID
+LEFT JOIN
+(SELECT rf.CASTKASCHVALENA,
+	rf.id_platba
+ FROM isum.v_bi_UmpRozpisFin rf
+ WHERE  rf.id_ukazatel = 361347 -- øádek 2, CZV	
+) czv_schvalene ON czv_schvalene.id_platba = platba.id
+LEFT JOIN
+(SELECT rf.CASTKASCHVALENA,
+	rf.id_platba
+ FROM isum.v_bi_UmpRozpisFin rf
+ WHERE rf.id_ukazatel = 361356 -- øádek 10a, dotace EU
+) eu_schvalene ON eu_schvalene.id_platba = platba.id
+
+-- LEFT JOIN isum.v_bi_UMZPrjGGTag tag ON p.id = tag.id_prjgg
+-- LEFT JOIN isum.v_bi_UmsCisZakladni ci ON ci.id = tag.id_tag
+
+
+WHERE p.KodPrioritniOsa in ('01.1', '01.2', '01.3', '01.4','01.5') 
+AND p."Registraèní èíslo projektu" is not null 
+AND fp.ID_FAZE=99991000000000005 -- sloupec aktuální stav 
+AND platba.SOUCTOVYRADEK IS NULL
+-- AND odpovedni.ROLE ='MAN_PRJ'
+-- AND odpovedni.DATUMDO IS NULL
+-- AND (ci."Název" not in ('Kvalitní PRJ','Chyba udr¾itelnost','brownfield','Tesco SW','úèinná spolupráce','Oponentní øízení') OR ci."Název" is null) 
+-- AND platba.ID = 1282152996 -- zop CZ.01.1.02/0.0/0.0/20_358/0027098/2022/001/POST
+
+-- GROUP BY pl."KOD",
+-- 	pl."Název programové linie",
+-- 	platba."Datum pøedlo¾ení",
+-- 	v."Název výzvy",
+-- 	p."Registraèní èíslo projektu",
+-- 	p."ZADATEL",
+-- 	platba."PORADI#Poøadí finanèního plánu",
+-- 	platba."WFSTAV",
+-- 	p."KODWFSTAV",
+-- 	p."WFSTAV",
+-- 	osoba."Email",
+-- 	osoba."Jméno",
+-- 	osoba."Pøíjmení",
+-- 	osoba."Mobil",
+-- 	platba."SOUCTOVYRADEK",
+-- 	odpovedni."ROLE",
+-- 	odpovedni."DATUMDO",
+-- 	platba."VYUCTPLAN#Vyúètování plán",
+-- 	((platba."VYUCTPLAN#Vyúètování plán"/100)*fp."PROC_EU"),
+-- 	platba."Závìreèná platba"
+
+-- ORDER BY substr(p."Registraèní èíslo projektu",-5,5) ASC , platba."PORADI#Poøadí finanèního plánu"

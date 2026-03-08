@@ -1,0 +1,24 @@
+SELECT 	v."Èíslo výzvy",
+	v."Název výzvy",
+	v."Odesílat do DotInfo",
+	kom."Název" AS "Program podpory",
+	cis."Název" AS "Typ pøílohy",
+	ciselnik."Název" AS "Druh pøílohy"	
+
+
+
+FROM		isum.v_bi_UmzVyzva v
+INNER JOIN 	isum.V_BI_UMZVYZVAUTVAR	utvar ON utvar.id_vyzva=v.id
+INNER JOIN 	isum.V_BI_UMSHIUtvarKomp kom ON kom.id=utvar.id_utvarkomp
+INNER JOIN	isum.v_bi_UMZVyzvaTypPrilDI pril ON pril.id_vyzva=v.id
+INNER JOIN 	isum.v_bi_UmsCisZakladni cis ON cis.id=id_typpril
+INNER JOIN	isum.V_BI_UMZVYZVADRUHPRILDI druh ON druh.id_druhtypu=pril.id
+INNER JOIN	isum.v_bi_UmsCisZakladni ciselnik ON ciselnik.id=druh.id_druhpril
+
+
+
+WHERE 	kom.id <> 172095
+-- AND	v."Èíslo výzvy" is not null
+
+ORDER BY v."Císlo výzvy"
+	

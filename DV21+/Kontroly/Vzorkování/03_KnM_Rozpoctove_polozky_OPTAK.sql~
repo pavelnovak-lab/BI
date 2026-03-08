@@ -1,0 +1,19 @@
+CREATE OR repalce VIEW "03_KnM_Rozpoctove_polozky_OPTAK" FOLDER = '/06_data_models/01_op_tak/mpo/novak-pavel/kontroly/vzorkovani_pro_kontroly_na_miste' AS
+
+SELECT p."Registrační číslo projektu",
+       pol."Kód" AS "Kód položky",
+       pol."Název",
+       pol."Částka celkem"
+FROM projekt AS p
+INNER JOIN ciselnik_stav_workflow w ON p.id_wfstav = w.id  
+INNER JOIN rozpocet_hlavicka AS hl ON (hl.id_nrozpocet = p.id AND hl."Aktuální" = 'A')
+INNER JOIN rozpocet_skupina AS sr ON sr.id = hl.id_skupina
+INNER JOIN rozpocet_polozka AS pol ON pol.id_hlavicka = hl.id
+
+WHERE p."Registrační číslo projektu" IS NOT NULL
+AND pol."Částka celkem" IS NOT NULL
+AND w."Kód" IN ('PP30','PP31','PU30')
+
+ORDER BY substr("Registrační číslo projektu", - 5, 5) ASC,
+	 "Kód položky" ASC;
+

@@ -1,0 +1,46 @@
+select	"V_BI_UMZPROJEKT"."Registraèní èíslo projektu" as "Registraèní èíslo projektu",
+	"V_BI_UMZPROJEKT"."Název projektu CZ" as "Název projektu CZ",
+	"V_BI_UMSCISZAKLADNI"."Kód" ,
+	"V_BI_UMZVYZVA"."Název výzvy",
+	"V_BI_UMZVYZVA"."Èíslo výzvy",
+	"V_BI_UMFPFCELKEM"."ESF_CELKEM",
+	"V_BI_UMFPFCELKEM"."Celkové zpùsobilé výdaje"
+	 
+from	"ISUM"."V_BI_UMSCISZAKLADNI" "V_BI_UMSCISZAKLADNI",
+	"ISUM"."V_BI_UMSRSCZNACE" "V_BI_UMSRSCZNACE",
+	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT",
+	"ISUM"."V_BI_UMZVYZVA",
+	"ISUM"."V_BI_UMFPFCELKEM"
+
+where   
+	and 	"V_BI_UMFPFCELKEM"."ID_PROJEKT"="V_BI_UMZPROJEKT"."ID"
+	and	"V_BI_UMZVYZVA"."ID"="V_BI_UMZPROJEKT"."ID_VYZVA"
+ 	and	"V_BI_UMSRSCZNACE"."ID_PROJEKT"="V_BI_UMZPROJEKT"."ID"
+	and 	"V_BI_UMZPROJEKT"."Registraèní èíslo projektu" IS NOT NULL
+	
+
+
+select    	p."Registraèní èíslo projektu",
+		p."Název projektu CZ",
+		v."Èíslo výzvy",
+                v."Název výzvy",
+		ci."Kód",
+		ci."Název",
+                sum(pl."VYUCTPLAN#Vyúètování plán") as czv,
+                sum(r.castkaschvalena) as dotace
+                
+from                     isum.v_bi_umzprojekt p
+inner join            isum.v_bi_umzvyzva v on v.id=p.id_vyzva
+inner join            isum.v_bi_umpplatbaprj pl on p.id=pl.id_nositelplatby
+inner join            isum.v_bi_umpcastky c on pl.id_schvalenecastky=c.id
+inner join            isum.v_bi_umprozpisfin r on r.id_platba=pl.id
+inner join            isum.v_bi_umsciszakladni cis on r.id_ukazatel=cis.id
+inner join            isum.v_bi_umswfhistoriestavu h on h.nositelid= pl.id
+inner join	      isum.v_bi_umsrscznace n on n.id_projekt=p.id
+inner join 	      isum.v_bi_umsciszakladni ci on ci.id=n.id_cznace
+where  	cis."Kód"= '10a'
+and     h.stavdo in ('P10','P11')
+and  (ci."Kód"  like '36%'  or  ci."Kód"  like '37%'  or ci."Kód" like '38%' or ci."Kód" like '39%' or ci."Kód" like 'E%' )
+
+group by p."Registraèní èíslo projektu", v."Název výzvy", p."Název projektu CZ", v."Èíslo výzvy", ci."Kód", ci."Název"
+

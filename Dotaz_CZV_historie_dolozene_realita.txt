@@ -1,0 +1,90 @@
+select   p."Registraèní èíslo projektu",
+         pf.proc_eu,
+         A."CZV_PODANI", 
+         A."DATUM_PODANI",
+         A."CZV_AKTUALNI",
+         A."DATUM_AKTUALNI",
+         A."CZV_SKUTECNOST",
+         A."DATUM_SKUTECNOST",
+         B.Datum_RoPD,
+         B.CZV_RoPD,
+	 C.vyuctskut,
+         C.vyuctdotbezjppcelk
+
+from
+
+/* Prochází rozpoèty - aktuální, skuteènost a zažádáno. Maximum je agregaèní funkcí ke group by, musí tam být alias - jinak je to zmatek. Group by - sluèuje øádky dohromady, což je v poøádku, protože na jiných jsou prázdná pole. */
+(select   r.id_nrozpocet, 
+          max(decode(r."Žádost o podporu",'A',pol."Èástka celkem")) as "CZV_PODANI",
+          max(decode(r."Žádost o podporu",'A',r."DATUMPROJEKT#Datum")) as "DATUM_PODANI",
+          max(decode(r."Aktuální",'A',pol."Èástka celkem")) as "CZV_AKTUALNI",
+          max(decode(r."Aktuální",'A',r.CREATE_CAS)) as "DATUM_AKTUALNI",
+          max(decode(r."Skuteènost",'A',pol."Èástka celkem")) as "CZV_SKUTECNOST",
+          max(decode(r."Skuteènost",'A',r."DATUMSKUTECNOST#Datum")) as "DATUM_SKUTECNOST"
+from
+
+isum.v_bi_umfrozhlavicka r inner join isum.v_bi_umfrozpolozky pol on pol.id_hlavicka=r.id
+
+where   pol."Název"='Celkové zpùsobilé výdaje'
+and        (r."Žádost o podporu"='A' or r."Aktuální"='A' or r."Skuteènost"='A')
+
+group by r.ID_NROZPOCET) A
+
+/* Druhý join je kvùli atributu pf.proc_eu. Poslední inner join je vazba na pro filtr, f.nazev='Aktuální stav', který je na konci celého dotazu.  */
+inner join isum.v_bi_umzprojekt p on p.id=A.id_nrozpocet
+inner join isum.v_bi_umfpfcelkem pf on p.id=pf.id_projekt
+inner join isum.v_bi_umfpffaze f on pf.id_faze=f.id
+
+/* Pokud nìco pøipojím zleva, tak join nefunguje jako filtr. */
+left outer join
+
+(select  s."Datum uzavøení" as Datum_RoPD,
+        s.id_nositelsml,
+        pol."Èástka celkem" as CZV_RoPD
+
+from
+
+/* sml je filtr na Rozhodnutí_o_poskytnutí_dotace s 1. datumem uzavøení. */
+(select   umfsmlouva.id_nositelsml,
+          min(umfsmlouva."Datum uzavøení") as datum
+from      isum.v_bi_umfsmlouva umfsmlouva
+where     umfsmlouva.typ = 'Rozhodnutí o poskytnutí dotace'
+group by umfsmlouva.id_nositelsml) sml
+
+
+/* 1. inner join je pouze filtr na projekty sml - viz pøedchozí vnitroblok sml a pak se vratím do stejné tabulky, abych si mohl vybrat datová pole v prvním selectu v B, pro která platí filtr sml. */ 
+
+inner join isum.v_bi_umfsmlouva s on sml.id_nositelsml=s.id_nositelsml and sml.datum=s."Datum uzavøení"
+inner join isum.v_bi_umfrozhlavicka r on r.id=s.id_rozpocet 
+inner join isum.v_bi_umfrozpolozky pol on pol.id_hlavicka=r.id
+
+where   
+pol."Název"='Celkové zpùsobilé výdaje') B
+
+on B.id_nositelsml=p.id
+
+left outer join
+
+
+/* Údaje o skuteèných platbách. Sèítáme vyucskut - reálné CZV ŽoPky a vyuctdotbezjppcelk je reálná dotace ZoPky v pøípadì kódu 10a. id_nositelplatby je ID projektu. */
+(select    pla.id_nositelplatby,
+           sum(pla.vyuctskut) as vyuctskut,
+           sum(cas.vyuctdotbezjppcelk) as vyuctdotbezjppcelk
+
+/* umsciszakladni je kvùli filtru 10a, umprozpisfin je kvùli vazbì na umpplatbaprj, umswfhistoriestavu je kvùli filtrování vyplacených plateb. */
+from isum.v_bi_umsciszakladni cis
+inner join isum.v_bi_umprozpisfin roz on cis.id=roz.id_ukazatel
+inner join isum.v_bi_umpplatbaprj pla on pla.id=roz.id_platba
+inner join isum.v_bi_umswfhistoriestavu his on his.nositelid=pla.id
+inner join isum.v_bi_umpcastky cas on cas.id= pla.id_schvalenecastky
+
+/*Kód 10a je výše dotace, stav žop P10 a P11 je vyplacena a vyplacena s krácením*/
+where  cis."Kód"='10a'
+and        his.stavdo in ('P10', 'P11')
+group by pla.id_nositelplatby) C
+
+on C.id_nositelplatby=p.id
+
+/* Chceme jen plné žádosti, které mají registraèní èíslo projektu, Aktuální stav je filtr pro aktuální financování - položka výstupu pf.proc_eu */ 
+where  p."Registraèní èíslo projektu" is not null
+and        f.nazev='Aktuální stav' 

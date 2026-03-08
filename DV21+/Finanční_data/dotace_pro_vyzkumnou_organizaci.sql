@@ -1,0 +1,57 @@
+-- CREATE or REPLACE view "Počet_VO_na_projektu" FOLDER='/06_Data_models/01_OP_TAK/MPO/novak-pavel/Subjekty' AS 
+SELECT op."Název specifického cíle/opatření" as "Opatření" ,
+       v."Číslo výzvy" ,
+       v."Název výzvy",
+       p."Registrační číslo projektu" ,
+       s."Název subjektu" "Žadatel" ,
+       w."Kód" "Kód stavu" ,
+       part.pocetp "Počet všech partnerů" ,
+       pf."Příspěvek Unie" "EU" ,
+       pf."Celkové zdroje připadající na způsobilé výdaje" "CZV" ,
+       count(vo.id) "Počet VO na projektu",
+       GROUP_CONCAT( vo.vo) "Výzkumné organizace",
+       GROUP_CONCAT( vo.eu) "EU podpora pro jednotlivé VO",
+       sum(vo.eu) "Celkem EU podpora pro všechny VO"
+FROM projekt p
+INNER JOIN vyzva v ON v.id = p.id_vyzva 
+INNER JOIN vyzva_hierarchie vh ON vh.id_vyzva = v.id
+INNER JOIN specificky_cil op on op.id=vh.id_speccil 
+INNER JOIN ciselnik_stav_workflow w ON p.id_wfstav = w.id  
+INNER JOIN subjekt s ON s.id_prjgg = p.id AND s."Neplatný od" is null AND s.id_typsubjektuedit IN (413462) -- žadatel
+INNER JOIN (SELECT count(s.id) pocetp,
+      	   	   s.id_prjgg
+	    FROM subjekt s
+	    WHERE s."Neplatný od" is null
+	    AND s.id_typsubjektuedit IN (413467) -- partner s FP
+	    GROUP BY s.id_prjgg ) part ON part.id_prjgg = p.id
+INNER JOIN prehled_zdroju_financovani pf ON pf.id_projekt = p.id AND pf.id_faze = 99991000000000005 -- aktuální stav
+INNER JOIN (SELECT sum( vpo."Částka poskytnuté veřejné podpory celkem - Příspěvek Unie v Kč") eu,
+      	   	   s."Název subjektu" vo,
+		   vpo.id_projekt,
+		   s.id
+      	    FROM verejna_podpora vpo 
+	    INNER JOIN subjekt s ON s.id = vpo.id_nositel 
+	    WHERE vpo."Částka poskytnuté veřejné podpory celkem v Kč" > 0
+	    AND vpo."Částka poskytnuté veřejné podpory celkem - Příspěvek Unie v Kč" / vpo."Částka poskytnuté veřejné podpory celkem v Kč" = 0.85
+	    GROUP BY s."Název subjektu" , vpo.id_projekt, s.id
+	    ) vo ON vo.id_projekt = p.id 
+
+WHERE p."Registrační číslo projektu" is not null
+AND w."Kód" not like 'PN%'
+AND v."Číslo výzvy" = '01_24_063'
+
+GROUP BY  op."Název specifického cíle/opatření" ,
+       v."Číslo výzvy" ,
+       v."Název výzvy",
+       p."Registrační číslo projektu" ,
+       s."Název subjektu",
+       w."Kód",
+       part.pocetp,
+       pf."Příspěvek Unie",
+       pf."Celkové zdroje připadající na způsobilé výdaje"
+
+ORDER BY "Počet VO na projektu"  DESC, "Počet všech partnerů"  DESC 
+
+
+
+

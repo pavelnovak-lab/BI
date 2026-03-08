@@ -1,0 +1,86 @@
+SELECT p."Registraèní èíslo projektu",
+       sc."Specifický cíl RIS3 (Kód)",
+       sc."Specifický cíl RIS3 (Název)",
+       sc."Procento" "Specifický cíl RIS3 (Procento)",
+
+       ds."Doména specializace (Kód)",
+       ds."Doména specializace (Název)",
+       ds."Procento" "Doména specializace (Procento)",
+
+       -- vavai."VaVaI téma k DS (Kód)",    
+       -- vavai."VaVaI téme k DS (Název)"
+
+       -- ket."RIS3 KET (Kód)",    
+       -- ket."RIS3 KET (Název)",
+
+       -- shuv."Témata VaVaI v SHUV (Kód)",    
+       -- shuv."Témata VaVaI v SHUV (Název)",
+
+       -- cm."Cíle mise (Kód)",    
+       -- cm."Cíle mise (Název)",       
+       -- cm."Procento" "Cíle mise (Procento)",
+
+       -- dsk."Krajské DS (Kód)",   
+       -- dsk."Krajské DS (Název)",
+       -- dsk."Krajské DS (Název územní jednotky)",
+       -- dsk."Procento" "Krajské DS (Procento)"
+ 
+
+FROM projekt p 
+INNER JOIN projekt_ris3 pr ON pr.id_projekt = p.id 
+INNER JOIN (
+ SELECT rsc."Kód" "Specifický cíl RIS3 (Kód)",    
+	rsc."Název" "Specifický cíl RIS3 (Název)",
+	pr.id_projekt,
+	pr."Procento"
+ FROM projekt_ris3 pr 
+ INNER JOIN ciselnik_ris3_specificky_cil rsc ON pr.id_ris3 = rsc.id) sc ON sc.id_projekt = p.id
+LEFT JOIN (
+ SELECT rds."Kód" "Doména specializace (Kód)",    
+	rds."Název" "Doména specializace (Název)",
+	pr.id_projekt,
+	pr."Procento",
+	pr.id
+ FROM projekt_ris3 pr 
+ INNER JOIN ciselnik_ris3_domeny_specializace rds ON pr.id_ris3 = rds.id) ds ON ds.id_projekt = p.id
+-- LEFT JOIN (
+--  SELECT vvi."Kód" "VaVaI téma k DS (Kód)",    
+-- 	vvi."Název" "VaVaI téme k DS (Název)",
+-- 	pr.id_projekt,
+-- 	pr.id_hierarchie
+--  FROM projekt_ris3 pr 
+--  INNER JOIN ciselnik_ris3_vavai_tema_k_domene_specializace vvi ON pr.id_ris3 = vvi.id) vavai ON vavai.id_projekt = p.id AND vavai.id_hierarchie = ds.id
+
+WHERE pr.id_projekt = 137862063
+-- AND ds.id = 139850507
+
+--------------------------------------------------
+
+-- LEFT JOIN (
+--  SELECT k."Kód" "RIS3 KET (Kód)",    
+-- 	k."Název" "RIS3 KET (Název)",
+-- 	pr.id_projekt
+--  FROM projekt_ris3 pr 
+--  INNER JOIN ciselnik_ris3_ket k ON pr.id_ris3 = k.id) ket ON ket.id_projekt = p.id
+-- LEFT JOIN (
+--  SELECT s."Kód" "Témata VaVaI v SHUV (Kód)",    
+-- 	s."Název" "Témata VaVaI v SHUV (Název)",
+-- 	pr.id_projekt
+--  FROM projekt_ris3 pr 
+--  INNER JOIN ciselnik_ris3_temata_vavai_v_oblasti_shuv s ON pr.id_ris3 = s.id) shuv ON shuv.id_projekt = p.id
+-- LEFT JOIN (
+--  SELECT c."Kód" "Cíle mise (Kód)",    
+-- 	c."Název" "Cíle mise (Název)",
+-- 	pr.id_projekt,
+-- 	pr."Procento"
+--  FROM projekt_ris3 pr 
+--  INNER JOIN ciselnik_ris3_cile_mise c ON pr.id_ris3 = c.id) cm ON cm.id_projekt = p.id
+-- LEFT JOIN (
+--  SELECT kds."Kód" "Krajské DS (Kód)",    
+-- 	kds."Název" "Krajské DS (Název)",
+-- 	u."Název" "Krajské DS (Název územní jednotky)",
+--  	pr."Procento",
+-- 	pr.id_projekt
+--  FROM projekt_ris3 pr 
+--  INNER JOIN ciselnik_ris3_krajske_domeny_specializace kds ON pr.id_ris3 = kds.id
+--  INNER JOIN ciselnik_uzemni_jednotky u ON u.id = kds.id_uzemnijednotky) dsk ON dsk.id_projekt = p.id

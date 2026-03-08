@@ -1,0 +1,14 @@
+select knm.*
+
+from isum.v_bi_UMVKontrolaNaMiste knm
+LEFT JOIN isum.v_bi_UmvHodnoceni hod ON hod.id_kontrola = knm.id
+
+
+WHERE knm."Název kontroly" = '%-2025/NPO'
+
+----------------------------------------
+SELECT hod.*
+
+FROM 
+
+WHERE hod.id = 2143015473

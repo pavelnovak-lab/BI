@@ -1,0 +1,53 @@
+SELECT p."Registraèní èíslo projektu" ,
+       p.zadatel ,
+       p."IÈ",
+       p.kodwfstav ,
+       zoz."Datum podání",
+       zoz."Datum úèinnosti",
+       zoz.NAZEV,
+       zoz.obrazovky,
+       zoz.wfstav ,
+       zoz.kodwfstav "Stav ®oZ",
+       REPLACE(REPLACE(zoz."Informace od pøíjemce",CHR(10),' $ '),CHR(13),' $ ') as "Informace od pøíjemce",
+       ci."Název" "Záva¾nost zmìny",
+       zoz."Poøadové èíslo ®oZ",
+       v."Èíslo výzvy",
+       v."Název výzvy" 
+       -- pocitadlo.pocet "Poèet vrácení ¾adateli",
+       -- pocitadlo.datum "Datum posledního vrácení"
+       -- -- hs.datumod,
+       -- hs.stavdo
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmzZoZProjekt zoz ON zoz.id_zad = p.id
+INNER JOIN isum.v_bi_UmsCisZakladni ci ON ci.id = zoz.id_zavaznostzmeny
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva 
+INNER JOIN (
+ -- SELECT count(hs.id) pocet,
+ --       max(hs.datumod) datum,
+ --       zoz.id
+ -- FROM isum.v_bi_UmzZoZProjekt zoz
+ -- INNER JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.NositelId = zoz.id
+ -- WHERE hs.stavdo = 'V0'
+ -- GROUP BY zoz.id
+ -- ) pocitadlo ON pocitadlo.id = zoz.id
+
+WHERE p."Registraèní èíslo projektu" is not null 
+AND SUBSTR(p.kompetencniutvar, 6) = 'Aplikace'
+-- AND p."Registraèní èíslo projektu" = 'CZ.01.1.02/0.0/0.0/17_176/0015594'
+-- AND zoz."Poøadové èíslo ®oZ" = 3
+
+-- AND p.kodwfstav not like 'PN%'
+-- AND p.kodwfstav not in ('PP41','PP42','PP43')
+-- AND zoz.kodwfstav in ('Z1','Z2','Z3','P1','V0', 'P3', 'P5')
+
+AND zoz.kodwfstav = 'P3'
+AND ci."Název" = 'podstatná zmìna zakládající dodatek/zmìnu právního aktu'
+
+-- AND EXISTS
+-- (SELECT 0
+--  FROM isum.v_bi_UmsWFHistorieStavu hs 
+--  WHERE hs.NositelId = zoz.id
+--  AND hs.stavdo = 'V0')
+
+ORDER BY "Datum posledního vrácení" ASC, substr(p."Registraèní èíslo projektu",-5,5) ASC

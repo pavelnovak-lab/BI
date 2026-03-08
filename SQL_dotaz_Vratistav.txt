@@ -1,0 +1,9 @@
+select	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" as "Registraèní èíslo projektu",
+	 "V_BI_UMZPROJEKT"."Název projektu CZ" as "Název projektu CZ",
+	 "V_BI_UMZPrjDuvodVratStav"."Dùvod zmìny stavu" as  "Dùvod zmìny stavu"
+	 
+ from	"ISUM"."V_BI_UMZPROJEKT" p 
+	"ISUM"."V_BI_UMZPrjDuvodVratStav" vs
+ where 	 p.ID=vs.ID_PRJGG
+
+"V_BI_UMZPROJEKT"."Registraèní èíslo projektu" ='CZ.01.1.02/0.0/0.0/17_106/0012434'

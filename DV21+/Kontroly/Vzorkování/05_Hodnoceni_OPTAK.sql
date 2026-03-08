@@ -1,0 +1,15 @@
+-- CREATE or REPLACE view "05_KnM_Hodnoceni_OPTAK_bez_EH" FOLDER='/06_Data_models/01_OP_TAK/MPO/novak-pavel/Kontroly/Vzorkovani_pro_kontroly_na_miste' AS 
+SELECT p."Registraèní èíslo projektu",
+       	body."Celkový výsledek - v bodech" "Bodù ve VH 0-100", -- je tøeba dopsaat podmínu kroku honocení 1. krok pro výzvy bez EH
+	null "Výrok analytika",
+	null "Ekonomické hodnocení"
+
+FROM projekt p
+-- INNER JOIN hodnoceni h ON p.id = h.id_noshodnoceni
+INNER JOIN hodnoceni_status body ON body.id_noshodnoceni = p.id AND body.id_krokvechodn = 488854
+INNER JOIN ciselnik_stav_workflow wp ON p.id_wfstav = wp.id
+
+WHERE p."Registraèní èíslo projektu" is not null 
+AND wp."Kód" in ('PP30','PP31','PU30')
+
+ORDER BY SUBSTR(p."Registraèní èíslo projektu",24) 

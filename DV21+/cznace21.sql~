@@ -1,0 +1,108 @@
+ SELECT	p."Registraèní èíslo projektu",
+	-- kom."Název" AS "Program podpory",
+	v."Èíslo výzvy" ,
+	p.kodprioritniosa
+FROM isum.v_bi_umzprojekt p
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva
+-- left JOIN 	isum.V_BI_UMZVYZVAUTVAR	utvar ON utvar.id_vyzva=v.id
+-- left JOIN 	isum.V_BI_UMSHIUtvarKomp kom ON kom.id=utvar.id_utvarkomp
+
+WHERE 	p."Registraèní èíslo projektu" in ('CZ.31.4.0/0.0/0.0/22_017/0003251', 'CZ.31.1.0/0.0/0.0/22_011/0004161'
+-- AND 	kom."Název"<>'Operaèní program Podnikání a inovace pro konkurenceschopnost'
+-- AND 	ci."Kód" like :nace
+-- AND	p.kodWFstav like ('PP%')
+-- AND 	n."Je souèástí projektu?" = 'A'
+AND      p.KodPrioritniOsa in ('31.1', '31.2', '31.3', '31.4','31.5','31.9','31.22','31.14')
+
+-- GROUP BY pr."IÈ",
+-- 	p."Registraèní èíslo projektu",
+-- 	pr.zadatel,
+-- 	p."Název projektu CZ",
+-- 	p.wfstav,
+-- 	p.kodWFStav,
+-- 	p.CZV,
+-- 	p.eu,
+-- 	kom."Název"
+
+
+--------------------------------------------
+
+SELECT	p."Registraèní èíslo projektu",
+	pr.zadatel,
+	pr."IÈ",
+	p."Název projektu CZ",
+	p.wfstav,
+	p.kodWFStav,
+	p.CZV,
+	p.eu AS "Po¾adovaná dotace",
+	LISTAGG(DISTINCT ci."Název",'; ' on overflow truncate) AS "Název CZ NACE",
+	LISTAGG(ci."Kód",'; ' on overflow truncate) AS "Kód CZ NACE",
+      	DECODE ( SUBSTR(p.KodPrioritniOsa,1,2),
+			'31', 'NPO',
+ 	       		'01', 'OP PIK',
+			      'jiný') "OP" 
+
+FROM isum.v_bi_umzprjgg p
+INNER JOIN isum.v_bi_umzprojekt pr ON pr.id=p.id
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva
+INNER JOIN isum.v_bi_umsrscznace n ON n.id_subjekt=p.id_zadatel
+INNER JOIN isum.v_bi_umsciszakladni ci ON ci.id=n.id_cznace
+
+WHERE 	p."Registraèní èíslo projektu" is not null
+AND 	ci."Kód" like :nace
+AND	p.kodWFstav like ('PP%')
+AND 	n."Je souèástí projektu?" = 'A'
+AND     pr.KodPrioritniOsa in (:OP)
+
+
+GROUP BY pr."IÈ",
+	p."Registraèní èíslo projektu",
+	pr.zadatel,
+	p."Název projektu CZ",
+	p.wfstav,
+	p.kodWFStav,
+	p.CZV,
+	p.eu,
+	pr.KODPRIORITNIOSA
+
+
+-- p.KodPrioritniOsa in ('31.1', '31.2', '31.3', '31.4','31.5','31.9','31.14','31.22')
+-- p.KodPrioritniOsa in ('01.1', '01.2', '01.3', '01.4','01.5') 
+---------------------------------
+SELECT SUBSTR(p.kompetencniutvar, 1,2) AS "Program podpory",
+       p."Registraèní èíslo projektu",
+      	DECODE ( SUBSTR(p.KodPrioritniOsa,1,2),
+			'31', 'NPO',
+ 	       		'01', 'OP PIK',
+			      'jiný') "OP" 
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva 
+inner join isum.v_bi_umzvyzvahierarchie vh on vh.id_vyzva = v.id
+inner join isum.v_bi_umshisc sh on sh.id = vh.id_speccil
+inner join isum.v_bi_umshiplinie l on l.id = sh.id_osa
+
+WHERE p."Registraèní èíslo projektu" = ('CZ.31.4.0/0.0/0.0/22_017/0003251', 'CZ.01.1.02/0.0/0.0/17_106/0012282')
+
+
+
+----------------------------------------
+
+
+SELECT p."Registraèní èíslo projektu",
+       p."Název projektu CZ",
+       LISTAGG( ci."Kód", '; ') "Název CZ NACE",
+       LISTAGG( ci."Název" , '; ') "Kód CZ NACE"
+       
+
+FROM projekt p
+LEFT JOIN projekt_cznace nace ON nace.id_projekt = p.id
+LEFT JOIN ciselnik_cznace ci ON ci.id = nace.id_cznace
+
+WHERE p."Registraèní èíslo projektu" is not null 
+
+GROUP BY p."Registraèní èíslo projektu",
+       p."Název projektu CZ"
+
+
+CREATE or REPLACE view "RIS3_OPTAK" FOLDER='/06_Data_models/01_OP_TAK/MPO/novak-pavel/RIS3' AS 

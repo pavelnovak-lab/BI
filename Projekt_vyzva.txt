@@ -1,0 +1,9 @@
+SELECT 	p."Identifikace žádosti (Hash)",
+	p."Registraèní èíslo projektu",
+	p."KOMPETENCNIUTVAR",
+	v."Èíslo výzvy"
+
+FROM 		isum.v_bi_umzprojekt p
+INNER JOIN 	isum.v_bi_umzvyzva v ON p.id_vyzva=v.id
+
+WHERE 	v."Èíslo výzvy" in ('01_18_269','01_18_272')

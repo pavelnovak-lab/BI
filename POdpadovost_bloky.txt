@@ -1,0 +1,80 @@
+SELECT 	v."Název výzvy",
+	v."Èíslo výzvy",
+	v."Finanèní alokace Celk" as "Alokace výzvy",
+	v."WFSTAV" as "WFSTAV výzvy",
+	formalky."Dotace" as "Dotace FNaP",
+	formalky."Poèet žádostí" as "Poèet žádostí FNaP",
+	vecko."Dotace VH",
+	vecko."Poèet žádostí VH",
+	vk."Dotace VK",
+	vk."Poèet žádostí VK",
+	pa."Dotace PA",
+	pa."Poèet žádostí PA",
+	count(p."Registraèní èíslo projektu") as "Poèet žádostí výzva"
+
+
+FROM 
+
+(SELECT	v."Èíslo výzvy",
+	sum(p."EU") as "Dotace",
+	count(p."Registraèní èíslo projektu") as "Poèet žádostí"
+FROM	"ISUM"."V_BI_UMZVYZVA" v
+ join	"ISUM"."V_BI_UMZPRJGG" p ON p.id_vyzva=v.id
+WHERE	p."KODWFSTAV" in ('PN21','PN22')
+GROUP BY v."Èíslo výzvy" ) formalky
+
+full join "ISUM"."V_BI_UMZVYZVA" v ON v."Èíslo výzvy"=formalky."Èíslo výzvy"
+
+full join
+
+(SELECT	v."Èíslo výzvy",
+	sum(p."EU") as "Dotace VH",
+	count(p."Registraèní èíslo projektu") as "Poèet žádostí VH"
+FROM	"ISUM"."V_BI_UMZVYZVA" v
+ join	"ISUM"."V_BI_UMZPRJGG" p ON p.id_vyzva=v.id
+WHERE	p."KODWFSTAV" in ('PN23a')
+GROUP BY v."Èíslo výzvy" ) vecko
+
+ON v."Èíslo výzvy"=vecko."Èíslo výzvy"
+
+full join 
+
+(SELECT	v."Èíslo výzvy",
+	sum(p."EU") as "Dotace VK",
+	count(p."Registraèní èíslo projektu") as "Poèet žádostí VK"
+FROM	"ISUM"."V_BI_UMZVYZVA" v
+ join	"ISUM"."V_BI_UMZPRJGG" p ON p.id_vyzva=v.id
+WHERE	p."KODWFSTAV" in ('PN27')
+GROUP BY v."Èíslo výzvy" ) vk
+
+ON v."Èíslo výzvy"=vk."Èíslo výzvy"
+
+full join 
+
+(SELECT	v."Èíslo výzvy",
+	sum(p."EU") as "Dotace PA",
+	count(p."Registraèní èíslo projektu") as "Poèet žádostí PA"
+FROM	"ISUM"."V_BI_UMZVYZVA" v
+ join	"ISUM"."V_BI_UMZPRJGG" p ON p.id_vyzva=v.id
+WHERE	p."KODWFSTAV" in ('PN29a')
+GROUP BY v."Èíslo výzvy" ) pa
+
+ON v."Èíslo výzvy"=pa."Èíslo výzvy"
+
+full join "ISUM"."V_BI_UMZPRJGG" p ON p.id_vyzva=v.id
+
+WHERE	v."Èíslo výzvy" ='01_17_176'
+ and	p."Registraèní èíslo projektu" is not null
+
+GROUP BY v."Název výzvy",
+	v."Èíslo výzvy",
+	v."Finanèní alokace Celk",
+	v."WFSTAV",
+	formalky."Dotace",
+	formalky."Poèet žádostí",
+	vecko."Dotace VH",
+	vecko."Poèet žádostí VH",
+	vk."Dotace VK",
+	vk."Poèet žádostí VK",
+	pa."Dotace PA",
+	pa."Poèet žádostí PA"

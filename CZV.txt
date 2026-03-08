@@ -1,0 +1,85 @@
+select   p."Registraèní èíslo projektu",
+         A."DATUM_AKTUALNI",
+         A."DATUM_PODANI",
+         B.Datum_RoPD as DATUM_ROPD,         
+         A."DATUM_SKUTECNOST",
+	 C.DATUM_VYPLACENO,
+	 pf.proc_eu,
+         A."CZV_AKTUALNI",
+	 A."CZV_AKTUALNI"*pf.proc_eu as "DOTACE_AKTUALNI",
+         A."CZV_PODANI", 
+	 A."CZV_PODANI"*pf.proc_eu as "DOTACE_PODANI",
+         B.CZV_RoPD as CZV_ROPD,
+	 B.CZV_RoPD*pf.proc_eu as "DOTACE_ROPD",
+         A."CZV_SKUTECNOST",
+	 A."CZV_SKUTECNOST"*pf.proc_eu as "DOTACE_SKUTECNOST",
+         C.vyuctskut as CZV_VYPLACENO,
+         C.vyuctdotbezjppcelk as DOTACE_VYPLACENO
+
+from
+
+(select   r.id_nrozpocet, 
+          max(decode(r."Žádost o podporu",'A',pol."Èástka celkem")) as "CZV_PODANI",
+          max(decode(r."Žádost o podporu",'A',r."DATUMPROJEKT#Datum")) as "DATUM_PODANI",
+          max(decode(r."Aktuální",'A',pol."Èástka celkem")) as "CZV_AKTUALNI",
+          max(decode(r."Aktuální",'A',r.CREATE_CAS)) as "DATUM_AKTUALNI",
+          max(decode(r."Skuteènost",'A',pol."Èástka celkem")) as "CZV_SKUTECNOST",
+          max(decode(r."Skuteènost",'A',r."DATUMSKUTECNOST#Datum")) as "DATUM_SKUTECNOST"
+from
+
+isum.v_bi_umfrozhlavicka r inner join isum.v_bi_umfrozpolozky pol on pol.id_hlavicka=r.id
+
+where   pol."Název"='Celkové zpùsobilé výdaje'
+and     (r."Žádost o podporu"='A' or r."Aktuální"='A' or r."Skuteènost"='A')
+
+group by r.ID_NROZPOCET) A
+
+inner join isum.v_bi_umzprojekt p on p.id=A.id_nrozpocet
+inner join isum.v_bi_umfpfcelkem pf on p.id=pf.id_projekt
+inner join isum.v_bi_umfpffaze f on pf.id_faze=f.id
+
+left outer join
+
+(select s."Datum uzavøení" as Datum_RoPD,
+        s.id_nositelsml,
+        pol."Èástka celkem" as CZV_RoPD
+
+from
+
+(select   umfsmlouva.id_nositelsml,
+               min(umfsmlouva."Datum uzavøení") as datum
+from      isum.v_bi_umfsmlouva umfsmlouva
+where   umfsmlouva.typ = 'Rozhodnutí o poskytnutí dotace'
+group by umfsmlouva.id_nositelsml) sml
+
+inner join isum.v_bi_umfsmlouva s on sml.id_nositelsml=s.id_nositelsml and sml.datum=s."Datum uzavøení"
+inner join isum.v_bi_umfrozhlavicka r on r.id=s.id_rozpocet 
+inner join isum.v_bi_umfrozpolozky pol on pol.id_hlavicka=r.id
+
+where   
+pol."Název"='Celkové zpùsobilé výdaje') B
+
+on B.id_nositelsml=p.id
+
+left outer join
+
+(select    pla.id_nositelplatby,
+           sum(pla.vyuctskut) as vyuctskut,
+           sum(cas.vyuctdotbezjppcelk) as vyuctdotbezjppcelk,
+	   max(his.datumod) as DATUM_VYPLACENO
+
+
+from isum.v_bi_umsciszakladni cis
+inner join isum.v_bi_umprozpisfin roz on cis.id=roz.id_ukazatel
+inner join isum.v_bi_umpplatbaprj pla on pla.id=roz.id_platba
+inner join isum.v_bi_umswfhistoriestavu his on his.nositelid=pla.id
+inner join isum.v_bi_umpcastky cas on cas.id= pla.id_schvalenecastky
+
+where  cis."Kód"='10a'
+and    his.stavdo in ('P10', 'P11')
+group by pla.id_nositelplatby) C
+
+on C.id_nositelplatby=p.id
+
+where  p."Registraèní èíslo projektu" is not null
+and    f.nazev='Aktuální stav'

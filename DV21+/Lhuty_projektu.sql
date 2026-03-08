@@ -1,0 +1,86 @@
+SELECT pl."Kód" "Kód priority",
+       pl."Název" "Priorita",
+       sc."Èíslo SC/opatøení ØO formát" "Kód SC",
+       sc."Název specifického cíle/opatøení" "Název SC",
+       opatreni."Èíslo SC/opatøení ØO formát" "Kód opatøení",
+       opatreni."Název specifického cíle/opatøení" "Opatøení",
+
+       v."Èíslo výzvy",
+       v."Název výzvy",
+       p."Registraèní èíslo projektu",
+       p."Název projektu CZ" "Název projektu",
+       w.kod "Kód stavu",
+       w.nazev "Název stavu",
+       p."Datum zmìny stavu",
+       
+       pzf."Celkové zdroje pøipadající na zpùsobilé výdaje" "CZV",
+       pzf."Pøíspìvek Unie" "Pøíspìvek EU",
+       pzf."Pøíspìvek spoleèenství (% veøejných)" "% EU",
+
+       s."Název subjektu",
+       s."IÈ",
+       vp."Velikost kategorie podniku",
+       pf."Právní forma",
+       min(case when swf."Kód" = 'PP20' then hs."Datum pøepnutí" end) "PP20",
+       min(case when swf."Kód" in ('PP22') then hs."Datum pøepnutí" end) "PP22",       
+       min(case when swf."Kód" in ('PP23a','PP23b') then hs."Datum pøepnutí" end) "PP23a,b",
+       min(case when swf."Kód" in ('PP25a','PP25b','PU25') then hs."Datum pøepnutí" end) "PP25a,b/PU25",              
+       min(case when swf."Kód" in ('PP26') then hs."Datum pøepnutí" end) "PP26",
+       min(case when swf."Kód" in ('PP30') then hs."Datum pøepnutí" end) "PP30"
+
+FROM projekt p
+INNER JOIN programova_linie pl ON pl.id = p.id_prioritniosa
+INNER JOIN v_rav_umscisstavwf w ON w.id = p.id_wfstav
+INNER JOIN vyzva v ON v.id = p.id_vyzva
+INNER JOIN specificky_cil sc ON sc."Èíslo SC/opatøení ØO formát" = substr(p."Registraèní èíslo projektu",4,8)
+INNER JOIN prehled_zdroju_financovani pzf ON pzf.id_projekt = p.id AND pzf.id_faze = 99991000000000005
+INNER JOIN subjekt s ON s.id_prjgg = p.id AND s.id_typsubjektuedit IN (413462) -- ¾adatel/pøíjemce
+INNER JOIN ciselnik_velikost_podniku vp ON vp.id = s.id_velikostpodniku
+INNER JOIN projekt_specificky_cil psc ON p.id = psc.id_prjgg
+INNER JOIN specificky_cil opatreni on opatreni.id = psc.id_sc
+INNER JOIN ciselnik_pravni_forma pf ON pf.id = s.id_hosppravforma
+INNER JOIN historie_stavu hs ON hs.nositelid = p.id
+INNER JOIN ciselnik_stav_workflow swf ON swf.id = hs.id_stavdo
+
+WHERE p."Registraèní èíslo projektu" = 'CZ.01.01.01/05/22_004/0000079'
+
+GROUP BY pl."Kód" ,
+       pl."Název" ,
+       sc."Èíslo SC/opatøení ØO formát" ,
+       sc."Název specifického cíle/opatøení" ,
+       opatreni."Èíslo SC/opatøení ØO formát" ,
+       opatreni."Název specifického cíle/opatøení" ,
+
+       v."Èíslo výzvy",
+       v."Název výzvy",
+       p."Registraèní èíslo projektu",
+       p."Název projektu CZ",
+       w.kod,
+       w.nazev ,
+       p."Datum zmìny stavu",
+       
+       pzf."Celkové zdroje pøipadající na zpùsobilé výdaje" ,
+       pzf."Pøíspìvek Unie" ,
+       pzf."Pøíspìvek spoleèenství (% veøejných)",
+
+       s."Název subjektu",
+       s."IÈ",
+       vp."Velikost kategorie podniku",
+       pf."Právní forma"
+
+
+----------------------------------------
+select p."Registraèní èíslo projektu" ,
+       min(case when swf."Kód" = 'PP20' then hs."Datum pøepnutí" end) "PP20",
+       min(case when swf."Kód" in ('PP22') then hs."Datum pøepnutí" end) "PP22",       
+       min(case when swf."Kód" in ('PP23a','PP23b') then hs."Datum pøepnutí" end) "PP23a,b",
+       min(case when swf."Kód" in ('PP25a','PP25b','PU25') then hs."Datum pøepnutí" end) "PP25a,b/PU25",              
+       min(case when swf."Kód" in ('PP26') then hs."Datum pøepnutí" end) "PP26",
+       min(case when swf."Kód" in ('PP30') then hs."Datum pøepnutí" end) "PP30"
+from projekt p
+INNER JOIN historie_stavu hs ON hs.nositelid = p.id
+INNER JOIN ciselnik_stav_workflow swf ON swf.id = id_stavdo
+
+WHERE p."Registraèní èíslo projektu" = 'CZ.01.01.01/05/22_004/0000079'
+
+GROUP BY p."Registraèní èíslo projektu" 

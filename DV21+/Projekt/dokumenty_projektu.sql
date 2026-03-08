@@ -1,0 +1,30 @@
+CREATE or REPLACE view "Dokumenty" FOLDER='/06_Data_models/01_OP_TAK/MPO/novak-pavel/RIS3' AS 
+
+SELECT distinct  p."Registraèní èíslo projektu" ,
+       p."Identifikace ¾ádosti (hash)" ,
+       s."Název subjektu" "®adatel"  ,
+       pf."Pøíspìvek Unie" "EU" 
+       -- pri."Název dokumentu",
+       -- dd."Název"
+FROM projekt p
+INNER JOIN vyzva v ON v.id = p.id_vyzva
+INNER JOIN subjekt s ON s.id_prjgg = p.id AND s.id_typsubjektuedit = 413462 -- ¾adatel 
+INNER JOIN prilohy_projektu pri ON pri.id_nositelpril = p.id
+INNER JOIN prehled_zdroju_financovani pf ON pf.id_projekt = p.id AND pf.id_faze = 99991000000000005 -- aktuální stav 
+-- INNER JOIN ciselnik_definovane_dokumenty dd ON dd.id = pri.id_prilohadef
+
+
+WHERE v."Èíslo výzvy" = '01_23_023'
+-- AND dd.id in (65251178, 19422844)
+-- AND pri.id = 144844532
+AND p."Registraèní èíslo projektu" =  'CZ.01.01.02/01/23_023/0001877'
+AND pf."Pøíspìvek Unie" "EU" > 0
+
+AND not exists
+(SELECT pr."Registraèní èíslo projektu" 
+ FROM projekt pr
+ INNER JOIN prilohy_projektu pril ON pril.id_nositelpril = pr.id     
+
+ WHERE pril.id_prilohadef in (65251178, 19422844)
+ AND pr.id = p.id)
+

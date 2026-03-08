@@ -1,0 +1,18 @@
+SELECT	p.kodprioritniosa "Komponenta NPO" ,
+	platba."Èíslo ¾ádosti o platbu" ,
+        platba."Datum zmìny stavu" ,
+        platba.kodwfstav "Stav ®oP",
+        p.kodwfstav "Stav projektu"
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby
+
+WHERE p.KodPrioritniOsa in ('31.1', '31.2', '31.3', '31.4','31.5','31.9','31.14','31.22') 
+AND platba."Závìreèná platba" = 'A'
+AND platba.kodwfstav IN ('P6T','P10','P11')
+AND p.kodwfstav  IN ('PP36','PP37','PP40')
+AND trunc(platba."Datum zmìny stavu") < to_date('2024-07-20','yyyy-mm-dd')
+
+ORDER BY p.kodprioritniosa, platba."Datum zmìny stavu"
+
+-- WHERE p."Registraèní èíslo projektu" IN KodPRJ IN
+('CZ.31.3.0/0.0/0.0/22_001/0000029','CZ.31.3.0/0.0/0.0/22_001/0002534','CZ.31.3.0/0.0/0.0/22_001/0001918','CZ.31.3.0/0.0/0.0/22_001/0003402','CZ.31.3.0/0.0/0.0/22_005/0002845','CZ.31.3.0/0.0/0.0/22_005/0000117','CZ.31.3.0/0.0/0.0/22_001/0004737','CZ.31.3.0/0.0/0.0/22_001/0003494','CZ.31.3.0/0.0/0.0/22_001/0001070','CZ.31.3.0/0.0/0.0/22_001/0006326','CZ.31.3.0/0.0/0.0/22_001/0000880','CZ.31.3.0/0.0/0.0/22_001/0005982','CZ.31.3.0/0.0/0.0/22_001/0006383','CZ.31.3.0/0.0/0.0/22_001/0001138','CZ.31.3.0/0.0/0.0/22_001/0003857','CZ.31.3.0/0.0/0.0/22_001/0000213','CZ.31.3.0/0.0/0.0/22_001/0002299','CZ.31.3.0/0.0/0.0/22_005/0004719','CZ.31.3.0/0.0/0.0/22_001/0000187','CZ.31.3.0/0.0/0.0/22_001/0001612','CZ.31.3.0/0.0/0.0/22_005/0000429','CZ.31.3.0/0.0/0.0/22_001/0006859','CZ.31.3.0/0.0/0.0/22_001/0005487','CZ.31.3.0/0.0/0.0/22_005/0006075','CZ.31.3.0/0.0/0.0/22_001/0004212','CZ.31.3.0/0.0/0.0/22_001/0004171')

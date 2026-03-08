@@ -1,0 +1,28 @@
+SELECT platba."Èíslo ¾ádosti o platbu",
+       p.zadatel,
+       platba."Datum zmìny stavu" ,
+       platba.kodwfstav ,
+       platba.wfstav ,
+       -- dp.id_oss,
+       -- dp.id_ucetoss,
+       -- uc."Èíslo úètu prezentaèní forma"
+       dp.REGCISLO "Detail platby",
+       ci."Kód",
+       ci."Název"
+
+
+FROM isum.v_bi_UmzProjekt p 
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby 
+INNER JOIN isum.v_bi_umpklasifikace dp ON dp.id_platba = platba.id
+-- INNER JOIN isum.V_BI_UMSRSVerzeUctu uc ON uc.id = dp.id_ucetoss
+-- INNER JOIN isum.v_bi_UMSCisZdrojeF zdroj ON zdroj.id = dp.id_zdrojfin
+INNER JOIN isum.v_bi_UmsCisZakladni ci ON ci.id = dp.id_zdroj
+
+
+WHERE dp.druhdp = 1
+AND platba.kodwfstav IN ('P5T','P6','P6T')
+-- dp.id = 1980638693
+-- AND platba."Èíslo ¾ádosti o platbu" = 'CZ.31.5.0/0.0/0.0/22_008/0003746/2023/001/POST'
+AND platba."Èíslo ¾ádosti o platbu" like 'CZ.31.5%' 
+
+ORDER BY platba.kodwfstav 

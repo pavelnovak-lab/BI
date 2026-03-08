@@ -1,0 +1,41 @@
+SELECT distinct v."Èíslo výzvy"
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva
+
+WHERE
+-- v."Èíslo výzvy" IN ('31_23_117','31_23_076','31_23_070','31_22_013','31_22_011','31_22_015','31_22_014','31_22_001','31_22_005','31_22_006','31_25_157','31_22_018','31_22_010','31_22_008','31_23_116')
+-- AND p.kodwfstav in ('PP20','PP21','PP22','PP23a','PP23b','PP27a','PP27b','PP29','PU21','PU27','V2','V5','Z1','Z3','PP30','PP36','PP37','PP40')
+
+ORDER BY v."Èíslo výzvy"
+
+
+
+
+
+----------------------------------------
+SELECT v."Èíslo výzvy" ,
+       rdp.*
+
+FROM isum.v_bi_UmzVyzva v
+INNER JOIN isum.v_bi_UMZRadekSabDP rdp ON  rdp.id_nositelsablony = v.id
+
+WHERE rdp.id = 1576884957
+-- neprojde nic, pro OP PIK ano ---
+v."Èíslo výzvy" like '31%'
+
+
+
+
+FROM /* na výzvách ní¾e existuje rozfinancovaný projekt */
+v."Èíslo výzvy" IN ('31_22_001', '31_22_005', '31_22_006', '31_22_008', '31_22_010', '31_22_011', '31_22_013', '31_22_014', '31_22_015', '31_23_070', '31_23_076', '31_23_116', '31_23_117')
+
+
+
+SELECT *
+FROM isum.v_bi_UMZSablonaDP
+WHERE id = 1576869176
+
+
+
+

@@ -1,0 +1,83 @@
+SELECT DISTINCT
+	hodnotitel."Kód" "Kód hodnotitele",
+	hodn.RATINGZNAMKANAPOCETH ,
+	LISTAGG(DISTINCT vs."Název subjektu", '; ' on overflow truncate) "Název zamìstnavatele",
+	LISTAGG(DISTINCT cis."Název", '; ' on overflow truncate) "Odbornost",
+	LISTAGG(DISTINCT vs."IÈ",  '; ' on overflow truncate) "IÈ zamìstnavatele",
+	-- LISTAGG(DISTINCT REPLACE(REPLACE(cis."Kód",CHR(10),' $ '),CHR(13),' $ '), '; ' on overflow truncate) "Odbornost Kód",
+	v."Vìk"	,
+	v."Rodné èíslo hodnotitele",
+	hodn.VyrazenZDatabaze
+	
+
+FROM isum.v_bi_UMVHodnotitelPrg hodn
+INNER JOIN 
+     (SELECT DISTINCT 100 + TO_NUMBER(SUBSTR(trunc(sysdate), -2,2)) - to_number(substr(s."Rodné èíslo hodnotitele", 1,2))  "Vìk",
+     	     s.CREATE_UZIVATEL,
+	     s."Rodné èíslo hodnotitele"
+      FROM isum.v_bi_umsrssubjekt s
+      WHERE s."Rodné èíslo hodnotitele" is not null 
+      ) v ON v.CREATE_UZIVATEL = hodn.CREATE_UZIVATEL
+INNER JOIN isum.v_bi_UmvHodnotitel hodnotitel ON hodnotitel.id = hodn.id_hodnotitel
+INNER JOIN isum.v_bi_CUzivatel uzivatel ON uzivatel.id = hodnotitel.id_cuzivatel	
+LEFT JOIN isum.v_bi_UMVHodnVerzeSubjektu vs ON vs.id_hodnotitel = hodnotitel.id
+INNER JOIN isum.v_bi_UmvHodnOdbornost odb ON odb.id_HodnotitelPrg = hodn.id
+INNER JOIN isum.v_bi_UMSCisOdbornost cis ON cis.id = odb.id_odbornost 
+
+
+WHERE
+-- uzivatel.username = 'UNRICMAR'
+-- AND s."Rodné èíslo hodnotitele" is not null 
+-- AND
+vs."Aktuální" is null
+AND hodnotitel."Interní hodnotitel" ='N' 
+-- AND REPLACE(REPLACE(cis."Kód",CHR(10),' $ '),CHR(13),' $ ') in  ('MPO','PO2')
+
+
+GROUP BY hodnotitel."Kód",
+	hodn.RATINGZNAMKANAPOCETH ,
+	v."Vìk"	,
+	v."Rodné èíslo hodnotitele",
+	hodn.VyrazenZDatabaze
+
+
+---------------------------------------------
+
+
+
+
+
+-- SELECT DISTINCT		
+-- 	-- LISTAGG(cis."Název" '; ') "Odbornost",
+-- 	-- LISTAGG( cis."Kód" '; ') "Odbornost Kód"
+-- 	-- hodn.RATINGZNAMKANAPOCETH ,
+-- 	-- hodn.REGISTRACESCHVALENA ,
+-- 	-- hodn.VYRAZENZDATABAZE
+-- 	-- hodnotitel."Kód",
+-- 	-- hodnotitel.seznamprgschv,
+-- 	hodn.*
+	
+
+-- FROM isum.v_bi_UMVHodnotitelPrg hodn
+-- INNER JOIN isum.v_bi_UmvHodnotitel hodnotitel ON hodnotitel.id = hodn.id_hodnotitel
+-- -- INNER JOIN isum.v_bi_UmvHodnOdbornost odb ON odb.id_HodnotitelPrg = hodn.id
+-- -- INNER JOIN isum.v_bi_UMSCisOdbornost cis ON cis.id = odb.id_odbornost
+-- INNER JOIN isum.v_bi_CUzivatel uzivatel ON uzivatel.id = hodnotitel.id_cuzivatel	
+-- -- INNER JOIN isum.v_bi_UMVHodnVzdelani vz ON vz
+
+
+-- WHERE
+-- -- cis."Název" like '%Digitální podnik'
+
+-- -- AND   cis."Název" like 'PO4%'
+-- -- AND hodn.id = 1117038306
+-- --  AND "V_BI_UMVHODNOTITEL"."SEZNAMPRGSCHV" like '%OP PIK%'
+-- AND uzivatel.username = 'NQBITJAR'
+
+
+-- --------------------------------------------
+-- SELECT 100+TO_NUMBER(SUBSTR(trunc(sysdate), -2,2); 
+--        trunc(sysdate)
+       
+-- FROM isum.v_bi_UmzVyzva 
+-- ----------------------------------------

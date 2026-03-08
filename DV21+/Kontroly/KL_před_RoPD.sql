@@ -1,0 +1,56 @@
+-- CREATE or REPLACE view "optak_-_novak_KL_k_VZ_na_projektech" FOLDER='/06_Data_models/01_OP_TAK/MPO/novak-pavel/' AS 
+SELECT	SUBSTR(prg."Kód",5) "Kód Priority" ,
+	op."Název specifického cíle/opatření" as "Opatření" ,
+	p."Registrační číslo projektu" ,
+ 	w."Kód" "Kód stavu",
+	z."Pořadové číslo",
+	z."Částka způsobilých výdajů předpokládané hodnoty veřejné zakázky bez DPH",
+ 	k."Stav AdO",
+	k."Výsledek kontroly",
+ 	k."Datum ukončení kontroly",
+ 	k."Datum zahájení kontroly",
+ 	k."Zkontrolované fáze VZ",
+ 	-- k."Kód zjištění",
+ 	k."Název zjištění" ,
+
+	hodn."Kód uživatele" ,
+	hk."Komentář"
+	
+
+
+FROM hodnoceni h
+INNER JOIN hodnota_kriteria hk ON hk.id_hodnoceni = h.id AND hk."Kód" = '007082'
+LEFT JOIN hodnotitel hodn ON hodn.id = h.id_hodnotitel
+INNER JOIN kontrola kontr ON kontr.id = h.id_noshodnoceni
+INNER JOIN zakazka z ON z.id = kontr.id_nositelkontroly
+INNER JOIN zakazka_projekt zp ON zp.id_vz = z.id 
+INNER JOIN projekt p ON p.id = kontr.id_projekt 
+INNER JOIN ciselnik_stav_workflow w ON p.id_wfstav = w.id 
+INNER JOIN vyzva v ON v.id = p.id_vyzva
+INNER JOIN vyzva_hierarchie vh ON vh.id_vyzva = v.id
+INNER JOIN specificky_cil op on op.id=vh.id_speccil 
+INNER JOIN programova_linie prg ON prg.id = op.id_osa
+INNER JOIN (SELECT GROUP_CONCAT(DISTINCT '; ',  k."Číslo kontroly") "Číslo kontroly",
+		  GROUP_CONCAT(DISTINCT '; ',  wvz."Název")  "Stav AdO",
+		  GROUP_CONCAT(DISTINCT '; ',  k."Datum ukončení kontroly") "Datum ukončení kontroly",
+		  GROUP_CONCAT(DISTINCT '; ',  k."Datum zahájení kontroly") "Datum zahájení kontroly",
+		  GROUP_CONCAT(DISTINCT '; ',  k."Zkontrolované fáze VZ") "Zkontrolované fáze VZ",
+		  GROUP_CONCAT(DISTINCT '; ',
+		  	CASE WHEN k."Ukončení kontroly" = 0 THEN 'Se zjištěním'
+			     WHEN k."Ukončení kontroly" = 1 THEN 'Bez zjištění'
+			     ELSE null END) "Výsledek kontroly",
+		  GROUP_CONCAT(DISTINCT '; ',  cpk."Kód") "Kód zjištění",
+		  GROUP_CONCAT(DISTINCT '; ',  cpk."Název"  ) "Název zjištění" ,
+		  k.id_nositelkontroly
+     	  FROM kontrola k 
+	  INNER JOIN ciselnik_stav_workflow wvz ON k.id_wfstav = wvz.id 
+	  LEFT JOIN nedostatky_zprava_o_realizaci nedost ON nedost.id_kontrola = k.id
+	  LEFT JOIN ciselnik_kategorizace_zjisteni cpk ON cpk.id = nedost.id_kategoriezjist
+	  -- WHERE k.id_nositelkontroly = 387238675
+	  GROUP BY k.id_nositelkontroly ) k ON k.id_nositelkontroly = z.id 
+
+
+
+WHERE h.id_souborkrit IN (205847519, 440338828, 445790503)
+-- AND h.id = 421810889
+ORDER BY  "Kód Priority" , op."Název specifického cíle/opatření" ,  k."Datum zahájení kontroly"

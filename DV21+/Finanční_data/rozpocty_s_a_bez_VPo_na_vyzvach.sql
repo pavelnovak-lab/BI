@@ -1,0 +1,68 @@
+SELECT
+    v."Číslo výzvy" AS "Číslo výzvy",
+    v."Název výzvy" AS "Název výzvy",
+    csr."Kód" AS "Kód",
+    csr."Název" AS "Název",
+    rsp."Kód" AS "KódRP",
+    rsp."Název" AS "NázevRP",
+    rsp."Úroveň" AS "Úroveň"
+  --  rsp."Platnost" AS "Platnost",
+    --rsp."Investice / Neinvestice" AS "Investice / Neinvestice" (podle tohohle by to kdyžtak asi šlo posčítat, ale to mi přijde dost složitý teda)
+FROM
+    rozpocet_skupina_polozka AS rsp
+inner JOIN
+    ciselnik_skupina_rozpoctu AS csr ON rsp.id_predpis = csr.id 
+inner JOIN
+    vyzva_matricni_data AS vmd ON csr.id = vmd.id_ciszakladni 
+inner JOIN
+    vyzva AS v ON vmd.id_vyzva = v.id
+WHERE
+-- rsp."Název" = 'Celkové způsobilé výdaje - neinvestiční'
+v."Číslo výzvy" = '01_23_039' 
+
+ORDER BY
+    "Číslo výzvy" ASC,
+    "Úroveň" ASC;
+    
+ -- rsp."Název" like '%působilé výdaje - neinvestiční'
+
+
+------------------------------
+
+
+SELECT
+    v."Číslo výzvy" AS "Číslo výzvy",
+    v."Název výzvy" AS "Název výzvy",
+    csr."Kód" AS "Kód",
+    csr."Název" AS "Název",
+    rsp."Kód" AS "KódRP",
+    rsp."Název" AS "NázevRP",
+    rsp."Úroveň" AS "Úroveň"
+  --  rsp."Platnost" AS "Platnost",
+    --rsp."Investice / Neinvestice" AS "Investice / Neinvestice" (podle tohohle by to kdyžtak asi šlo posčítat, ale to mi přijde dost složitý teda)
+FROM
+    rozpocet_skupina_polozka AS rsp
+inner JOIN
+    ciselnik_skupina_rozpoctu AS csr ON rsp.id_predpis = csr.id 
+INNER JOIN
+    rozpocet_skupina sr ON sr.id = rsp.id_predpis
+inner JOIN
+    vyzva_matricni_data AS vmd ON csr.id = vmd.id_ciszakladni 
+inner JOIN
+    vyzva AS v ON vmd.id_vyzva = v.id
+WHERE
+rsp.id_verejnapodpora = 0
+AND rsp."Listová" = 'A'
+AND rsp."Název" not like 'Celkové%'
+AND exists (SELECT 1
+    	    FROM rozpocet_skupina_polozka r
+	    INNER JOIN rozpocet_skupina rs ON rs.id = r.id_predpis
+	    where r."Listová" = 'A'
+	    AND r.id_verejnapodpora > 0
+	    AND r."Název" not like 'Celkové%'
+	    AND rs.id = sr.id )
+
+
+ORDER BY
+    "Číslo výzvy" ASC,
+    "Úroveň" ASC;

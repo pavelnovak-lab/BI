@@ -1,0 +1,12 @@
+SELECT v."Název výzvy",
+       v."Èíslo výzvy",
+       p."Registraèní èíslo projektu" ,
+       hk.*
+
+FROM isum.v_bi_UMVHodnKomNos k
+INNER JOIN isum.v_bi_UmzPrjGGII p ON p.id = k.id_noshodnoceni
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva 
+INNER JOIN isum.v_bi_UMVHodnKomise hk ON hk.id = k.id_hodnkomise
+-- INNER JOIN V_BI_UMVHodnTypKomise
+
+WHERE id = 59672186

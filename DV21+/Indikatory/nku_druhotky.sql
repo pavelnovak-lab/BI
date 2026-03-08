@@ -1,0 +1,159 @@
+-- CREATE or REPLACE view "tak-novak-nku-druhotky-voda" FOLDER='/06_Data_models/01_OP_TAK/MPO/novak-pavel/Indikatory' AS 
+WITH indose AS (
+    SELECT 
+        IH.id_nositelindi,
+        ind."Kód NČI 2021+",
+	IH."Povinný k naplnění" ,
+        ind."Název indikátoru CZ",
+        IH."Cílová hodnota",
+        IH."Dosažená hodnota",
+	cmj."Název měrné jednotky"
+        -- ROW_NUMBER() OVER (PARTITION BY IH.id_nositelindi ORDER BY ind."Kód NČI 2021+", ind.id) as rn
+ 	FROM indikator_hodnota IH
+	INNER JOIN indikator ind ON IH.id_indikator = ind.id
+	INNER JOIN ciselnik_merna_jednotka cmj ON cmj.id = ind.id_mernajednotka
+	WHERE ind."Kód NČI 2021+" IN ( '101022', '243010', '426101', '426201', '401601', '401701')
+)
+
+SELECT 
+    v."Číslo výzvy",
+    p."Registrační číslo projektu",
+    p."Název projektu CZ",
+    s."Název subjektu" AS "Název příjemce",
+    s."IČ/rodné číslo" "IČ",
+    csw."Kód" AS "Kód stavu projektu",
+
+    -- FINANCOVÁNÍ
+    pzf."Celkové zdroje připadající na způsobilé výdaje",
+    pzf."Příspěvek Unie",
+    pzf."Soukromé zdroje",
+    PF."Doporučený poměr financování (%)" AS "Poměr financování z vlastních zdrojů",
+    
+    
+    -- TERMÍNY
+    p."Předpokládané datum zahájení",
+    p."Předpokládané datum ukončení",
+    p."Skutečné datum zahájení",
+    p."Skutečné datum ukončení",
+    platby."Datum finančního ukončení ŘO" ,
+    platby.propleu "Dosud proplacená dotace" ,
+    platby.proplczv "CZV odpovídající proplaceným platbám",
+    -- Místo realizace
+    GROUP_CONCAT(DISTINCT '; ', cisjednot."Název") AS "Místo realizace - Obec",
+    
+     max(CASE WHEN ind."Kód NČI 2021+" = '101022' THEN ind."Povinný k naplnění"
+     	  END) AS "Ind. 101022 povinný k naplnění",
+     max(CASE WHEN ind."Kód NČI 2021+" = '101022' THEN ind."Dosažená hodnota"
+     	  END) AS "Ind. 101022 Dosažená hodnota",
+     max(CASE WHEN ind."Kód NČI 2021+" = '101022' THEN ind."Cílová hodnota"
+     	  END) AS "Ind. 101022 Cílová hodnota" ,
+
+     max(CASE WHEN ind."Kód NČI 2021+" = '243010' THEN ind."Povinný k naplnění"
+     	  END) AS "Ind. 243010 povinný k naplnění",
+     max(CASE WHEN ind."Kód NČI 2021+" = '243010' THEN ind."Dosažená hodnota"
+     	  END) AS "Ind. 243010 Dosažená hodnota",
+     max(CASE WHEN ind."Kód NČI 2021+" = '243010' THEN ind."Cílová hodnota"
+     	  END) AS "Ind. 243010 Cílová hodnota" ,
+
+     max(CASE WHEN ind."Kód NČI 2021+" = '426101' THEN ind."Povinný k naplnění"
+     	  END) AS "Ind. 426101 povinný k naplnění",
+     max(CASE WHEN ind."Kód NČI 2021+" = '426101' THEN ind."Dosažená hodnota"
+     	  END) AS "Ind. 426101 Dosažená hodnota",
+     max(CASE WHEN ind."Kód NČI 2021+" = '426101' THEN ind."Cílová hodnota"
+     	  END) AS "Ind. 426101 Cílová hodnota" ,
+
+     max(CASE WHEN ind."Kód NČI 2021+" = '426201' THEN ind."Povinný k naplnění"
+     	  END) AS "Ind. 426201 povinný k naplnění",
+     max(CASE WHEN ind."Kód NČI 2021+" = '426201' THEN ind."Dosažená hodnota"
+     	  END) AS "Ind. 426201 Dosažená hodnota",
+     max(CASE WHEN ind."Kód NČI 2021+" = '426201' THEN ind."Cílová hodnota"
+     	  END) AS "Ind. 426201 Cílová hodnota" ,
+
+     max(CASE WHEN ind."Kód NČI 2021+" = '401601' THEN ind."Povinný k naplnění"
+     	  END) AS "Ind. 401601 povinný k naplnění",
+     max(CASE WHEN ind."Kód NČI 2021+" = '401601' THEN ind."Dosažená hodnota"
+     	  END) AS "Ind. 401601 Dosažená hodnota",
+     max(CASE WHEN ind."Kód NČI 2021+" = '401601' THEN ind."Cílová hodnota"
+     	  END) AS "Ind. 401601 Cílová hodnota" ,
+
+     max(CASE WHEN ind."Kód NČI 2021+" = '401701' THEN ind."Povinný k naplnění"
+     	  END) AS "Ind. 401701 povinný k naplnění",
+     max(CASE WHEN ind."Kód NČI 2021+" = '401701' THEN ind."Dosažená hodnota"
+     	  END) AS "Ind. 401701 Dosažená hodnota",
+     max(CASE WHEN ind."Kód NČI 2021+" = '401701' THEN ind."Cílová hodnota"
+     	  END) AS "Ind. 401701 Cílová hodnota"
+
+FROM projekt AS p
+INNER JOIN subjekt s ON s.id_prjgg = p.id AND s."Neplatný od" is null AND s.id_typsubjektuedit IN (413462) -- žadatel
+INNER JOIN vyzva AS v ON p.id_vyzva = v.id
+INNER JOIN ciselnik_stav_workflow AS csw ON p.id_wfstav = csw.id
+INNER JOIN prehled_zdroju_financovani_sckr AS pzf ON p.id = pzf.id_projekt AND pzf.id_faze = '99991000000010005'
+INNER JOIN pomery_financovani AS PF ON pf.id_nositelpompf = p.id
+LEFT JOIN umisteni AS u ON p.id = u.id_projekt
+LEFT JOIN ciselnik_uzemni_jednotky AS cisjednot ON u.id_uzemnijednotky = cisjednot.id
+INNER JOIN indose ind ON p.id = ind.id_nositelindi
+
+-- Platby
+LEFT JOIN ( SELECT pl.id_nositelplatby ,
+ 	       sum(CASE WHEN cuk."Kód" = '7' THEN  rf."Schválené vyúčtování ZS/ŘO v této ŽoP" END) propleu,
+ 	       sum(CASE WHEN cuk."Kód" = '1' THEN  rf."Schválené vyúčtování ZS/ŘO v této ŽoP" END) proplczv,
+ 	       CASE WHEN pl."Závěrečná platba" = 'A' THEN pl."Datum proplacení příjemci / vypořádání"
+		   	ELSE NULL
+			END "Datum finančního ukončení ŘO"
+      	    FROM projekt p 
+	    INNER JOIN platba pl ON pl.id_nositelplatby = p.id 
+	    INNER JOIN ciselnik_stav_workflow wpl ON pl.id_wfstav = wpl.id 
+	    INNER JOIN rozpis_financovani rf ON rf.id_platba = pl.id
+	    INNER JOIN ciselnik_ukazatel_rozpis_financovani cuk ON cuk.id = rf.id_ukazatel AND cuk."Kód" in ('1','7') -- řádek F1-C CZV celkem, EU celkem
+	    WHERE wpl."Kód" REGEXP_LIKE ('P1[0-4][T]?') -- proplaceno zop stavy po P11 jsou ŽoP vrácené z PO
+	     -- AND
+	     
+	    GROUP BY pl.id_nositelplatby,
+	    	     "Datum finančního ukončení ŘO"
+         ) platby ON platby.id_nositelplatby = p.id
+-- SELECT pl.id_nositelplatby ,
+-- 		   sum(rf."Schválené vyúčtování ZS/ŘO v této ŽoP") propleu,
+--       		   CASE WHEN pl."Závěrečná platba" = 'A' THEN pl."Datum proplacení příjemci / vypořádání"
+-- 		   	ELSE NULL
+-- 			END
+--       	    FROM platba pl 
+-- 	    INNER JOIN rozpis_financovani rf ON rf.id_platba = pl.id
+-- 	    INNER JOIN ciselnik_stav_workflow wpl ON pl.id_wfstav = wpl.id 
+-- 	    INNER JOIN ciselnik_ukazatel_rozpis_financovani cuk ON cuk.id = rf.id_ukazatel AND cuk."Kód" = '7' -- řádek F1-C EU celkem
+-- 	    WHERE wpl."Kód" REGEXP_LIKE ('P1[0-4][T]?') -- proplaceno zop stavy po P11 jsou ŽoP vrácené z PO 
+-- 	    GROUP BY pl.id_nositelplatby,
+--
+	    
+	    
+WHERE v."Číslo výzvy" IN ('01_23_029','01_25_068','01_23_028')
+  AND p."Registrační číslo projektu" IS NOT NULL
+  AND csw."Kód" REGEXP_LIKE 'P[NPU][34][0-6][ab]?' 
+  AND PF."Vlastní prostředky financování" = 'A'
+  -- AND p."Registrační číslo projektu" = ('CZ.01.05.02/01/23_028/0002687','CZ.01.05.01/01/23_029/0004757')
+  AND p."Registrační číslo projektu" in ('CZ.01.05.02/01/23_028/0002687','CZ.01.05.01/01/23_029/0004757','CZ.01.05.02/01/23_028/0003638')
+
+GROUP BY v."Číslo výzvy",
+    p."Registrační číslo projektu",
+    p."Název projektu CZ",
+    s."Název subjektu",
+    s."IČ/rodné číslo",
+    csw."Kód",
+
+    -- FINANCOVÁNÍ
+    pzf."Celkové zdroje připadající na způsobilé výdaje",
+    pzf."Příspěvek Unie",
+    pzf."Soukromé zdroje",
+    PF."Doporučený poměr financování (%)",
+    
+    -- TERMÍNY
+    p."Předpokládané datum zahájení",
+    p."Předpokládané datum ukončení",
+    p."Skutečné datum zahájení",
+    p."Skutečné datum ukončení" ,
+    platby."Datum finančního ukončení ŘO" ,
+    platby.propleu,
+    platby.proplczv
+    -- platby."Datum finančního ukončení ŘO" ,
+    -- platby.propleu
+
+ORDER BY v."Číslo výzvy", SUBSTR(p."Registrační číslo projektu",24) 

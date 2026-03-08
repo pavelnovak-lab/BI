@@ -1,0 +1,26 @@
+SELECT op."Název specifického cíle/opatření" as "Opatření" ,
+       p."Registrační číslo projektu",
+       w."Kód" "Stav WF" ,
+       hs."Datum přepnutí" ,
+       p."Datum změny stavu"         
+
+FROM projekt p
+INNER JOIN ciselnik_stav_workflow w ON p.id_wfstav = w.id    
+INNER JOIN vyzva v ON v.id = p.id_vyzva 
+INNER JOIN (SELECT max(hs.id),
+      	   	   hs.nositelid,
+		   hs."Datum přepnutí" 
+      	    FROM historie_stavu hs 
+	    INNER JOIN ciselnik_stav_workflow pwf ON pwf.id = hs.id_stavdo
+	    WHERE pwf."Kód" = 'PU22a'
+	    GROUP BY hs."Datum přepnutí",
+	    	     hs.nositelid) hs ON hs.nositelid = p.id
+
+
+
+INNER JOIN vyzva_hierarchie vh ON vh.id_vyzva = v.id
+INNER JOIN specificky_cil op on op.id=vh.id_speccil
+
+
+WHERE ADDDAY(trunc(hs."Datum přepnutí"), 8) >= trunc(p."Datum změny stavu")         
+AND w."Kód" = 'PN20b'

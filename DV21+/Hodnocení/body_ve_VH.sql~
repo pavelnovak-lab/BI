@@ -1,0 +1,63 @@
+CREATE OR REPLACE VIEW "Posudky_2_krok_VH_Priorita_1"
+    FOLDER = '/06_data_models/01_op_tak/mpo/novak-pavel/hodnoceni' AS
+
+
+SELECT 
+        p."Registraèní èíslo projektu" ,                           
+	w."Kód" "Kód stavu" ,
+	pf."Pøíspìvek Unie" "Dotace",
+	-- body.pocetbodu "Celkem bodù ve VH",
+	body."Celkový výsledek - v bodech",
+	ch."Název" "Popis statutu" ,
+	tel."Kód u¾ivatele2" "Kód hodnotitele",
+	dep."Adresa u¾ivatele",     
+	h."Výsledek (v bodech)"	"Bodù posudek",
+	h."Poøadí" "Poøadí posudku",
+	h."Opravný posudek" ,
+	h."Arbitr",
+	h."Známka (rating hodnotitele)",
+	h."Poèet hodin" "Poèet hodin (od EH, vyplnìno na posudku)" ,
+	h."Datum finalizace"
+
+
+
+	
+FROM projekt p
+INNER JOIN ciselnik_stav_workflow w ON p.id_wfstav = w.id 
+INNER JOIN vyzva v ON v.id = p.id_vyzva 
+INNER JOIN vyzva_hierarchie vh ON vh.id_vyzva = v.id
+INNER JOIN v_rav_umshisc op on op.id=vh.id_speccil 
+INNER JOIN programova_linie prg ON prg.id = op.id_osa
+INNER JOIN prehled_zdroju_financovani pf ON pf.id_projekt = p.id AND pf.id_faze = 99991000000000005 -- aktuální stav
+INNER JOIN hodnoceni h ON p.id = h.id_noshodnoceni
+INNER JOIN hodnotitel tel ON h.id_hodnotitel = tel.id
+INNER JOIN hodnotitel_adresa_depese dep ON dep.id = tel.id
+INNER JOIN ciselnik_krok_vecneho_hodnoceni c ON c.id = h.id_krokvechodn
+INNER JOIN hodnoceni_status body ON body.id_noshodnoceni = p.id AND body.id_krokvechodn = 488854
+INNER JOIN ciselnik_status_hodnoceni ch ON ch.id = body.id_statushodn
+
+
+
+
+
+
+
+WHERE h."Platný" = 'A'
+AND h."Finalizováno" = 'A'
+AND h."Schváleno schvalovatelem" = 'A'
+AND tel."Interní hodnotitel" = 'N'
+-- AND v."Èíslo výzvy" in ('01_22_002','01_22_003', '01_23_024', '01_22_001', '01_22_005')
+-- AND p."Registraèní èíslo projektu" = 'CZ.01.01.01/01/22_002/0000011'
+AND prg."Kód" = "01.01"
+
+
+ORDER BY p."Registraèní èíslo projektu" 
+
+ 
+
+
+
+
+ 
+
+

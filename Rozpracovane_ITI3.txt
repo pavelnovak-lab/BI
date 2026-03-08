@@ -1,0 +1,31 @@
+select	"V_BI_UMZVYZVA"."Název výzvy" as "Název výzvy",
+	"V_BI_UMZVYZVA"."Èíslo výzvy" as "Èíslo výzvy",
+	"V_BI_UMZVYZVA"."Finanèní alokace Celk" as "Finanèní alokace Celk",
+	"V_BI_UMZVYZVA"."WFSTAV" as "WFSTAV",
+	"V_BI_UMZVYZVA"."Datum zahájení pøíjmu žádosti" as "Datum otevøení výzvy",
+
+	round(("V_BI_UMZVYZVA"."Datum ukonèení pøíjmu žádosti"-"V_BI_UMZVYZVA"."Datum zahájení pøíjmu žádosti")/30) as "Vyhlasena_mesicu",
+
+	decode("V_BI_UMZVYZVASTRATEGIE"."ID_STRATEGIE",47207531,'Hradec-Pardubice',52055106,'Plzeò',47466198,'Olomouc',48093763,'Brno',45804583,'Ostrava','Neuvedena') as "Aglomerace ITI",
+
+	count("V_BI_UMZPRJGG"."Registraèní èíslo projektu") as "Poèet projektù s RoPD"
+/*	"V_BI_UMZPRJGG"."Název projektu CZ" as "Název projektu CZ",
+	"V_BI_UMZPRJGG"."KODWFSTAV" as "KODWFSTAV", 
+	sum("V_BI_UMZPRJGG"."CZV") as "CZV celkem",
+	sum("V_BI_UMZPRJGG"."EU") as "Pøíspìvek EU celkem" */
+
+from	"ISUM"."V_BI_UMZPRJGG" "V_BI_UMZPRJGG",
+	"ISUM"."V_BI_UMZVYZVASTRATEGIE" "V_BI_UMZVYZVASTRATEGIE",
+	"ISUM"."V_BI_UMZVYZVAKATEGORIE" "V_BI_UMZVYZVAKATEGORIE",
+	"ISUM"."V_BI_UMZVYZVA" "V_BI_UMZVYZVA" 
+
+where   "V_BI_UMZVYZVAKATEGORIE"."ID_VYZVA"="V_BI_UMZVYZVA"."ID"
+ and	 "V_BI_UMZVYZVASTRATEGIE"."ID_VYZVA"="V_BI_UMZVYZVA"."ID"
+ and	 "V_BI_UMZPRJGG"."ID_VYZVA"="V_BI_UMZVYZVA"."ID"
+ and 	 "V_BI_UMZVYZVA"."Èíslo výzvy" in ('01_17_095', '01_17_139')
+ and	 "V_BI_UMZPRJGG"."KODWFSTAV" in ('PP30','PP36','PP37','PP40','PP41','PP42') 
+ and	 "V_BI_UMZPRJGG"."Registraèní èíslo projektu" is not null 
+ and	 "V_BI_UMZVYZVA"."OP kod" ='01' 
+ and	 "V_BI_UMZVYZVAKATEGORIE"."INTEGROVANY" ='Ano'
+
+group by "Název výzvy","Èíslo výzvy","Finanèní alokace Celk","V_BI_UMZVYZVA"."WFSTAV","V_BI_UMZVYZVASTRATEGIE"."ID_STRATEGIE", "V_BI_UMZVYZVA"."Datum ukonèení pøíjmu žádosti","V_BI_UMZVYZVA"."Datum zahájení pøíjmu žádosti"

@@ -1,0 +1,22 @@
+SELECT 	fn."Kód",
+	fn."Název fondu fondù",
+	kp."Jméno nebo Název",
+	typ."Název" AS "Typ koneèného pøíjemce",
+	kp."Identifikaèní údaj smlouvy",
+	kp."Datum podpisu smlouvy",
+
+/* Tady bych èekal položky z èíselníkù výbìr typu, není to pravda ... */
+	nazev."Název" AS "Výbìr typu",
+
+	rzfin.*
+	
+
+FROM 		isum.v_bi_UMPFinNastroj fn
+INNER JOIN	isum.v_bi_UMPFNPrehledKP kp ON kp.id_finnastroj=fn.id
+INNER JOIN	isum.v_bi_UmsCisZakladni typ ON typ.id=kp.id_typprijemce
+INNER JOIN	isum.V_BI_UmpFNRozpisFin rzfin ON rzfin.id_finnastroj=fn.id
+INNER JOIN 	isum.v_BI_UmsCISZakladni nazev ON nazev.id=rzfin.id_typ
+
+
+WHERE 	fn."Kód" is not null
+AND	kp.id=1044162701 /* Jizerskohosrská strojírna */

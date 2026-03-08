@@ -1,0 +1,86 @@
+SELECT DECODE (SUBSTR(p.KodPrioritniOsa, 4), 1, '1.3', 
+                             2, '1.5', 
+                             3, '2.3', 
+                             5, '2.7',
+                             
+                                '¾ádná')  "Komponenta NPO",
+       v."Èíslo výzvy",
+       v."Název výzvy",
+       p.id "id_projekt",
+       p."Registraèní èíslo projektu" "Èíslo projektu",
+       vs."IÈ",
+       vs."Název subjektu" "Pøíjemce",
+       ci."Název" "Právní forma",
+       cis."Název" "Velikost podniku" ,
+       platba."Úprava/zamítnutí ¾ádosti o pla",
+       platba."Èíslo ¾ádosti o platbu",       
+       platba.id "id_platba",
+       platba.id_NositelPlatby,
+       platba."Závìreèná platba",
+       platba."PORADI#Poøadí finanèního plánu" "Poøadí ®oP",
+       platba."Zálohová platba",
+       platba.kodwfstav ,
+       platba."Datum zmìny stavu" "Datum souèasného stavu ®oP" ,
+       (hs.posldatum) "Datum posledního P5T" ,
+       (hs.pocet) "Poèet pøepnutí do P5T",
+       (korekce.vyse) "Celkovì kráceno",
+       korekce.nazev_k "Typ korekce"
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva
+INNER JOIN isum.v_bi_UmzPrjGGvs vs ON vs.id_prjgg=p.id AND vs.neplatny is null AND vs.id_typsubjektu = 300784 AND vs.id_typsubjektuEdit = 300798 -- zadatel 
+INNER JOIN isum.v_bi_UmsCisZakladni ci ON ci.id =  vs.id_hosppravforma
+INNER JOIN isum.v_bi_UmsCisZakladni cis ON cis.id = vs.id_velikostpodniku
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby
+INNER JOIN (SELECT max(h.datumod) posldatum,
+      	   	   count(h.stavdo) pocet,
+		   h.nositelid
+ 	    FROM isum.v_bi_UmsWFHistorieStavu h
+	    WHERE h.stavdo = 'P5T'
+	    GROUP BY h.nositelid) hs ON hs.Nositelid = platba.id
+-- následující subselect umo¾òuje pou¾ití u¾ivatelského parametru
+INNER JOIN (SELECT count(h.datumod), -- agregaèní funkce, kvùli unikátosti záznamu v INNER JOIN 
+		   h.nositelid
+ 	    FROM isum.v_bi_UmsWFHistorieStavu h
+	    WHERE h.datumod >= (:P5T_DatumOD)
+	    AND   h.stavdo = 'P5T'
+	    GROUP BY h.nositelid) hhs ON hhs.Nositelid = platba.id
+
+LEFT JOIN (SELECT sum(kor.vyse) vyse,
+     	  	  kor.id_platba,
+		  LISTAGG(DISTINCT ci.nazev, '; ') nazev_k
+	   FROM isum.v_bi_UMPKorekce kor 
+	   INNER JOIN isum.v_bi_UMSCisTypKorekce ci ON ci.id =  kor.id_typkorekce
+	   WHERE kor.souctovyradek is null
+	   GROUP BY kor.id_platba) korekce ON korekce.id_platba = platba.id
+
+WHERE
+p.kodwfstav in ('PP30','PP36','PP37','PP40','PP41','PP42','PP43')
+AND p.KodPrioritniOsa in ('31.1', '31.2', '31.3', '31.5','31.26') 
+AND platba.kodwfstav in ('P5T') --   ,'P6T','P6','P7','P8T','P8','P9T','P9','P10','P11')
+-- AND platba."Èíslo ¾ádosti o platbu" IN ( 'CZ.31.3.0/0.0/0.0/22_001/0002223/2024/001/POST','CZ.31.3.0/0.0/0.0/22_001/0000562/2023/001/POST')
+
+
+
+
+-- GROUP BY platba."Èíslo ¾ádosti o platbu",       
+--        platba.id,
+--        platba.id_NositelPlatby,
+--        platba."Závìreèná platba",
+--        platba."PORADI#Poøadí finanèního plánu",
+--        platba."Zálohová platba",
+--        platba.kodwfstav ,
+--        platba."Datum zmìny stavu",
+--       SUBSTR(p.KodPrioritniOsa, 4),
+--        v."Èíslo výzvy",
+--        v."Název výzvy",
+--        p.id,
+--        p."Registraèní èíslo projektu",
+--        vs."IÈ",
+--        vs."Název subjektu",
+--        ci."Název",
+--        cis."Název",
+--        platba."Úprava/zamítnutí ¾ádosti o pla" ,
+--        hs.posldatum ,
+--        hs.pocet,
+--        korekce.nazev_k

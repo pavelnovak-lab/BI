@@ -1,0 +1,167 @@
+-- CREATE or REPLACE view "zop_v_p5t_vcera_odpoledne" FOLDER='/06_Data_models/01_OP_TAK/MPO/novak-pavel/Finanèní_data' AS	
+SELECT hszop."Poèet prùchodù P5T nebo P8T",              
+       hszop."Datum posledního stavu P5T nebo P8T",
+       -- w."Kód" "Souèasný stav ®oP",
+       substring(prg."Kód",4) "Kód Priority",
+       v."Název výzvy" ,
+       pl."Èíslo platby" ,
+       s."Název subjektu" "Pøíjemce",
+       -- maximum, abych potlaèil nulový výstup, kdy¾ je podmínka vyhodnocena jako NE. 
+       max(CASE WHEN cuk."Kód" in ('7') THEN rf."Schválené vyúètování ZS/ØO v této ®oP" 
+	    END) "Výdaje EU",
+
+       sum(kr."Krácení celkem") "Celkem kráceno",
+       GROUP_CONCAT(DISTINCT typk."Název CZ") "Zpùsob provedení krácení",
+       GROUP_CONCAT(DISTINCT kr."Typ krácení" 
+       -- CASE WHEN kr."Typ krácení" = '0' THEN 'Vìcné'
+       -- 	    WHEN kr."Typ krácení" = '1' THEN 'VR'
+       -- 	    WHEN kr."Typ krácení" = '2' THEN 'Jiné'
+       -- 	    END
+       ) "Typ krácení 0 - vìcné, 1 - VR, 2 - jiné",
+
+       pl."Partnerství zakládající refundaci do jiné kapitoly OSS",
+       pl."Zálohová platba",
+       pl."Závìreèná platba" ,
+
+       sum(CASE WHEN cuk."Kód" in ('8','9','10','11','12','13') THEN rf."Schválené vyúètování ZS/ØO v této ®oP" 
+       	    END) "Soukromé + národní veøejné zdroje",
+
+       sum(CASE WHEN cuk."Kód" in ('8','9','10','11','12') THEN rf."Schválené vyúètování ZS/ØO v této ®oP" 
+       	    END) "Národní veøejné zdroje",
+
+
+       max(CASE WHEN cuk."Kód" in ('13') THEN rf."Schválené vyúètování ZS/ØO v této ®oP" 
+       	    END) "Soukromé zdroje",
+
+       p."Registraèní èíslo projektu" ,
+       op.nazev as "Opatøení",
+       v."Èíslo výzvy"
+       
+FROM projekt p
+INNER JOIN vyzva v on v.id = p.id_vyzva 
+INNER JOIN vyzva_hierarchie vh ON vh.id_vyzva = v.id
+INNER JOIN v_rav_umshisc op on op.id=vh.id_speccil 
+INNER JOIN v_rav_umshisc sc on sc.id=op.id_hierarchie
+INNER JOIN programova_linie prg ON prg.id = sc.id_osa
+INNER JOIN platba pl ON pl.id_nositelplatby = p.id
+INNER JOIN ciselnik_stav_workflow w ON pl.id_wfstav = w.id  
+LEFT JOIN korekce kr ON kr.id_platba = pl.id 
+-- tahle vazba znamená ignorování souètových øádkù, proto¾e ty nemají nastavený typ korekce. 
+LEFT JOIN ciselnik_typ_korekce typk ON typk.id = kr.id_typkorekce
+
+INNER JOIN (SELECT count(hs.id) "Poèet prùchodù P5T nebo P8T",
+      	   	   max(hs."Datum od") "Datum posledního stavu P5T nebo P8T",
+		   hs.nositelid
+            FROM historie_stavu hs
+	    INNER JOIN ciselnik_stav_workflow w ON w.id = hs.id_stavdo
+	    WHERE w."Kód" IN ('P5T','P8T')
+	    AND hs.id_objekt = 400493 -- tady doufám, ¾e se omezuji jen na platby
+	    GROUP BY hs.nositelid) hszop ON hszop.nositelid = pl.id
+INNER JOIN rozpis_financovani rf ON rf.id_platba = pl.id 
+INNER JOIN ciselnik_ukazatel_rozpis_financovani cuk ON cuk.id = rf.id_ukazatel AND cuk."Kód" in ('7','8','9','10','11','12','13') -- øádek F1-C EU celkem
+INNER JOIN subjekt s ON s.id_prjgg = p.id AND s."Neplatný od" is null AND s.id_typsubjektuedit IN (413462) -- ¾adatel, partner s FP
+-- INNER JOIN ciselnik_typ_subjektu ts ON ts.id = s.id_typsubjektuedit 
+
+WHERE w."Kód" IN ('P5T','P8T')
+-- AND pl."Èíslo platby" IN ( 'CZ.01.01.01/02/22_003/0000133/2025/001/POST','CZ.01.04.01/01/22_006/0000001/2024/001/POST','CZ.01.04.01/01/22_006/0000380/2024/001/POST','CZ.01.04.02/01/22_007/0000017/2024/001/POST')
+AND
+(
+    ( GETDAYOFWEEK(NOW())) IN (1) -- pondìlí
+    AND 
+    pl."Datum zmìny stavu" BETWEEN 
+    CAST(FORMATDATE('yyyy-MM-dd', ADDDAY(CURRENT_DATE(), -3)) || ' 12:00:00.001' AS timestamp) 
+    AND 
+    CAST(FORMATDATE('yyyy-MM-dd', CURRENT_DATE()) || ' 05:59:59.999' AS timestamp)
+   
+OR  (
+    ( GETDAYOFWEEK(NOW())) IN (0) -- nedìle 
+    AND 
+    pl."Datum zmìny stavu" BETWEEN 
+    CAST(FORMATDATE('yyyy-MM-dd', ADDDAY(CURRENT_DATE(), -2)) || ' 12:00:00.001' AS timestamp) 
+    AND 
+    CAST(FORMATDATE('yyyy-MM-dd', CURRENT_DATE()) || ' 05:59:59.999' AS timestamp)
+    )
+OR  (
+    ( GETDAYOFWEEK(NOW())) IN (2,3,4,5,6) -- úterý - sobota 
+    AND 
+    pl."Datum zmìny stavu" BETWEEN 
+    CAST(FORMATDATE('yyyy-MM-dd', ADDDAY(CURRENT_DATE(), -1)) || ' 12:00:00.001' AS timestamp) 
+    AND 
+    CAST(FORMATDATE('yyyy-MM-dd', CURRENT_DATE()) || ' 05:59:59.999' AS timestamp)
+    )
+)
+
+GROUP BY hszop."Poèet prùchodù P5T nebo P8T",              
+       hszop."Datum posledního stavu P5T nebo P8T",
+       -- w."Kód" ,
+       "Kód Priority",
+       v."Název výzvy" ,
+       pl."Èíslo platby" ,
+       s."Název subjektu",
+
+       pl."Partnerství zakládající refundaci do jiné kapitoly OSS",
+       pl."Zálohová platba",
+       pl."Závìreèná platba" ,
+       p."Registraèní èíslo projektu" ,
+       "Opatøení",
+       v."Èíslo výzvy" 
+       -- kr."Krácení celkem",
+       -- "Zpùsob provedení krácení",
+       -- kr."Typ krácení"
+       -- "Krácení typu"
+
+
+ORDER BY pl."Èíslo platby" 
+
+
+
+-- --------------------------------------------------
+-- SELECT (hs.id) "Poèet prùchodù P5T nebo P8T",
+--       	   	   (hs."Datum od") "Datum posledního stavu P5T nebo P8T",
+-- 		   hs.nositelid, w."Kód" 
+--             FROM historie_stavu hs
+-- 	    INNER JOIN ciselnik_stav_workflow w ON w.id = hs.id_stavdo
+-- 	    INNER JOIN platba pl ON pl.id = hs.nositelid
+-- 	    WHERE w."Kód" IN ('P5T','P8T')
+-- 	    AND hs.id_objekt = 400493 -- tady doufám, ¾e se omezuji jen na platby
+-- 	    -- AND (hs."Datum od" BETWEEN
+-- 	    -- 	 CAST(FORMATDATE('yyyy-MM-dd', CURRENT_DATE() ) || ' 06:00:00' AS timestamp) 
+--  	    -- 	 AND 
+--  	    -- 	 CAST(FORMATDATE('yyyy-MM-dd', CURRENT_DATE() ) || ' 12:00:00' AS timestamp)
+--  	    -- 	)
+
+-- 	    AND (
+-- 	    	( GETDAYOFWEEK(NOW())) IN (1) -- pondìlí
+-- 	    	AND 
+-- 	    	hs."Datum od" BETWEEN 
+--  		CAST(FORMATDATE('yyyy-MM-dd', ADDDAY(CURRENT_DATE(), -3)) || ' 12:00:00.001' AS timestamp) 
+--  		AND 
+--  		CAST(FORMATDATE('yyyy-MM-dd', CURRENT_DATE()) || ' 05:59:59.999' AS timestamp)
+-- 	    	)
+-- 	    OR  (
+-- 	    	( GETDAYOFWEEK(NOW())) IN (0) -- nedìle 
+-- 	    	AND 
+-- 	    	hs."Datum od" BETWEEN 
+--  		CAST(FORMATDATE('yyyy-MM-dd', ADDDAY(CURRENT_DATE(), -2)) || ' 12:00:00.001' AS timestamp) 
+--  		AND 
+--  		CAST(FORMATDATE('yyyy-MM-dd', CURRENT_DATE()) || ' 05:59:59.999' AS timestamp)
+-- 	    	)
+-- 	    OR  (
+-- 	    	( GETDAYOFWEEK(NOW())) IN (2,3,4,5,6) -- úterý - sobota 
+-- 	    	AND 
+-- 	    	hs."Datum od" BETWEEN 
+--  		CAST(FORMATDATE('yyyy-MM-dd', ADDDAY(CURRENT_DATE(), -1)) || ' 12:00:00.001' AS timestamp) 
+--  		AND 
+--  		CAST(FORMATDATE('yyyy-MM-dd', CURRENT_DATE()) || ' 05:59:59.999' AS timestamp)
+-- 	    	)
+
+-- 		-- (
+-- 		-- (
+--  		-- (getdayofweek(now()) - 1) IN (5, 6, 0)
+--  		-- AND trunc(addday(now(), - 3)) <= hs."Datum od"
+--  		-- AND hs."Datum od" <= trunc(addday(now(), - 1))
+-- 		-- )
+-- 		-- OR ((getdayofweek(now()) - 1) IN (1, 2, 3, 4) AND trunc(addday(now(), - 1)) <= hs."Datum od")
+-- 		-- )
+-- 		AND pl."Èíslo platby" like 'CZ.01.04.01/01/22_006/0002219/2025/001/POST'
+-- 	    -- GROUP BY hs.nositelid

@@ -1,0 +1,7 @@
+SELECT p."Registraèní èíslo projektu" ,
+       sd.*
+
+FROM projekt p
+INNER JOIN projekt_sdileni sd ON sd.id_nositelsdil = p.id
+
+WHERE p."Registraèní èíslo projektu" = 'CZ.01.04.01/01/22_006/0002305'

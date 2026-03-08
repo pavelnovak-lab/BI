@@ -1,0 +1,46 @@
+SELECT 	opravne."Registraèní èíslo projektu",
+	opravne.kodwfstav,
+	opravne.pocet_edit as "Poèet kritérií k opravì",
+	vsechna.pocet_vsech
+
+FROM
+
+(SELECT p."Registraèní èíslo projektu",
+	p.kodwfstav,
+	p.id,
+	count(hkr.needitovatelne) AS pocet_edit
+	
+FROM 		isum.v_bi_umzprojekt p
+inner join	isum.v_bi_umvhodnoceni h ON h.id_noshodnoceni=p.id
+inner join	isum.V_bi_umvhodnotakrit hkr ON hkr.id_hodnoceni=h.id
+
+
+WHERE	p."Registraèní èíslo projektu" is not null
+AND	h.druhhodn = 'Vìcné hodnocení' 
+-- AND	h.id_krokvechodn = 171214
+AND	h.opravnehodnoceni = 'A'
+AND 	hkr.needitovatelne = 'N' 
+AND	h.platnost = 'A'
+
+GROUP BY p."Registraèní èíslo projektu", p.KODWFSTAV, p.id) opravne
+
+inner join
+
+(SELECT p.id,
+	count(hkr.needitovatelne) AS pocet_vsech
+	
+FROM 		isum.v_bi_umzprojekt p
+inner join	isum.v_bi_umvhodnoceni h ON h.id_noshodnoceni=p.id
+inner join	isum.V_bi_umvhodnotakrit hkr ON hkr.id_hodnoceni=h.id
+
+
+WHERE	p."Registraèní èíslo projektu" is not null
+AND	h.druhhodn = 'Vìcné hodnocení' 
+-- AND	h.id_krokvechodn = 171214
+AND	h.opravnehodnoceni = 'A'
+-- AND 	hkr.needitovatelne = 'N' 
+AND	h.platnost = 'A'
+
+GROUP BY p.id) vsechna
+
+ON opravne.id=vsechna.id

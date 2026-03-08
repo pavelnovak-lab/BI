@@ -1,0 +1,73 @@
+select p."Registrační číslo projektu",
+       -- sw."Kód",
+       -- hs."Datum změny",
+       -- max(case WHEN (hs."Datum změny" <= to_date('yyyy-MM-dd HH:mm:ss','2023-04-30 08:00:00')
+       -- 	    	 AND hs."Datum změny" >= to_date('yyyy-MM-dd HH:mm:ss','2023-04-01 08:00:00')) THEN hs."Datum změny" 
+       -- 		 ELSE NULL 
+       -- 		 END)
+       -- 		 AS "max 04-22",
+       min(case WHEN "Datum změny" >= to_date('yyyy-MM-dd HH:mm:ss','2023-04-01 08:00:00')
+       		AND hs."Datum změny" <= to_date('yyyy-MM-dd HH:mm:ss','2023-04-30 08:00:00') THEN sw."Kód" 
+ 		 ELSE NULL 
+ 		 END)
+ 		 AS "stav 04-23",
+       min(case WHEN "Datum změny" >= to_date('yyyy-MM-dd HH:mm:ss','2023-05-01 08:00:00')
+       		AND hs."Datum změny" <= to_date('yyyy-MM-dd HH:mm:ss','2023-05-31 08:00:00') THEN sw."Kód" 
+ 		 ELSE NULL 
+ 		 END)
+ 		 AS "stav 05-23",
+       min(case WHEN "Datum změny" >= to_date('yyyy-MM-dd HH:mm:ss','2023-06-01 08:00:00')
+       		AND hs."Datum změny" <= to_date('yyyy-MM-dd HH:mm:ss','2023-06-30 08:00:00') THEN sw."Kód" 
+ 		 ELSE NULL 
+ 		 END)
+ 		 AS "stav 06-23",
+       min(case WHEN "Datum změny" >= to_date('yyyy-MM-dd HH:mm:ss','2023-07-01 08:00:00')
+       		AND hs."Datum změny" <= to_date('yyyy-MM-dd HH:mm:ss','2023-07-31 08:00:00') THEN sw."Kód" 
+ 		 ELSE NULL 
+ 		 END)
+ 		 AS "stav 07-23",
+       min(case WHEN "Datum změny" >= to_date('yyyy-MM-dd HH:mm:ss','2023-08-01 08:00:00')
+       		AND hs."Datum změny" <= to_date
+		('yyyy-MM-dd HH:mm:ss','2023-08-31 08:00:00') THEN sw."Kód" 
+ 		 ELSE NULL 
+ 		 END)
+ 		 AS "stav 08-23",
+       min(case WHEN "Datum změny" >= to_date('yyyy-MM-dd HH:mm:ss','2023-09-01 08:00:00')
+       		AND hs."Datum změny" <= to_date('yyyy-MM-dd HH:mm:ss','2023-09-31 08:00:00') THEN sw."Kód" 
+ 		 ELSE NULL 
+ 		 END)
+ 		 AS "stav 09-23",
+       min(case WHEN "Datum změny" >= to_date('yyyy-MM-dd HH:mm:ss','2023-10-01 08:00:00')
+       		AND hs."Datum změny" <= to_date('yyyy-MM-dd HH:mm:ss','2023-10-30 08:00:00') THEN sw."Kód" 
+ 		 ELSE NULL 
+ 		 END)
+ 		 AS "stav 10-23",
+       min(case WHEN "Datum změny" >= to_date('yyyy-MM-dd HH:mm:ss','2023-11-01 08:00:00')
+       		AND hs."Datum změny" <= to_date('yyyy-MM-dd HH:mm:ss','2023-11-31 08:00:00') THEN sw."Kód" 
+ 		 ELSE NULL 
+ 		 END)
+ 		 AS "stav 11-23"
+
+
+from projekt p
+join historie_stavu hs on hs.nositelid = p.id
+join ciselnik_stav_workflow sw on sw.id = hs.id_stavdo
+
+
+where p."Registrační číslo projektu" = 'CZ.01.01.01/05/23_009/0001251'
+
+GROUP BY p."Registrační číslo projektu" 
+
+
+-----------------------------------------
+
+SELECT
+v."Číslo výzvy",
+v."Datum změny" 
+FROM
+vyzva v
+WHERE
+v."Číslo výzvy" like '01_%'
+--and v.id in (31025415,132416676)
+and v."Datum změny" > to_date('yyyy-MM-dd HH:mm:ss','2023-08-02 08:00:00')
+order by v."Datum změny" desc;

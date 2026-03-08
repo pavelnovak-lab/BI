@@ -1,0 +1,75 @@
+select	A."KODPRIORITNIOSA",
+	A."KODINVESTPRIORITA",
+	A."KODSPECIFCIL",
+	A."Èíslo výzvy",
+	A."Název výzvy",
+	A."Registraèní èíslo projektu",
+	A."ZADATEL",
+	A."ZADATELPFORMA",
+	A."IÈ",
+	A."WFSTAV",
+	A."KODWFSTAV",
+	A."Pøíspìvek Unie",
+	A."Evropský fond pro regionální r",
+	A."Celkové zpùsobilé výdaje",
+	A."PROC_EU",
+	A."KOMPETENCNIUTVAR",
+	A."WFSTAVDATUM",
+	A."Datum prvního podání",
+	B."PP00",
+	B."PU01/PU21",
+	B."PP20",
+	B."PP21/PP22",
+	B."PP23",
+	B."PP27/PU27",
+	B."PP29",
+	B."PP30"
+
+from
+(select	 "V_BI_UMZPROJEKT"."KODPRIORITNIOSA" as "KODPRIORITNIOSA",
+	 "V_BI_UMZPROJEKT"."KODINVESTPRIORITA" as "KODINVESTPRIORITA",
+	 "V_BI_UMZPROJEKT"."KODSPECIFCIL" as "KODSPECIFCIL",
+	 "V_BI_UMZVYZVA"."Èíslo výzvy" as "Èíslo výzvy",
+	 "V_BI_UMZVYZVA"."Název výzvy" as "Název výzvy",
+	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" as "Registraèní èíslo projektu",
+	 "V_BI_UMZPROJEKT"."ZADATEL" as "ZADATEL",
+	 "V_BI_UMZPROJEKT"."ZADATELPFORMA" as "ZADATELPFORMA",
+	 "V_BI_UMZPROJEKT"."IÈ" as "IÈ",
+	 "V_BI_UMZPROJEKT"."WFSTAV" as "WFSTAV",
+	 "V_BI_UMZPROJEKT"."KODWFSTAV" as "KODWFSTAV",
+	 "V_BI_UMFPFCELKEM"."Pøíspìvek Unie" as "Pøíspìvek Unie",
+	 "V_BI_UMFPFCELKEM"."Evropský fond pro regionální r" as "Evropský fond pro regionální r",
+	 "V_BI_UMFPFCELKEM"."Celkové zpùsobilé výdaje" as "Celkové zpùsobilé výdaje",
+	 "V_BI_UMFPFCELKEM"."PROC_EU" as "PROC_EU",
+	 "V_BI_UMZPROJEKT"."KOMPETENCNIUTVAR" as "KOMPETENCNIUTVAR",
+	 "V_BI_UMZPROJEKT"."WFSTAVDATUM" as "WFSTAVDATUM",
+	 "V_BI_UMZPROJEKT"."Datum prvního podání" as "Datum prvního podání" 
+ from	"ISUM"."V_BI_UMZVYZVA" "V_BI_UMZVYZVA",
+	"ISUM"."V_BI_UMFPFFAZE" "V_BI_UMFPFFAZE",
+	"ISUM"."V_BI_UMFPFCELKEM" "V_BI_UMFPFCELKEM",
+	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT" 
+ where   "V_BI_UMFPFCELKEM"."ID_PROJEKT"="V_BI_UMZPROJEKT"."ID"
+ and	 "V_BI_UMFPFCELKEM"."ID_FAZE"="V_BI_UMFPFFAZE"."ID"
+ and	 "V_BI_UMZPROJEKT"."ID_VYZVA"="V_BI_UMZVYZVA"."ID"
+  and 	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" is not null 
+   and	 "V_BI_UMFPFFAZE"."KOD" ='AKT') A
+
+inner join
+
+(select	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" as "Registraèní èíslo projektu",
+min(decode("V_BI_UMSWFHISTORIESTAVU"."STAVDO",'PP00',"V_BI_UMSWFHISTORIESTAVU"."DATUMOD")) as "PP00",
+min(decode("V_BI_UMSWFHISTORIESTAVU"."STAVDO",'PU01',"V_BI_UMSWFHISTORIESTAVU"."DATUMOD",'PU21',"V_BI_UMSWFHISTORIESTAVU"."DATUMOD")) as "PU01/PU21",
+min(decode("V_BI_UMSWFHISTORIESTAVU"."STAVDO",'PP20',"V_BI_UMSWFHISTORIESTAVU"."DATUMOD")) as "PP20",
+min(decode("V_BI_UMSWFHISTORIESTAVU"."STAVDO",'PP21',"V_BI_UMSWFHISTORIESTAVU"."DATUMOD",'PP22',"V_BI_UMSWFHISTORIESTAVU"."DATUMOD")) as "PP21/PP22",
+min(decode("V_BI_UMSWFHISTORIESTAVU"."STAVDO",'PP23a',"V_BI_UMSWFHISTORIESTAVU"."DATUMOD",'PP23b',"V_BI_UMSWFHISTORIESTAVU"."DATUMOD")) as "PP23",
+min(decode("V_BI_UMSWFHISTORIESTAVU"."STAVDO",'PP27a',"V_BI_UMSWFHISTORIESTAVU"."DATUMOD",'PP27b',"V_BI_UMSWFHISTORIESTAVU"."DATUMOD",'PU27',"V_BI_UMSWFHISTORIESTAVU"."DATUMOD")) as "PP27/PU27",
+min(decode("V_BI_UMSWFHISTORIESTAVU"."STAVDO",'PP29',"V_BI_UMSWFHISTORIESTAVU"."DATUMOD")) as "PP29",
+min(decode("V_BI_UMSWFHISTORIESTAVU"."STAVDO",'PP30',"V_BI_UMSWFHISTORIESTAVU"."DATUMOD")) as "PP30"
+
+from	"ISUM"."V_BI_UMSWFHISTORIESTAVU" "V_BI_UMSWFHISTORIESTAVU",
+	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT" 
+where	"V_BI_UMSWFHISTORIESTAVU"."NOSITELID"="V_BI_UMZPROJEKT"."ID"
+ and	 "V_BI_UMSWFHISTORIESTAVU"."STAVDO" in ('PP00','PPU01','PU21','PP20','PP21','PP22','PP23a','PP23b','PP27a','PP27b','PU27','PP29','PP30')
+group by  "V_BI_UMZPROJEKT"."Registraèní èíslo projektu") B
+
+on A."Registraèní èíslo projektu" = B."Registraèní èíslo projektu"

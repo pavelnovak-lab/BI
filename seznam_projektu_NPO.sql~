@@ -1,0 +1,20 @@
+SELECT p."Registraèní èíslo projektu" ,
+       p."Název projektu CZ",
+       p."IÈ",
+       p.zadatel,
+       gg.eu,
+       gg.czv,
+       p.kodwfstav,
+       p.wfstav,
+       hs.datumod "Datum RoPD",
+       p."Datum ukonèení pøedp",
+       p."Datum zahájení pøedp"
+       p.PRIORITNIOSA "Název komponenty v MS14+"
+       p.KodPrioritniOsa "Èíslo komponenty v MS14+"
+       
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_umzprjgg gg ON gg.id=p.id
+LEFT JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.NositelId = p.id where hs.stavdo = 'PP30'
+
+WHERE p."Registraèní èíslo projektu" is not null
+AND p.KodPrioritniOsa like ('31.%') 

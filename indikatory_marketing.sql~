@@ -1,0 +1,42 @@
+SELECT 	p."Registraèní èíslo projektu",
+	p."Název projektu CZ",
+	v."Èíslo výzvy",
+	v."Název výzvy",
+	p.kodwfstav,
+	p.zadatel,
+	p."Datum zahájení pøedp",
+	p."Datum zahájení skut",
+	p."Datum ukonèení pøedp",
+	p."Datum ukonèení skut",
+	p.wfstav,
+	indprj."Cílová hodnota" ,
+	indprj."Datum cílové hodnoty" ,
+	indprj."Datum dosa¾ené hodnoty" ,
+	indprj."Datum výchozí hodnoty" ,
+	indprj."Dosa¾ená hodnota" ,
+	indprj."Povinný k naplnìní" ,
+	indprj."Procento plnìnÍ dosaz" ,
+	indprj."Procento plnìní závazek" ,
+	indprj."Výchozí hodnota" ,
+	indprj."POVINNY" ,
+	indprj."ZAVAZEKHODNOTA" ,
+	ind."Kód NÈI 2014+" ,
+	ind."Název indikátoru" ,
+	cis."Název" 
+
+
+FROM 		isum.v_bi_UmzProjekt p
+INNER JOIN	isum.v_bi_umzvyzva v ON p.id_vyzva=v.id
+INNER JOIN	isum.v_bi_UmvIndiHodnotaPRJ indprj ON indprj.id_nositelindi=p.id
+INNER JOIN 	isum.v_bi_UmvIndikator ind ON ind.id=indprj.id_indikator
+INNER JOIN	isum.v_bi_umsciszakladni cis ON cis.id=ind.id_mernajednotka
+
+WHERE p."Registraèní èíslo projektu" is not null
+AND v."Èíslo výzvy" in ( '01_15_016', '01_16_047', '01_18_167', '01_18_244', '01_15_022', '01_15_023', '01_17_168', '01_18_226', '01_18_223', '01_15_003', '01_16_048', '01_18_221')
+-- AND   p."Registraèní èíslo projektu" is not null
+AND   p.kodwfstav in ('PP30','PP36','PP37','PP40','PP41','PP42','PN40a','PN40b') 
+
+
+ORDER BY p."Registraèní èíslo projektu" 
+
+

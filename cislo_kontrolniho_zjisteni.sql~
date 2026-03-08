@@ -1,0 +1,17 @@
+
+SELECT p."Registraèní èíslo projektu",
+       knm."KOD#Èíslo kontroly" "Kód kontroly",
+       ni.cislo
+       
+
+FROM isum.v_bi_UmzPrjGGII p
+INNER JOIN isum.v_bi_UmvKontrolaNaMiste knm ON p.id = knm.id_nositelkontroly
+inner join isum.V_BI_UMVKONTRZJISTENI ni on ni.ID_KONTROLA=knm.id
+
+ORDER BY substr(p."Registraèní èíslo projektu",-5,5) ASC , ni.cislo
+
+-- WHERE
+--knm."KOD#Èíslo kontroly" like '017571%'
+
+
+

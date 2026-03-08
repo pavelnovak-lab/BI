@@ -1,0 +1,9 @@
+SELECT p."Registrační číslo projektu" ,
+       platba.*
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby
+INNER JOIN isum.v_bi_UmpCastkySchval castky ON platba.id_SchvaleneCastky=castky.id
+
+WHERE p."Registrační číslo projektu" is not null
+AND platba.kodwfstav in ('P11')

@@ -1,0 +1,25 @@
+select	platba."»Ìslo æ·dosti o platbu",
+       sum(kor.vyse) "CelkovÏ kr·ceno",
+       LISTAGG(DISTINCT ci.nazev, '; ') "Typ korekce"
+	
+FROM isum.v_bi_UmpPlatbaPrj platba
+INNER JOIN  isum.v_bi_UMPKorekce kor  ON kor.id_platba = platba.id
+INNER JOIN  isum.v_bi_UMSCisTypKorekce ci ON ci.id =  kor.id_typkorekce
+
+
+WHERE platba."»Ìslo æ·dosti o platbu" = 'CZ.31.3.0/0.0/0.0/22_001/0005146/2024/001/POST'
+
+GROUP BY platba."»Ìslo æ·dosti o platbu" 
+
+----------------------------------------
+
+SELECT kor.id_platba ,
+       sum(kor.vyse) "CelkovÏ kr·ceno",
+       LISTAGG(DISTINCT ci.nazev, '; ') "Typ korekce"
+
+FROM isum.v_bi_UMPKorekce kor  
+LEFT JOIN isum.v_bi_UMSCisTypKorekce ci ON ci.id =  kor.id_typkorekce
+
+WHERE kor.souctovyradek is null 
+
+GROUP BY kor.id_platba

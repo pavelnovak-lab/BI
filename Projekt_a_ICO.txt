@@ -1,0 +1,8 @@
+SELECT	 p."IÈ",
+	 p."Název projektu CZ",
+	 p."ZADATEL",
+	 p."Registraèní èíslo projektu" as "Registraèní èíslo projektu" 
+
+FROM	isum.v_bi_umzprojekt p 
+
+WHERE 	p."Registraèní èíslo projektu" = 'CZ.01.4.04/0.0/0.0/15_005/0000153'

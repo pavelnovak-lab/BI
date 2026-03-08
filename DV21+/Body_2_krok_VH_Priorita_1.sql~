@@ -1,0 +1,26 @@
+CREATE OR REPLACE VIEW "Body_2_krok_VH_Priorita_1" FOLDER = '/06_data_models/01_op_tak/mpo/novak-pavel/hodnoceni' AS
+
+
+SELECT op.nazev as "Opatøení" ,
+       v."Èíslo výzvy",
+       v."Název výzvy",
+       p."Registraèní èíslo projektu" AS "Èíslo projektu",
+       w.kod AS "Kód stavu",
+       st."Celkový výsledek - v bodech" AS "2. krok VH body",
+       cis."Název" AS "Status 2. kroku VH",
+       pzf."Pøíspìvek Unie",
+
+FROM projekt AS p
+INNER JOIN v_rav_umscisstavwf AS w ON w.id = p.id_wfstav
+INNER JOIN vyzva AS v ON v.id = p.id_vyzva
+INNER JOIN vyzva_hierarchie vh ON vh.id_vyzva = v.id
+INNER JOIN v_rav_umshisc op on op.id=vh.id_speccil 
+INNER JOIN hodnoceni_status AS st ON (st.id_noshodnoceni = p.id AND st.id_krokvechodn = 488854)
+INNER JOIN ciselnik_status_hodnoceni AS cis ON cis.id = st.id_statushodn
+LEFT OUTER JOIN prehled_zdroju_financovani AS pzf ON (pzf.id_projekt = p.id AND pzf.id_faze = 99991000000000005)
+
+
+
+WHERE p."Registraèní èíslo projektu" IS NOT NULL
+AND v."Èíslo výzvy" in ('01_22_002','01_22_003', '01_23_024', '01_22_001', '01_22_005') --Aplikace, Inovace, Potenciál, PoC 
+

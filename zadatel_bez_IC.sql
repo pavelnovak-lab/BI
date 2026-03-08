@@ -1,0 +1,11 @@
+SELECT vs."Fyzická osoba podnik bez IÈ",
+       p.zadatel ,
+       p."Registraèní èíslo projektu" ,
+       SUBSTR(p.kompetencniutvar, 6) AS "Program podpory" 
+
+FROM isum.v_bi_UmzProjekt p 
+INNER JOIN isum.v_bi_UmzPrjGGvs vs ON vs.id_prjgg=p.id AND vs.neplatny is null AND vs.id_typsubjektu = 300784 AND vs.id_typsubjektuEdit = 300798 -- zadatel
+
+WHERE vs."Fyzická osoba podnik bez IÈ" = 'A'
+AND p.KodPrioritniOsa in ('01.1', '01.2', '01.3', '01.4','01.5')
+AND p."Registraèní èíslo projektu" is not null 

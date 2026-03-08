@@ -1,0 +1,17 @@
+SELECT 		v."Odesílat do DotInfo",
+		v."Èíslo výzvy",
+		cisd.*
+
+FROM 		isum.v_bi_UmzVyzva v
+INNER JOIN 	isum.V_BI_UMZVYZVATYPPRILDI di ON di.id_vyzva=v.id
+INNER JOIN	isum.v_bi_UMSCisZakladni cis ON cis.id=di.id_typpril
+INNER JOIN 	isum.V_BI_UMZVyzvaDruhPrilDI druh ON druh.ID_DRUHTYPU=di.id
+INNER JOIN 	isum.v_bi_UMSCisZakladni cisd ON cisd.id=druh.ID_DRUHPRIL
+
+
+
+WHERE v.id=576949000
+
+
+
+

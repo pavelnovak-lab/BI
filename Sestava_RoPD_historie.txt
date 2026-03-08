@@ -1,0 +1,22 @@
+select	s."Datum uzavøení" as Datum_RoPD,
+	p."Registraèní èíslo projektu",
+	pol."Èástka celkem" as CZV_RoPD
+
+from
+
+/* Filtr 1. RoPD - group by je kvùli agregaèní fci minimum - vypadnou dvì pole: id_nositelsml a datum uzavøení */
+
+(select 	umfsmlouva.id_nositelsml,
+	min(umfsmlouva."Datum uzavøení") as datum
+from 	isum.v_bi_umfsmlouva umfsmlouva
+where 	umfsmlouva.typ = 'Rozhodnutí o poskytnutí dotace'
+group by umfsmlouva.id_nositelsml) sml
+
+
+/* První inner join je na dva atributy id_nositelsml a "Datum uzavøení" */
+inner join isum.v_bi_umfsmlouva s on sml.id_nositelsml=s.id_nositelsml and sml.datum=s."Datum uzavøení" inner join isum.v_bi_umzprojekt p on s.id_nositelsml=p.id inner join isum.v_bi_umfrozhlavicka r on r.id=s.id_rozpocet inner join isum.v_bi_umfrozpolozky pol on pol.id_hlavicka=r.id
+
+where 	
+-- Tento filtr je obsažen v selectu sml   s.typ='Rozhodnutí o poskytnutí dotace'
+
+pol."Název"='Celkové zpùsobilé výdaje'

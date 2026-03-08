@@ -1,0 +1,14 @@
+CREATE or REPLACE view "RIS3_OPTAK" FOLDER='/06_Data_models/01_OP_TAK/MPO/novak-pavel/RIS3' AS 
+
+SELECT p."Registraèní èíslo projektu" ,
+       hs."Datum pøepnutí" "Datum PP30"
+
+FROM projekt p
+INNER JOIN vyzva v ON v.id = p.id_vyzva
+INNER JOIN historie_stavu hs ON hs.nositelid = p.id
+INNER JOIN ciselnik_stav_workflow pwf ON pwf.id = hs.id_stavdo
+
+WHERE v."Èíslo výzvy" = '01_23_026'
+AND pwf."Kód" = 'PP30'
+
+ORDER BY hs."Datum pøepnutí" 

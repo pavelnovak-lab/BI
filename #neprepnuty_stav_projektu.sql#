@@ -1,0 +1,7 @@
+SELECT p."Registrační číslo projektu" ,
+       p.kodwfstav
+
+
+FROM isum.v_bi_UmzProjekt p
+
+WHERE p."Registrační číslo projektu" = 'CZ.31.1.0/0.0/0.0/23_085/0008649'

@@ -1,0 +1,19 @@
+SELECT	SUBSTR(p.kompetencniutvar, 6) AS "Program podpory" ,
+	v."Èíslo výzvy" ,
+	p."Registraèní èíslo projektu",
+        p.kodwfstav ,
+        pzf."Pøíspìvek Unie" ,
+       	cis.nazev 
+       
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id = p.id_vyzva 
+INNER JOIN isum.v_bi_UMFPFCelkem pzf ON pzf.id_projekt = p.id
+INNER JOIN isum.V_BI_UMFPFFaze cis ON pzf.id_faze = cis.id
+
+
+WHERE p."Registraèní èíslo projektu" is not null
+AND p.KodPrioritniOsa in ('01.1', '01.2', '01.3', '01.4','01.5') 
+-- AND p."Registraèní èíslo projektu" = 'CZ.01.3.10/0.0/0.0/20_370/0025543'
+-- AND pzf.id_faze in (99991000000000005, 99991000000000001, 99991000000000011)
+
+ORDER BY p."Registraèní èíslo projektu", cis.guiporadi

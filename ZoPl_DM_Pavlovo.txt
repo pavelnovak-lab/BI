@@ -1,0 +1,28 @@
+select	 "V_BI_UMZPROJEKT"."KODPRIORITNIOSA" as "KODPRIORITNIOSA",
+	 "V_BI_UMZPROJEKT"."KODSPECIFCIL" as "KODSPECIFCIL",
+	 "V_BI_UMZPROJEKT"."KOMPETENCNIUTVAR" as "KOMPETENCNIUTVAR",
+	 "V_BI_UMZVYZVA"."Èíslo výzvy" as "Èíslo výzvy",
+	 "V_BI_UMZVYZVA"."Název výzvy" as "Název výzvy",
+	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" as "Registraèní èíslo projektu",
+	 "V_BI_UMZPROJEKT"."KODWFSTAV" as "KODWFSTAV",
+	 "V_BI_UMPPLATBAPRJ"."Èíslo žádosti o platbu" as "Èíslo žádosti o platbu",
+	 "V_BI_UMPPLATBAPRJ"."PORADI#Poøadí finanèního plánu" as "PORADI#Poøadí finanèního plánu",
+	 "V_BI_UMPPLATBAPRJ"."WFSTAV" as "WFSTAV",
+	 "V_BI_UMPPLATBAPRJ"."Datum zmìny stavu" as "Datum zmìny stavu",
+	 "V_BI_UMPPLATBAPRJ"."VYUCTPLAN#Vyúètování plán" as "VYUCTPLAN#Vyúètování plán",
+	 "V_BI_UMPPLATBAPRJ"."VYUCTSKUT" as "VYUCTSKUT",
+	 "V_BI_UMPROZPISFIN"."CASTKAPOZADOVANA" as "CASTKAPOZADOVANA",
+	 "V_BI_UMPCASTKY"."EUVYUCTCELKEM" as "EUVYUCTCELKEM",
+	 "V_BI_UMSCISZAKLADNI"."Kód" as "Kód" 
+
+from		"ISUM"."V_BI_UMZVYZVA" "V_BI_UMZVYZVA"
+inner join	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT" on "V_BI_UMZPROJEKT"."ID_VYZVA"="V_BI_UMZVYZVA"."ID"
+inner join 	"ISUM"."V_BI_UMPPLATBAPRJ" "V_BI_UMPPLATBAPRJ" on "V_BI_UMPPLATBAPRJ"."ID_NOSITELPLATBY"="V_BI_UMZPROJEKT"."ID"
+inner join	"ISUM"."V_BI_UMPCASTKY" "V_BI_UMPCASTKY" on "V_BI_UMPPLATBAPRJ"."ID_SCHVALENECASTKY"="V_BI_UMPCASTKY"."ID"
+inner join	"ISUM"."V_BI_UMPROZPISFIN" "V_BI_UMPROZPISFIN" on "V_BI_UMPROZPISFIN"."ID_PLATBA"="V_BI_UMPPLATBAPRJ"."ID"
+inner join 	"ISUM"."V_BI_UMSCISZAKLADNI" "V_BI_UMSCISZAKLADNI"on "V_BI_UMPROZPISFIN"."ID_UKAZATEL"="V_BI_UMSCISZAKLADNI"."ID"
+
+where   "V_BI_UMPPLATBAPRJ"."WFSTAV" in ('Proplacena pøíjemci/Vypoøádána','Proplacena pøíjemci s krácením/Vypoøádána s krácením','Neschválená') 
+ and	"V_BI_UMSCISZAKLADNI"."Kód" ='10a'
+
+order by "V_BI_UMZPROJEKT"."KODPRIORITNIOSA" ASC, "V_BI_UMZPROJEKT"."KODSPECIFCIL" ASC, "V_BI_UMZVYZVA"."Èíslo výzvy" ASC, "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" ASC, "V_BI_UMPPLATBAPRJ"."Èíslo žádosti o platbu" ASC

@@ -1,0 +1,114 @@
+SELECT	 
+v."Číslo výzvy" as "Číslo výzvy",
+p."Registrační číslo projektu",
+p."Název projektu CZ",
+(select cis.kurz
+                from isum.v_bi_UMSCisKurzyMen cis
+                inner join isum.v_bi_umsciszakladni domena on domena.id=cis.id_domeny
+                where to_char(cis.datumod,'yyyyMM')=to_char(s."Datum uzavření",'yyyyMM')
+                and domena."Kód"='CZK') as KURZ
+FROM
+isum.V_BI_UMZVYZVA v
+inner join isum.V_BI_UMZPRJGGII p on p.id_vyzva=v.id
+inner join isum.v_bi_umfsmlouva s on s.id_nositelsml=p.ID and s.minporadisml=s."Pořadí"
+WHERE
+p."Registrační číslo projektu" is not null
+
+
+
+________________________________________
+
+
+
+SELECT cis.*
+
+FROM isum.v_bi_UMSCisKurzyMen cis         
+INNER JOIN isum.v_bi_umsciszakladni domena on domena.id=cis.id_domeny
+AND domena."Kód"='CZK'
+
+
+
+WHERE cis.rok = 2022 AND cis.mesic = 3
+----------------------------------------
+
+
+SELECT p."Registrační číslo projektu"
+       pzf.*
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UMFPFCelkem pzf ON pzf.id_projekt = p.id 
+
+WHERE p."Registrační číslo projektu" = 'CZ.01.3.43/0.0/0.0/18_246/0014923'
+
+
+
+
+----------------------------------------
+
+
+SELECT p."Registrační číslo projektu" ,
+       p."Název projektu CZ" ,
+       platba."PORADI#Pořadí finančního plánu" "Číslo ŽoP",
+       (select cis.kurz
+                from isum.v_bi_UMSCisKurzyMen cis
+                inner join isum.v_bi_umsciszakladni domena on domena.id=cis.id_domeny
+                where to_char(cis.datumod,'yyyyMM')=to_char(s."Datum uzavření",'yyyyMM')
+ 		and domena."Kód"='CZK') as "Měsíční kurz RoPD" ,
+      dp.REGCISLO ,
+      dp.WFSTAV "Stav DP",
+      dp.WFSTAVDATUM,
+      dp."Částka v CZK žádost",
+      dp."Částka v EUR žádost",
+      round(dp."Částka v CZK žádost" / dp."Částka v EUR žádost",3)  "Dopočátaný kurz DP žádost" ,
+      dp."Částka (CZK)" ,
+      dp."Částka (EUR)",
+      round(dp."Částka (CZK)" / dp."Částka (EUR)",3) "Dopočítaný kurz DP skutečnost",
+      platba.kurz "Kurz z platby (databáze)",
+      dp.kurz "Kurz z DP (databáze)" ,
+      platba.datumrefundace,
+      (select cis.kurz
+                from isum.v_bi_UMSCisKurzyMen cis
+                inner join isum.v_bi_umsciszakladni domena on domena.id=cis.id_domeny
+                where to_char(cis.datumod,'yyyyMM')=to_char(platba.datumrefundace,'yyyyMM')
+ 		and domena."Kód"='CZK') as "Měsíční kurz refundace" ,
+      platba.datumcertifikace,		
+      (select cis.kurz
+                from isum.v_bi_UMSCisKurzyMen cis
+                inner join isum.v_bi_umsciszakladni domena on domena.id=cis.id_domeny
+                where to_char(cis.datumod,'yyyyMM')=to_char(platba.datumcertifikace,'yyyyMM')
+		and domena."Kód"='CZK') as "Měsíční kurz certifikace" ,
+      platba."Datum proplacení příjemci",
+      (select cis.kurz
+                from isum.v_bi_UMSCisKurzyMen cis
+                inner join isum.v_bi_umsciszakladni domena on domena.id=cis.id_domeny
+                where to_char(cis.datumod,'yyyyMM')=to_char(platba."Datum proplacení příjemci",'yyyyMM')
+		and domena."Kód"='CZK') as "Měsíční kurz datum proplacení příjemci" 
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby 
+inner join isum.v_bi_umfsmlouva s on s.id_nositelsml=p.ID and s.minporadisml=s."Pořadí"
+INNER JOIN isum.v_bi_umpklasifikace dp ON dp.id_platba = platba.id 
+
+
+
+
+WHERE p."Registrační číslo projektu" IN ('CZ.01.3.43/0.0/0.0/17_097/0009899' ,'CZ.01.3.43/0.0/0.0/18_246/0014923')
+AND platba.souctovyradek is null 
+AND (dp.regcislo like ('%_P_V') OR dp.regcislo like '%_R_V')
+ORDER BY platba."Číslo žádosti o platbu"  , dp.regcislo
+
+
+
+
+
+----------------------------------------
+
+SELECT *
+FROM -- isum.v_bi_SFCFINDATAS12 SFC
+ISUM.V_BI_V_BI_SFCFINDATAIGJETCVER_1
+-- WHERE sfc.id = 1297216945
+
+
+V_BI_SFCFINDATAIGJETCVER_1"
+
+

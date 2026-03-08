@@ -1,0 +1,102 @@
+SELECT devatenact.prj_19,
+       count(devatenact."IÈO")
+
+FROM 
+( SELECT count(p.id) as prj_19 ,
+	p."IÈ" as "IÈO"	
+ FROM isum.v_bi_UmzProjekt p 
+ WHERE trunc(p."Datum registrace ¾ádosti")  <= to_date('2019-12-31','yyyy-mm-dd')
+ AND p."Registraèní èíslo projektu" is not null
+-- AND p."IÈ" = '45274649'
+ GROUP BY p."IÈ") devatenact
+ 
+GROUP BY devatenact.prj_19
+
+ORDER BY devatenact.prj_19
+
+
+
+-- WHERE
+-- p."Datum registrace ¾ádosti" is null
+-- AND p."Registraèní èíslo projektu" is not null 
+-- p.id = 1991147
+
+-- trunc(p."Datum registrace ¾ádosti")  <= to_date('2019-12-31','yyyy-mm-dd')
+-- -- AND cert."Typ certifikace" = 2
+-- AND vs.neplatny is
+
+
+SELECT count(hist19.id) as prj_19,
+       hist19."IÈ"
+
+FROM isum.v_bi_UmzProjekt p
+  (SELECT *
+   FROM 
+    (SELECT p."Registraèní èíslo projektu" ,
+	    p.id,
+	    hs.datumod "Poslední datum 2019",
+	    hs.stavdo,
+	    p."IÈ"
+    FROM isum.v_bi_UmzProjekt p
+    INNER JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.NositelId = p.id
+
+    WHERE p."Registraèní èíslo projektu" is not null 
+    AND trunc(hs.datumod) <= to_date('2019-12-31','yyyy-mm-dd')
+    
+    ORDER BY hs.stavdo DESC ) h19 ON h19.id = p.id
+
+  WHERE rownum = 1) hist19 ON hist19.id = p.id 
+
+GROUP BY hist19."IÈ"
+
+
+
+
+AND (stavdo like ('PP%') or stavdo = 'V2' or stavdo = 'V5' or stavdo like 'PU%')
+
+GROUP BY "IÈ"
+
+
+
+---------
+
+
+
+SELECT p."Registraèní èíslo projektu" ,
+       p."IÈ",
+       hist.datumod,
+       hist.stavdo
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN 
+(
+  SELECT *
+  FROM
+  (SELECT p.id,
+	  p."Registraèní èíslo projektu",
+	  hs.datumod ,
+	  hs.stavdo
+
+   FROM isum.v_bi_UMZPrjGGii P 
+   INNER JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.NositelId = p.id
+
+   WHERE trunc(hs.datumod) <= to_date('2019-12-31','yyyy-mm-dd')
+   ORDER BY hs.stavdo DESC
+  )
+  WHERE rownum = 1
+) hist ON hist.id = p.id
+
+
+WHERE p."Registraèní èíslo projektu" in ('CZ.01.1.02/0.0/0.0/15_030/0005988','CZ.01.1.02/0.0/0.0/15_019/0004507')
+
+
+
+
+
+
+
+
+    
+--  
+
+-- GROUP BY p."Registraèní èíslo projektu",  hs.stavdo,  p."IÈ"

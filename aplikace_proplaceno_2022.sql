@@ -1,0 +1,33 @@
+SELECT p."Registraèní èíslo projektu", --
+       p.zadatel,
+       -- p.id,
+       v."Èíslo výzvy",
+       v."Název výzvy" ,
+       platba."Èíslo ¾ádosti o platbu" ,
+       -- platba.id,
+       -- platba.id_nositelPlatby ,
+       platba."Datum proplacení pøíjemci",
+       eu."Dotace schválená",
+       czv."CZV"
+
+FROM isum.v_bi_UmzProjekt p 
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva 
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby 
+INNER JOIN (
+ SELECT rf.id_platba,
+ 	rf.castkaschvalena "Dotace schválená" -- øádek 10a
+ FROM isum.v_bi_UmpRozpisFin rf 
+ WHERE rf.id_ukazatel = 361356 -- øádek 10a
+ ) eu ON eu.id_platba = platba.id 
+INNER JOIN (
+ SELECT rf.id_platba,
+        rf.castkaschvalena "CZV" -- øádek 10a
+ FROM isum.v_bi_UmpRozpisFin rf 
+ WHERE rf.id_ukazatel = 361347 -- øádek 2
+) czv ON czv.id_platba = platba.id
+
+WHERE p.kodwfstav in ('PP37','PP40','PP41','PP42','PP43','PU30')
+AND SUBSTR(p.kompetencniutvar, 6) = 'Aplikace'
+AND to_date('2021-12-31','yyyy-mm-dd') < platba."Datum proplacení pøíjemci"
+AND platba."Datum proplacení pøíjemci" < to_date('2023-01-01','yyyy-mm-dd')  
+AND platba.kodwfstav in ('P10','P11')

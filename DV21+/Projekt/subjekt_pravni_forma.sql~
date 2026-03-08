@@ -1,0 +1,23 @@
+-- CREATE or REPLACE view "subjekt_pravni_forma" FOLDER= AS 
+SELECT
+	op.nazev as "Opatøení",
+	p."Registraèní èíslo projektu",
+       w."Kód" "Kód stavu" , 
+       s."Název subjektu" ,
+       s."IÈ",
+       ts."Název" "Typ subjektu",       
+       pf."Právní forma" 
+
+
+FROM projekt p
+INNER JOIN vyzva v ON v.id = p.id_vyzva 
+INNER JOIN vyzva_hierarchie vh ON vh.id_vyzva = v.id
+INNER JOIN v_rav_umshisc op on op.id=vh.id_speccil 
+INNER JOIN subjekt s ON s.id_prjgg = p.id AND s.id_typsubjektuedit = 413462 -- ¾adatel
+INNER JOIN ciselnik_pravni_forma pf on pf.id = s.id_hosppravforma
+INNER JOIN ciselnik_stav_workflow w ON p.id_wfstav = w.id     
+INNER JOIN ciselnik_typ_subjektu ts ON ts.id = s.id_typsubjektuedit  
+
+WHERE p."Registraèní èíslo projektu" is not null
+AND v."Èíslo výzvy" IN ('01_23_030',  '01_23_031',  '01_23_040',  '01_23_041')
+AND w."Kód" not like 'PN%'

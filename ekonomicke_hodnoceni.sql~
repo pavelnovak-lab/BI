@@ -1,0 +1,49 @@
+SELECT p."Registraèní èíslo projektu" ,
+       prvni.pocetbodu "Celkem bodù",
+       prvni.bodykrit "Ekonomické hodnocení bodù",
+       druhy.bodù "Výrok analytika"       
+
+FROM isum.v_bi_UmzPrjGGII p 
+INNER JOIN (
+     SELECT krit.pocetbodu bodykrit ,
+     	    h.pocetbodu,
+     	    h.id_noshodnoceni
+     FROM  isum.v_bi_UmvHodnoceni h
+     INNER JOIN isum.v_bi_UMVHodnotaKrit krit ON krit.id_hodnoceni = h.id 
+     WHERE h.id_kolohodnoceni=171212  /* hodnocení plné ¾ádosti */
+     AND h.id_KrokVecHodn = 171213  /* 1. krok VH */
+     AND h.platnost = 'A'
+     AND h.OpravneHodnoceni = 'N'
+     AND h.finalizovano = 'A'
+     AND krit.Kod = '01') prvni ON prvni.id_noshodnoceni = p.id
+INNER JOIN (
+     SELECT krit.pocetbodu bodykrit ,
+     	    h.pocetbodu,
+     	    h.id_noshodnoceni
+     FROM  isum.v_bi_UmvHodnoceni h
+     INNER JOIN isum.v_bi_UMVHodnotaKrit krit ON krit.id_hodnoceni = h.id 
+     WHERE h.id_kolohodnoceni=171212  /* hodnocení plné ¾ádosti */
+     AND h.id_KrokVecHodn = 171213  /* 1. krok VH */
+     AND h.platnost = 'A'
+     AND h.OpravneHodnoceni = 'N'
+     AND h.finalizovano = 'A'
+     AND krit.Kod = '02') druhy ON druhy.id_noshodnoceni = p.id
+ 
+
+WHERE p."Registraèní èíslo projektu" = 'CZ.01.1.02/0.0/0.0/21_374/0027374'
+AND h.ID_SOUBORKRIT in 
+
+
+
+
+-- INNER JOIN isum.v_bi_UMVHodnKriterium krit
+-- INNER JOIN  isum.v_bi_UMVHodnSouborKrit krit
+
+-- WHERE krit.id = 144365008
+-- -- krit.id = 144365005
+-- AND krit.Kod = '01'
+
+
+--------------------------------------------
+SELECT *
+

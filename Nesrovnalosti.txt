@@ -1,0 +1,136 @@
+Select
+decode(st."TYP",0, 'Individuální HN',1, 'Systémové HN',2, 'Podlimitní HN') as "typnesr",
+p."Registraèní èíslo projektu",
+p."Název projektu CZ",
+st."Èíslo pøípadu",
+st."Název pøíjemce",
+st."IÈ",
+st."Verze hlášení",
+st."Název operaèního programu",
+st."Fond",
+st."Region(y) soudržnosti (NUTS II",
+decode(st."Eskalovat na vnìjší úroveò?",'A','Ano','Ne') as "Eskalovat na vnìjší úroveò?",
+st."WFSTAV",
+st."KODWFSTAV",
+to_char(st.WFStavDatum,'dd.MM.yyyy')  as WFStavDatum,
+z4."Kód" as mena,
+to_char(st.Create_cas,'dd.MM.yyyy') as "Založení záznamu",
+st."SUBJEKTPRVNIINFO#Popis",
+st."ZDROJPRVNIINFO#Popis",
+st."Celková výše podezøení/nesrovn",
+st."Odpovídající výše podílù z pro",
+st."Praktiky použité pøi spáchání",
+st."Z toho èástka vymožena z dùvod",
+z3."Název" as "Stav pøípadu",
+to_char(st."Datum potvrzení opodstatnìného",'dd.MM.yyyy') as "Datum potvrzení opodstatnìného",
+st."Prùbìh šetøení",
+decode(st."Potvrzeno",'A','Ano','Ne') as "Potvrzeno",
+decode(st."Vymáhání nezpùsobilých výdajù",'A','Ano','Ne') as "Vymáhání nezpùsobilých výdajù",
+to_char(st."Datum zahájení øízení o vymáhá",'dd.MM.yyyy') as "Datum zahájení øízení o vymáhá",
+to_char(st."Finální datum vymožení všech n",'dd.MM.yyyy') as "Finální datum vymožení všech n",
+st."EUPODIL1#EU podíl",
+st."PODPORAZVZ1#Výše podpory z veø",
+st."CELKVYDAJ1#Celkové výdaje",
+st."Vymožená èástka podíl z pros",
+st."Z toho èástka vymožena z dùvod" as "Z toho èástka vymožena z dùvo",
+decode(st."Zapoètení nezpùsobilých výdajù",'A','Ano','Ne') as "Zapoètení nezpùsobilých výdajù",
+to_char(st."Finální datum zapoètení všech",'dd.MM.yyyy') as "Finální datum zapoètení všech",
+st."Zapoètená èástka podíl z pro",
+decode(st."Odeètení nezpùsobilých výdajù",'A','Ano','Ne') as "Odeètení nezpùsobilých výdajù",
+"Odeètena èástka - EU podíl",
+decode(st."Odeèteno v rámci uzavírání úèt",0,'1.1.2014 - 30.6.2015',1,'1.7.2015 - 30.6.2016',2,'1.7.2016 - 30.6.2017',3,'1.7.2017 - 30.6.2018',4,'1.7.2018 - 30.6.2019'
+			,5,'1.7.2019 - 30.6.2020',6,'1.7.2020 - 30.6.2021',7,'1.7.2021 - 30.6.2022',8,'1.7.2022 - 30.6.2023',9,'1.7.2023 - 30.6.2024')as UcetniObdobi,
+st."EUPODIL2#EU podíl",
+st."PODPORAZVZ2#Výše podpory z veø",
+st."CELKVYDAJ2#Celkové výdaje",
+st."Poznámky, pøipomínky",
+decode(st."Pøípad uzavøen ze strany ØO",'A','Ano','Ne') as "Pøípad uzavøen ze strany ØO",
+to_char(st."Datum uzavøení",'dd.MM.yyyy') as "Datum uzavøení",
+vyp."Jméno"||' '||vyp."Pøíjmení" as "VYPRACJMPRIJM#Jméno a pøíjmení",
+to_char(st.Create_cas,'dd.MM.yyyy') as "VYPRACDATUM#Datum",
+sch."Jméno"||' '||sch."Pøíjmení" as "SCHVALJMPRIJM#Jméno a pøíjmení",
+to_char(st."SCHVALDATUM#Datum",'dd.MM.yyyy') as "SCHVALDATUM#Datum",
+st."CELKVYDAJE#Celkové výdaje",
+st."Podíl EU",
+st."Národní spolufinancování",
+st."Soukromé spolufinancování",
+decode(st."Nesrovnalost dle èl. 71 obecné",'A','Ano','Ne') as nesr71,
+st."Výše úroku z prodlení, pokud v",
+st."Prùbìh vymáhání",
+st."Výše nesrovnalosti v EUR_EU",
+to_char(st."Datum pøedání podnìtu na FÚ",'dd.MM.yyyy') as "Datum pøedání podnìtu na FÚ",
+to_char(st."Datum rozhodnutí o vrácení pr",'dd.MM.yyyy') as  "Datum rozhodnutí o vrácení pr",
+to_char(st."Finální datum vymož nezp výdaj",'dd.MM.yyyy') as "Finální datum vymož nezp výdaj",
+st."PODILEU2#EU podíl",
+st."Výše podpory z veøejných zdroj",
+st."CELKEMVYDAJ#Celkové výdaje",
+st."Vymožená èástka EU podíl",
+st."Vymožený úrok z prodlení EU" ,
+st."Název koneèného pøíjemce" ,
+st."IIÈ/RÈ",
+st."ØO",
+to_char(st.LAST_MODIF_CAS,'dd.MM.yyyy') as LAST_MODIF_CAS,
+st.LAST_MODIF_UZIVATEL,
+(select k."Kód kontroly" from isum.v_bi_umvkontrola k where k.id=st.id_kontrola) as cislokontr,
+st."Konkrétní porušení zákona",
+st."ÚOHS è Dle vìstníku",
+st."Žaloba spisová znaèka",
+st."Typ koneèného pøíjemce",
+st."Konkrétní porušení RoPD",
+to_char(st."Lhùta pro vrácení prostøedkù",'dd.MM.yyyy') as "Lhùta pro vrácení prostøedkù",
+to_char(st."Datum informování OFS",'dd.MM.yyyy') as "Datum informování OFS",
+st."Národní spolufinancování1",
+st."Národní spolufinancování ØO",
+to_char(st."Datum informování OFS o zap",'dd.MM.yyyy') as "Datum informování OFS o zap",
+(select "Název" from  isum.V_BI_UMSCISZAKLADNI ro where ro.id=st.id_RozhodnutiOFS) as "RozhodnutiOFS",
+(select "Kód"||' '||"Název" from  isum.V_BI_UMSCISZAKLADNI vsd where vsd.id=st.id_VariantaCiselniku) as variantaSVDR,
+(select "Název" from  isum.V_BI_UMSCISZAKLADNI zp where zp.id=st.id_ZpusobVymahani) as "ZpusobVymahani",
+--fdop.*,
+--fkat.*,
+--info.*,
+st.id_projekt as id,
+st.id as idst
+From isum.V_BI_UMZNESROVNALOST st 
+	inner join isum.v_bi_umzprjggii p on st.id_projekt=p.id AND P.ID>0
+	inner join isum.V_BI_UMSCISZAKLADNI z3 on z3.id=st.id_stavpripadu
+	inner join isum.V_BI_UMSCISZAKLADNI z4 on z4.id=st.id_mena
+	inner join isum.V_BI_UMSZamestnanec sch on sch.id=st.id_schvalil
+	inner join isum.V_BI_UMSZamestnanec vyp on vyp.id=st.id_vypracoval
+/*	left outer join (select fd.id_nesrovnalost, fd.id as id_fdop,
+								decode(fd.TypFinDopad,0,'Dotèená ŽoP',1,'Zapoèteno',2,'Vymoženo') as TypFinDopad,
+								decode(fd.ID_FINDOPAD,0,'',decode(fd.TypFinDopad,0,'Dotèená ŽoP',1,'Zapoèteno',2,'Vymoženo')||' '||nfd.CastkaCZK) as nadrpolozka,
+								fd.CastkaCZK,
+								fd.narodnifin,
+								fd.soukromefin,
+								fd.celkvydaj,
+								Platba."Èíslo žádosti o platbu",
+								to_char(cer.datumcertifikace,'dd.MM.yyyy') as datumcertifikace,
+								to_char(k.DatumZalozeni,'dd.MM.yyyy') as datumzuctovaniuis,
+								decode(cer."Typ certifikace",1,'Uzavírání úètu',2,'Certifikace') as TYPC
+							from isum.v_bi_UMZNesrFinDopad fd
+							inner join isum.v_bi_UMZNesrFinDopad nfd on nfd.id=fd.ID_FINDOPAD
+							inner join isum.v_bi_UMPPlatbaprj platba on platba.id=fd.ID_PLATBA
+							left outer join (select per.DatumCertifikace,c.id_platba,
+																	 c."Typ certifikace" from isum.v_bi_UMPCertifikace c 
+																	INNER JOIN isum.v_bi_UMPEKPlatba per on per.id=c.id_perioda 
+																	where c."Typ certifikace" in (:typproc) ) cer on cer.id_platba=platba.id
+							inner join isum.v_bi_UMPklasifikace k on k.id=fd.ID_KLASIFIKACEPLATBY
+							where fd.TypFinDopad=0) fdop on fdop.id_nesrovnalost=st.id
+	
+	left outer join (select
+										k.id_findopad,
+										k.financnidopad,
+										k."Název" as kat,
+										pk."Název" as podkat,
+										pk."Popis CZ" as svdr
+								from isum.V_BI_UMZNesrFinKateg k
+								inner join isum.V_BI_UMSCISZAKLADNI k on k.id=k.ID_KATEGORIE
+								inner join isum.V_BI_UMSCISZAKLADNI pk on pk.id=k.ID_PODKATEG
+	) fkat on fkat.id_findopad=fdop.id_fdop
+	*/
+	--left outer join  info on info.id_nesrovnalost9=st.id
+										
+where st.Uroven=1
+	and (p."Registraèní èíslo projektu" = :p or :p is null)
+	and (st."Èíslo pøípadu" = :cp or :cp is null)
+	and st."Název operaèního programu"=:op

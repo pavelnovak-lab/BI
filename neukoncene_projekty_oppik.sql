@@ -1,0 +1,34 @@
+SELECT	SUBSTR(p.kompetencniutvar, 6) AS "Program podpory" ,
+	p."Registrační číslo projektu" ,
+	p.zadatel ,
+	p.kodwfstav "Stav projektu",
+	p."Počet ZoU",
+	platba."PORADI#Pořadí finančního plánu" "Pořadí ZŽoP",
+	platba.vyuctskut "Schválené vyúčtování", 
+	platba.kodwfstav "Kód stavu ŽoP",
+	platba.wfstav "Stav ŽoP",
+	platba."Datum změny stavu" ,
+	zi.kodwfstav "Kód stavu ZZoR" ,
+ 	zi.wfstav "Stavu ZZoR" ,
+	zoz."Pořadové číslo ŽoZ",
+	zoz.kodwfstav "Kód stavu ŽoZ",
+	zoz.wfstav "Stav ŽoZ"
+	
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby
+INNER JOIN isum.v_bi_UMZZIProjekt zi ON zi.id_zad = p.id
+INNER JOIN isum.v_bi_UMZCisTypZI ct ON ct.id = zi.id_CisTypZI 
+LEFT JOIN isum.v_bi_UmzZoZProjekt zoz ON zoz.id_zad = p.id AND zoz.kodwfstav not IN ('P3','N4','N3','N1')
+
+
+
+
+WHERE  -- p."Registrační číslo projektu" = 'CZ.31.2.0/0.0/0.0/22_014/0004906'
+ct.HOP = 'ZZoR'
+
+
+AND platba."Závěrečná platba" = 'A'
+AND p."Registrační číslo projektu" IN ('CZ.01.2.07/0.0/0.0/15_004/0003818','CZ.01.2.07/0.0/0.0/16_058/0007871','CZ.01.2.07/0.0/0.0/16_048/0007722','CZ.01.2.07/0.0/0.0/16_058/0007991','CZ.01.3.10/0.0/0.0/16_061/0011152','CZ.01.1.02/0.0/0.0/16_092/0010095','CZ.01.1.02/0.0/0.0/16_092/0010060','CZ.01.3.10/0.0/0.0/16_061/0011143','CZ.01.1.02/0.0/0.0/17_102/0011543','CZ.01.3.10/0.0/0.0/16_061/0011988','CZ.01.3.10/0.0/0.0/16_061/0012045','CZ.01.1.02/0.0/0.0/17_093/0012352','CZ.01.1.02/0.0/0.0/17_170/0015056','CZ.01.1.02/0.0/0.0/17_175/0015745','CZ.01.3.10/0.0/0.0/19_251/0020441','CZ.01.1.02/0.0/0.0/19_297/0019639','CZ.01.1.02/0.0/0.0/19_262/0020210','CZ.01.3.10/0.0/0.0/19_251/0021860','CZ.01.2.06/0.0/0.0/20_357/0021863','CZ.01.3.14/0.0/0.0/19_254/0023283','CZ.01.1.02/0.0/0.0/20_321/0024676','CZ.01.1.02/0.0/0.0/20_318/0023712','CZ.01.2.06/0.0/0.0/20_322/0024601','CZ.01.1.02/0.0/0.0/20_365/0026241','CZ.01.1.02/0.0/0.0/20_358/0028058','CZ.01.1.02/0.0/0.0/21_374/0027255','CZ.01.1.02/0.0/0.0/21_373/0027152','CZ.01.1.02/0.0/0.0/21_374/0027365','CZ.01.1.02/0.0/0.0/20_358/0028070','CZ.01.1.02/0.0/0.0/20_358/0028254')
+
+
+ORDER BY p."Registrační číslo projektu" 

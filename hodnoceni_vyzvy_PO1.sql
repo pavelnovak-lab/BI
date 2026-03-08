@@ -1,0 +1,54 @@
+SELECT 	p."Registraèní èíslo projektu" ,
+	-- SUBSTR Oøízne prvních 6 znakù (èíselný kód)
+ 	-- SUBSTR( p.kompetencniutvar, 6 ) AS "Program podpory", 
+	v."Název výzvy",
+	p.kodwfstav,
+	h.pocetbodu "Body hodnotitele",
+	h.arbiter,
+	h.schvalenoschval, /* Pozor, h.schvalenoschval se v¹ude nerovná sch.schvalenoschval */
+	-- h.datumhodnoceni, /* Tøeba jednou budu vìdìt, v èem se tyto dva atributy li¹í... */
+	-- h.datumhodn,
+	NVL(h.datum_finalizace,h.datumhodnoceni) AS "Datum hodnocení", /* Existují prj, kde není h.datum_finalizace vyplnìno, tam pøiøazuji h.datumhodnoceni */
+	-- sch.Last_Modif_Uzivatel AS Schvalovatel, /* Bohu¾el nevím odkud jinud */
+	h.Create_uzivatel AS "Kód hodnotitele",
+-- 	sch.DatumSchval, /* Existují schválené posudky, kde není DatumSchval vyplnìno, proto následující podmínka. */
+	-- (CASE WHEN (sch.schvalenoschval = 'A' AND sch.DatumSchval is null)
+	--  THEN sch.Last_Modif_cas
+	--  ELSE sch.DatumSchval  END) AS "Datum schválení", /* Tam, kde není schváleno bude prázdné pole */
+
+	--  (CASE WHEN LENGTH(h.CREATE_UZIVATEL)>7
+	--  THEN 'EH'
+	--  ELSE 'IH'  END) AS "EH / IH" /* Tam, kde není schváleno bude prázdné pole */
+	-- cu.uzivatel "Jméno hodotitele"
+	hod."Název" "Jméno hodnotitele",
+	status.POPISSTATUTU "Status hodnocení" ,
+	status.POCETBODU "Bodù ve 2. kroku VH"
+
+FROM isum.v_bi_UmzPrjGGII p 
+INNER JOIN isum.v_bi_UmvHodnoceniPrj h ON p.id=h.id_noshodnoceni
+INNER JOIN isum.v_bi_UmvHodnSchvaleni sch ON h.id=sch.id_hodnoceni
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva
+INNER JOIN isum.v_bi_UmvHodnotitel hod ON hod.id = h.id_hodnotitel
+-- INNER JOIN isum.v_bi_cuzivatel cu ON cu.id = h.id_hodnotitel
+INNER JOIN isum.V_BI_UMVHODNSTATUSDH status ON status.id_noshodnoceni = p.id AND status.id_KROKVECHODN = 171214
+
+WHERE
+p."Registraèní èíslo projektu" is not null 
+-- ('CZ.01.3.14/0.0/0.0/19_253/0020892','CZ.01.1.02/0.0/0.0/19_262/0020241','CZ.01.1.02/0.0/0.0/15_031/0007136','CZ.01.1.02/0.0/0.0/19_262/0020241','CZ.01.2.111/0.0/0.0/15_016/0000226', 'CZ.01.2.06/0.0/0.0/19_250/0019192')
+-- AND	p.kodwfstav not in ('PP20','Z1','Z2','Z3','PN21','PN22')
+AND 	p.kodwfstav in ('PP21','PP22','PP23a','PP23b')
+AND 	h.id_kolohodnoceni=171212   /* hodnocení "ostré" ¾ádosti */
+AND 	h.id_KrokVecHodn = 171214 /* 2. krok VH */ 
+-- Po konzultaci je povolen i arbitr, check má hodnotu buï A nebo N, OR je tu zbyteèné
+-- AND 	(h.arbiter = 'N' OR h.arbiter = 'A')
+AND	h.platnost = 'A'
+-- Posudek je¹tì nemusí být schválený
+-- AND	(h.SchvalenoSchval = 'N' OR sch.SchvalenoSchval = 'N' OR (h.SchvalenoSchval is null) OR (sch.SchvalenoSchval is null ) )
+AND 	h.OpravneHodnoceni = 'N'
+AND	h.finalizovano = 'A'
+AND 	v."Èíslo výzvy" in ( :cislo_vyzvy )
+
+
+ORDER BY p."Registraèní èíslo projektu"
+
+

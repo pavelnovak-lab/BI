@@ -1,0 +1,42 @@
+SELECT	p."Registraèní èíslo projektu",
+   	p."Název projektu CZ",
+	p."Anotace projektu",
+	p.ZADATEL,
+	p.KODWFSTAV,
+	p.krajrealizace,
+--	uzjed."Název" AS "Název územní jednotky",
+	uzjed.urovennazev,
+	p.specifcil,
+	p.kodspecifcil,
+	pggvs."IÈ",
+	pggvs."Poèet zamìstnancù",
+	p.velikostpodniku,¨
+--	cis."Název" AS "Právní forma",
+	v."Èíslo výzvy",
+        v."Název výzvy",
+	LISTAGG(ci."Kód",'; ') AS "Kód CZ NACE",
+	LISTAGG(ci."Název",'; ') AS "Název CZ NACE",
+	gg."EU" AS "Požadovaná dotace",
+	gg."CZV" AS "Celkové zpùsobilé výdaje"
+	
+
+
+FROM 		isum.v_bi_umzprojekt p
+INNER JOIN	isum.v_bi_umzprjggvs pggvs ON pggvs.id=p.id_zadatel  
+INNER JOIN	isum.v_bi_umzvyzva v ON p.id_vyzva=v.id
+INNER JOIN	isum.v_bi_umsrscznace n ON n.id_projekt=p.id
+INNER JOIN 	isum.v_bi_umsciszakladni ci ON ci.id=n.id_cznace
+INNER JOIN	isum.v_bi_umzprjgg gg ON gg.id=p.id
+INNER JOIN 	isum.V_BI_UMZPRJUMISTENI umist ON umist.id_projekt=p.id AND umist.typ = 1
+INNER JOIN 	isum.V_BI_UMSCisUzemniJednotky uzjed ON umist.id_uzemnijednotky=uzjed.id
+-- INNER JOIN	isum.v_bi_UmsCisZakladni cis ON pggvs.id_HOSPPRAVFORMA=cis.id 
+
+WHERE	p."Registraèní èíslo projektu"='CZ.01.2.06/0.0/0.0/18_240/0016111'
+
+GROUP BY p."Registraèní èíslo projektu", p.specifcil, p.kodspecifcil, pggvs."IÈ", pggvs."Poèet zamìstnancù", v."Èíslo výzvy", v."Název výzvy", gg."EU", gg."CZV", p."Název projektu CZ", p."Anotace projektu", p.ZADATEL, p.KODWFSTAV, p.krajrealizace, uzjed."Název", p.velikostpodniku, uzjed.urovennazev
+-- , cis."Název"
+
+/*
+Bude dát tøeba info, o plnìní kodu/popis - SC, NACE, KODSTAVU
+
+*/

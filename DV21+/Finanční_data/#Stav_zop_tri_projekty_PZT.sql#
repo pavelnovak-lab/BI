@@ -1,0 +1,9 @@
+SELECT pl."Číslo platby" ,
+       w.* 
+
+FROM projekt p
+INNER JOIN platba pl ON pl.id_nositelplatby = p.id
+INNER JOIN ciselnik_stav_workflow w ON pl.id_wfstav = w.id   
+
+WHERE p."Registrační číslo projektu" IN ('CZ.01.01.01/06/23_014/0001373', 'CZ.01.01.01/06/23_014/0001364', 'CZ.01.01.01/06/23_014/0001367')
+ AND pl."Číslo platby" is not null 

@@ -1,0 +1,62 @@
+SELECT projektu.posa,
+       projektu.pocetprj,
+       nepropl.zop,
+       nepropl.czv,
+       nepropl.dotace,
+       -- propl.projektu "Rozfinancovaných projektù",
+       propl.zop "Proplacených ®oP",
+       propl.czv "Proplaceno ZV",
+       propl.dotace "Proplaceno EU podíl"
+
+
+FROM 
+
+(SELECT	p.kodprioritniosa posa ,
+	count(p."Registraèní èíslo projektu") pocetprj
+
+FROM isum.v_bi_UmzProjekt p
+
+WHERE p.KodPrioritniOsa in ('31.1', '31.2', '31.3', '31.5')
+AND p.kodwfstav not like 'PN%'
+GROUP BY p.kodprioritniosa) projektu
+
+LEFT JOIN 
+(SELECT	p.kodprioritniosa posa ,
+	-- count(p."Registraèní èíslo projektu") projektu,
+       sum(platba."PORADI#Poøadí finanèního plánu") zop ,
+       sum(platba."VYUCTPLAN#Vyúètování plán") czv,
+       sum(pzf.PROC_EU * platba."VYUCTPLAN#Vyúètování plán"/100) dotace
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby
+INNER JOIN isum.v_bi_UMFPFCelkem pzf ON pzf.id_projekt = p.id AND pzf.id_faze = 99991000000000005 -- aktuální stav
+
+WHERE p.KodPrioritniOsa in ('31.1', '31.2', '31.3', '31.5')
+AND  platba.kodwfstav IN ('P0' ,'P1','P2','P3','P4','P5') 
+AND p.kodwfstav not like 'PN%'
+
+
+-- AND p."Registraèní èíslo projektu" = 'CZ.31.3.0/0.0/0.0/22_001/0001442'
+
+GROUP BY p.kodprioritniosa) nepropl ON nepropl.posa = projektu.posa
+
+
+LEFT JOIN 
+
+(SELECT	p.kodprioritniosa posa ,
+	-- count(p."Registraèní èíslo projektu") projektu,
+       sum(platba."PORADI#Poøadí finanèního plánu") zop ,
+       sum(platba."VYUCTPLAN#Vyúètování plán") czv,
+       sum(pzf.PROC_EU * platba."VYUCTPLAN#Vyúètování plán"/100) dotace
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva 
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby
+INNER JOIN isum.v_bi_UMFPFCelkem pzf ON pzf.id_projekt = p.id AND pzf.id_faze = 99991000000000005 -- aktuální stav
+
+
+WHERE p.KodPrioritniOsa in ('31.1', '31.2', '31.3','31.5')
+AND (platba.kodwfstav IN ('P5T','P6','P6T','P10','P11') OR platba.kodwfstav like ('N%'))
+AND p.kodwfstav not like 'PN%'
+
+GROUP BY p.kodprioritniosa) propl ON propl.posa = nepropl.posa

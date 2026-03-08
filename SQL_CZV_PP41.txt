@@ -1,0 +1,13 @@
+select	 "V_BI_UMFPFCELKEM"."PROC_EU" as "proc_zopo",
+	 "V_BI_UMZPROJEKT"."ZADATEL" as "zadatel1",
+	 "V_BI_UMZPROJEKT"."IÈ" as "ico",
+	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" as "reg_cis1",
+	 "V_BI_UMZPROJEKT"."Název projektu CZ" as "nazev1",
+	 "V_BI_UMZPROJEKT"."ID" as "id1",
+	 "V_BI_UMZPROJEKT"."KODWFSTAV" as "wf",
+	 "V_BI_UMFPFCELKEM"."Celkové zpùsobilé výdaje" as "Celkové zpùsobilé výdaje",
+ from	"ISUM"."V_BI_UMZPROJEKT" "V_BI_UMZPROJEKT",
+	"ISUM"."V_BI_UMFPFCELKEM" "V_BI_UMFPFCELKEM" 
+ where   "V_BI_UMFPFCELKEM"."ID_PROJEKT"="V_BI_UMZPROJEKT"."ID"
+  and 	 "V_BI_UMZPROJEKT"."Registraèní èíslo projektu" like ('CZ.01.2.06/0.0/0.0/15_038/0006724') 
+   and	 "V_BI_UMFPFCELKEM"."ID_FAZE" ='99991000000000005'

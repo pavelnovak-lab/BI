@@ -1,0 +1,20 @@
+SELECT 	v."Èíslo výzvy",
+	v."Název výzvy",
+	v."Datum vyhlášení výzvy",
+	v."Datum zahájení pøíjmu žádosti",
+	v."Datum ukonèení pøíjmu žádosti",
+	v.uzemi,
+	kom."Název",
+	v."Finanèní alokace Celk"
+
+FROM		isum.v_bi_UmzVyzva v
+INNER JOIN	isum.v_bi_UmzVyzvaKategorie kat ON kat.id_vyzva=v.id
+inner join 	isum.V_BI_UMZVYZVAUTVAR	utvar ON utvar.id_vyzva=v.id
+inner join 	isum.V_BI_UMSHIUtvarKomp kom ON kom.id=utvar.id_utvarkomp
+
+
+
+WHERE 	kat.integrovany='Ano'
+AND	v.id=583466458
+
+

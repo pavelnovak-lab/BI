@@ -1,0 +1,62 @@
+select    "V_BI_UMZPRJGG"."Registraèní èíslo projektu" as "Registraèní èíslo projektu",
+                "V_BI_UMPPLATBAPRJ"."Èíslo ¾ádosti o platbu" as "Èíslo ¾ádosti o platbu",
+                "V_BI_UMPPLATBAPRJ"."KODWFSTAV" as "KodStavZoP",
+                "V_BI_UMPPLATBAPRJ"."ID" as "ID_ZoP",
+                "V_BI_UMFSOUPISKADOKLAD"."Poøadové èíslo" as "PoradiDoklad",
+                "V_BI_UMFSOUPISKADOKLAD"."VYDAJEPROKAZ" as "VYDAJEPROKAZ",
+                "V_BI_UMFSOUPISKADOKLAD"."VYDAJESCHVAL" as "VYDAJESCHVAL",
+                "V_BI_UMFSOUPISKADOKLAD"."Sní¾ení prokazovaných zpùsobil" as "Sní¾ení prokazovaných zpùsobil",
+"V_BI_UMFSOUPISKADOKLAD"."ID_VZ" as "ID_VZ",
+
+-- DECODE("V_BI_UMFSOUPISKADOKLAD"."Investice/Neinvestice",'0','Neinvestice','1','Investice') as "Investice/Neinvestice",
+
+-- DECODE("V_BI_UMFSOUPISKADOKLAD"."Typ úpravy dokladu",'0','Upravený','1','Nový','2','Smazaný') as "Typ úpravy dokladu",
+
+-- DECODE("V_BI_UMFSOUPISKADOKLAD"."TYPDOKLADU",'0','Pøíjmy','1','SD-1','2','SD-2','3','SD-3') as "TYPDOKLADU",
+
+                -- "V_BI_UMFROZPOLOZKY"."Kód" as "KodPolozka",
+                "V_BI_UMFSOUPISKADOKLAD"."EXTKLIC" as "EXTKLIC" 
+ from
+ -- "ISUM"."V_BI_UMFROZPOLOZKY" "V_BI_UMFROZPOLOZKY",
+                "ISUM"."V_BI_UMFSOUPISKADOKLAD" "V_BI_UMFSOUPISKADOKLAD",
+                "ISUM"."V_BI_UMPPLATBAPRJ" "V_BI_UMPPLATBAPRJ",
+                "ISUM"."V_BI_UMZPRJGG" "V_BI_UMZPRJGG" 
+ where   "V_BI_UMPPLATBAPRJ"."ID_NOSITELPLATBY"="V_BI_UMZPRJGG"."ID"
+and       "V_BI_UMFSOUPISKADOKLAD"."ID_PLATBA"="V_BI_UMPPLATBAPRJ"."ID"
+-- and       "V_BI_UMFSOUPISKADOKLAD"."ID_POLOZKA"="V_BI_UMFROZPOLOZKY"."ID"
+
+and       "V_BI_UMPPLATBAPRJ"."Èíslo ¾ádosti o platbu" is not null 
+   and     "V_BI_UMFSOUPISKADOKLAD"."Poøadové èíslo" is not null
+and ("V_BI_UMZPRJGG"."Registraèní èíslo projektu" = :Cislo_projektu or :Cislo_projektu is null)
+
+
+
+--------------------------------------------
+
+SELECT DISTINCT p."Registraèní èíslo projektu",
+       platba."Èíslo ¾ádosti o platbu",
+       vz.NAZEV,
+       vz.NAZEVPRACOVNI,
+       vz.PORADOVECISLO is not null  ,
+       stavzop.prvnipodani
+       
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby
+INNER JOIN isum.v_bi_umfsoupiskadoklad doklad ON doklad.ID_PLATBA = platba.id
+INNER JOIN isum.V_BI_UMVVyberovaRizeni vz ON vz.id = doklad.id_vz
+INNER JOIN 
+(SELECT min(hs.datumod) prvnipodani,
+       hs.NositelId
+FROM  isum.v_bi_UmsWFHistorieStavu hs 
+WHERE hs.stavdo = 'P4'
+GROUP BY hs.NositelId ) stavzop ON stavzop.NositelId = platba.id
+
+
+
+WHERE
+-- p.KodPrioritniOsa in ('01.1', '01.2', '01.3', '01.4','01.5')
+-- AND 
+
+platba."Èíslo ¾ádosti o platbu" = 'CZ.01.1.02/0.0/0.0/19_280/0018684/2021/001/POST'
+AND doklad.id = 1457772142

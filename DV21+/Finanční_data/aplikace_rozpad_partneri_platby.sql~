@@ -1,0 +1,85 @@
+-- CREATE or REPLACE view "Aplikace_proplaceno_partnteri_2024" FOLDER= AS 
+SELECT	v."Èíslo vızvy" ,
+	p."Registraèní èíslo projektu",
+	p."Název projektu CZ" ,
+	d.dp "Data proplacení",
+       sum(CASE WHEN cuk."Kód" = '1' then rf."Schválené vyúètování ZS/ØO v této ®oP" END ) "ZV v prolacenıch ®oP",
+       sum(CASE WHEN cuk."Kód" = '13' then rf."Schválené vyúètování ZS/ØO v této ®oP" END ) "Soukromı podíl v prolacenıch ®oP" ,
+       sum(CASE WHEN cuk."Kód" = '7' then rf."Schválené vyúètování ZS/ØO v této ®oP" END ) "EU doatace v prolacenıch ®oP",
+       max(CASE WHEN s.id_typsubjektuedit = 413462 THEN s."Název subjektu" END) "Pøíjemce" ,
+       max(CASE WHEN s.id_typsubjektuedit = 413462 THEN  s."IÈ" END) "IÈ pøíjemce" ,
+       sum(CASE WHEN s.id_typsubjektuedit = 413462 THEN vpos."Èástka pro vıpoèet veøejné podporky (CZK) - Schváleno" END) "ZV pøíjemce",
+       sum(CASE WHEN s.id_typsubjektuedit = 413462 THEN vpos."Èástka Vlastní zdroje - Schváleno" END)  "Vlastní podíl pøíjemce",
+       sum(CASE WHEN (s.id_typsubjektuedit = 413462 AND partneri.id = vpos.id_subjekt) THEN vpos."Èástka EU - Schváleno" END)  "EU dotace pøíjemce" ,
+
+       max(CASE WHEN (partneri.poradi = 1 AND partneri.id = s.id) THEN s."Název subjektu" END) "1. partner" ,
+       max(CASE WHEN (partneri.poradi = 1 AND partneri.id = s.id) THEN s."IÈ" END) "IÈ 1. partner" ,
+       sum(CASE WHEN (partneri.poradi = 1 AND partneri.id = s.id) THEN vpos."Èástka pro vıpoèet veøejné podporky (CZK) - Schváleno" END) "ZV 1. partner",
+       sum(CASE WHEN (partneri.poradi = 1 AND partneri.id = s.id) THEN vpos."Èástka Vlastní zdroje - Schváleno" END)  "Vlastní podíl 1. partner",
+       sum(CASE WHEN (partneri.poradi = 1 AND partneri.id = s.id AND partneri.id = vpos.id_subjekt ) THEN vpos."Èástka EU - Schváleno" END)  "EU dotace 1. partner" ,
+
+       max(CASE WHEN (partneri.poradi = 2 AND partneri.id = s.id) THEN s."Název subjektu" END) "2. partner" ,
+       max(CASE WHEN (partneri.poradi = 2 AND partneri.id = s.id) THEN s."IÈ" END) "IÈ 2. partner" ,
+       sum(CASE WHEN (partneri.poradi = 2 AND partneri.id = s.id) THEN vpos."Èástka pro vıpoèet veøejné podporky (CZK) - Schváleno" END) "ZV 2. partner",
+       sum(CASE WHEN (partneri.poradi = 2 AND partneri.id = s.id) THEN vpos."Èástka Vlastní zdroje - Schváleno" END)  "Vlastní podíl 2. partner",
+       sum(CASE WHEN (partneri.poradi = 2 AND partneri.id = s.id) THEN vpos."Èástka EU - Schváleno" END)  "EU dotace 2. partner" ,
+
+       max(CASE WHEN (partneri.poradi = 3 AND partneri.id = s.id) THEN s."Název subjektu" END) "3. partner" ,
+       max(CASE WHEN (partneri.poradi = 3 AND partneri.id = s.id) THEN s."IÈ" END) "IÈ 3. partner" ,
+       sum(CASE WHEN (partneri.poradi = 3 AND partneri.id = s.id) THEN vpos."Èástka pro vıpoèet veøejné podporky (CZK) - Schváleno" END) "ZV 3. partner",
+       sum(CASE WHEN (partneri.poradi = 3 AND partneri.id = s.id) THEN vpos."Èástka Vlastní zdroje - Schváleno" END)  "Vlastní podíl 3. partner",
+       sum(CASE WHEN (partneri.poradi = 3 AND partneri.id = s.id) THEN vpos."Èástka EU - Schváleno" END)  "EU dotace 3. partner" ,
+
+       max(CASE WHEN (partneri.poradi = 4 AND partneri.id = s.id) THEN s."Název subjektu" END) "4. partner" ,
+       max(CASE WHEN (partneri.poradi = 4 AND partneri.id = s.id) THEN s."IÈ" END) "IÈ 4. partner" ,
+       sum(CASE WHEN (partneri.poradi = 4 AND partneri.id = s.id) THEN vpos."Èástka pro vıpoèet veøejné podporky (CZK) - Schváleno" END) "ZV 4. partner",
+       sum(CASE WHEN (partneri.poradi = 4 AND partneri.id = s.id) THEN vpos."Èástka Vlastní zdroje - Schváleno" END)  "Vlastní podíl 4. partner",
+       sum(CASE WHEN (partneri.poradi = 4 AND partneri.id = s.id) THEN vpos."Èástka EU - Schváleno" END)  "EU dotace 4. partner" 
+
+
+FROM projekt p
+INNER JOIN platba pl ON pl.id_nositelplatby = p.id
+INNER JOIN (SELECT GROUP_CONCAT(FORMATDATE('yyyy-MM-dd', pl."Datum proplacení pøíjemci / vypoøádání")) dp ,
+      	   	   pl.id_nositelplatby
+	    FROM platba pl
+	    WHERE pl."Datum proplacení pøíjemci / vypoøádání"  >= to_date('yyyy-MM-dd HH:mm:ss','2024-01-01 00:00:00')
+	    AND pl."Datum proplacení pøíjemci / vypoøádání"  < to_date('yyyy-MM-dd HH:mm:ss','2025-01-01 00:00:00')
+	    GROUP BY pl.id_nositelplatby) d ON d.id_nositelplatby = p.id
+INNER JOIN vyzva v ON v.id = p.id_vyzva
+INNER JOIN subjekt s ON s.id_prjgg = p.id AND s."Neplatnı od" is null AND s.id_typsubjektuedit IN (413462, 413467) --  ¾adatel, partner s FP
+INNER JOIN verejna_podpora_soupiska vpos ON vpos.id_platba = pl.id AND vpos.id_subjekt = s.id
+INNER JOIN rozpis_financovani rf ON rf.id_platba = pl.id 
+INNER JOIN ciselnik_ukazatel_rozpis_financovani cuk ON cuk.id = rf.id_ukazatel AND cuk."Kód" in ('1','7','13') -- øádek F1-C EU celkem
+
+LEFT JOIN (SELECT ROW_NUMBER() OVER (PARTITION BY s.id_prjgg ORDER BY s.id) AS poradi,
+     	  	  s."Název subjektu",
+     	  	  s.id,
+		  s.id_prjgg
+	   FROM projekt p
+	   INNER JOIN vyzva v ON v.id = p.id_vyzva
+	   INNER JOIN subjekt s ON s.id_prjgg = p.id AND s."Neplatnı od" is null AND s.id_typsubjektuedit IN (413467) --  partner s FP
+	   INNER JOIN ciselnik_stav_workflow w ON p.id_wfstav = w.id  
+
+	   WHERE p."Registraèní èíslo projektu" is not null
+	   AND v."Èíslo vızvy" = '01_22_002'
+	   AND w."Kód" not like 'PN%'
+	   -- AND p."Registraèní èíslo projektu" IN ('CZ.01.01.01/01/22_002/0000322', 'CZ.01.01.01/01/22_002/0000436')
+	   ) partneri ON partneri.id_prjgg = p.id
+
+WHERE v."Èíslo vızvy" = '01_22_002' -- Aplikace I
+--- pozor datumy jsou i v JOINech nahoøe !!!
+AND pl."Datum proplacení pøíjemci / vypoøádání"  >= to_date('yyyy-MM-dd HH:mm:ss','2024-01-01 00:00:00')
+AND pl."Datum proplacení pøíjemci / vypoøádání"  < to_date('yyyy-MM-dd HH:mm:ss','2025-01-01 00:00:00')
+-- AND p."Registraèní èíslo projektu" IN ('CZ.01.01.01/01/22_002/0000322', 'CZ.01.01.01/01/22_002/0000436')
+p."Registraèní èíslo projektu" = 'CZ.01.01.01/01/22_002/0000397'
+GROUP BY v."Èíslo vızvy",
+	 p."Registraèní èíslo projektu" ,
+	 p."Název projektu CZ",
+	 d.dp
+
+ORDER BY p."Registraèní èíslo projektu" 
+
+
+
+--- dvì platby 
+CZ.01.01.01/01/22_002/0000106

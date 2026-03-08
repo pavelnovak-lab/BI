@@ -1,0 +1,14 @@
+SELECT 	p."Registraèní èíslo projektu",
+	v."Èíslo výzvy",
+	v."Název výzvy",
+	p."KODWFSTAV"
+
+FROM 	isum.v_bi_umzprojekt p
+inner join isum.v_bi_umzvyzva v ON p.id_vyzva=v.id
+
+WHERE 	(p."KODWFSTAV" like 'PP3_' OR p."KODWFSTAV" like 'PP4_' OR p."KODWFSTAV" like 'PP2%' )
+AND	v."Èíslo výzvy" in ('01_15_002','01_17_109','01_18_180')
+
+
+
+

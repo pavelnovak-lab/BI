@@ -1,0 +1,19 @@
+SELECT 	p."Registrační číslo projektu",
+	p."Název projektu CZ",
+	p."IČ",
+	p.zadatel,
+	v."Číslo výzvy",
+	v."Název výzvy",
+	p.kodwfstav,
+	p.wfstavdatum,
+        TO_CHAR(p.wfstavdatum, 'DY') AS den_tydne
+       -- CASE WHEN TO_CHAR(your_date_column, 'DY') IN ('SAT', 'SUN') THEN 'Víke
+FROM 		isum.v_bi_UmzProjekt p
+INNER JOIN	isum.v_bi_umzvyzva v ON p.id_vyzva=v.id
+
+WHERE p.kodwfstav in ('PP41','PP42')
+AND p.kodprioritniosa <> '01.5'
+
+
+-- ORDER BY substr(p."Registrační číslo projektu",-5,5) asc 
+

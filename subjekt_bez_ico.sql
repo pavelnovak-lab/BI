@@ -1,0 +1,56 @@
+SELECT
+   vs."Fyzická osoba podnik bez IÈ",
+   --    p."Registraèní èíslo projektu" ,
+   --    vs."Název subjektu"
+    -- p."Identifikace ¾ádosti (Hash)",
+   p."Registraèní èíslo projektu" 
+   
+FROM isum.v_bi_UmzProjekt p
+-- INNER JOIN isum.v_bi_UmzPrjGGvs vs ON vs.id_prjgg=p.id
+
+WHERE
+-- vs.id = 1551878638
+p."Registraèní èíslo projektu" is not null
+AND vs.ID_TYPSUBJEKTU = 300784 -- zadatel
+AND vs."Fyzická osoba podnik bez IÈ" = 'A'
+-- AND p."Identifikace ¾ádosti (Hash)" = '1GRk9QP'
+
+
+	
+-- CZ.31.3.0/0.0/0.0/22_001/0001645|CZ.31.3.0/0.0/0.0/22_001/0000972|CZ.31.3.0/0.0/0.0/22_001/0000653|CZ.31.3.0/0.0/0.0/22_001/0000971
+
+87420295
+
+REGISTRAÈNÍ_ÈÍSLO_PROJEKTU (CZ.01.3.10/0.0/0.0/19_251/0022461)
+FYZICKÁ_OSOBA_PODNIK_BEZ_IÈ (A)
+G_1
+REGISTRAÈNÍ_ÈÍSLO_PROJEKTU (CZ.31.3.0/0.0/0.0/22_001/0001645)
+FYZICKÁ_OSOBA_PODNIK_BEZ_IÈ (A)
+G_1
+REGISTRAÈNÍ_ÈÍSLO_PROJEKTU (CZ.31.3.0/0.0/0.0/22_001/0000972)
+FYZICKÁ_OSOBA_PODNIK_BEZ_IÈ (A)
+G_1
+REGISTRAÈNÍ_ÈÍSLO_PROJEKTU (CZ.31.3.0/0.0/0.0/22_001/0000653)
+FYZICKÁ_OSOBA_PODNIK_BEZ_IÈ (A)
+G_1
+REGISTRAÈNÍ_ÈÍSLO_PROJEKTU (CZ.31.3.0/0.0/0.0/22_001/0000971)
+FYZICKÁ_OSOBA_PODNIK_BEZ_IÈ (A)
+
+
+CZ.01.3.10/0.0/0.0/19_251/0022461
+CZ.31.3.0/0.0/0.0/22_001/0001645
+CZ.31.3.0/0.0/0.0/22_001/0000972
+CZ.31.3.0/0.0/0.0/22_001/0000653
+CZ.31.3.0/0.0/0.0/22_001/0000971
+
+
+--------------------------------------------
+
+Dobrý den,
+
+podle vyjádøení provozovatele
+
+
+
+
+

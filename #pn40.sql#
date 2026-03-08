@@ -1,0 +1,7 @@
+SELECT *
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby
+INNER JOIN isum.v_bi_UmsWFHistorieStavu hs ON hs.NositelId = platba.id
+
+WHERE p."Registrační číslo projektu" in 

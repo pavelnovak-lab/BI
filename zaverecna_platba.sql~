@@ -1,0 +1,23 @@
+SELECT p."Registraèní èíslo projektu" ,
+       platba."Èíslo ¾ádosti o platbu" ,
+       platba."Závìreèná platba",
+       posledni.datum ,
+       platba."Datum zmìny stavu"
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id = platba.id_NositelPlatby
+INNER JOIN
+( SELECT platba."Datum zmìny stavu" datum,
+  	 platba.id_NositelPlatby
+  FROM isum.v_bi_UmpPlatbaPrj platba
+  WHERE p.KodPrioritniOsa in ('01.1', '01.2', '01.3', '01.4','01.5')
+  AND platba.kodwfstav IN ('P10','P11')
+  AND platba."Závìreèná platba" = 'N'
+  GROUP BY platba.id_NositelPlatby ) posledni ON posledni.id_NositelPlatby = p.id
+
+WHERE p."Registraèní èíslo projektu" is not null
+AND p.KodPrioritniOsa in ('01.1', '01.2', '01.3', '01.4','01.5')
+AND platba."Závìreèná platba" = 'N'
+-- AND p."Registraèní èíslo projektu" = 'CZ.01.2.07/0.0/0.0/16_058/0007644'
+AND platba.kodwfstav IN ('P10','P11')
+AND posledni.datum < platba."Datum zmìny stavu"

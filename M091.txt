@@ -1,0 +1,40 @@
+SELECT	 
+	v."OP kod" as "OP kod",
+	v."OP název" as "OP název",
+	v."Èíslo výzvy",
+	v."Název výzvy",
+	v."Èíslo výzvy MAS" AS VMK,
+	v."Název výzvy MAS" AS VMN,
+	P.KODSPECIFCIL AS SC,
+	p."Registraèní èíslo projektu",
+	p."Název projektu CZ",
+	vs."JMENOANAZEV" as "JMENOANAZEV",
+	nvl(vs."IÈ",vs."DIÈ / NIP") as "IÈ",
+	(select (LISTAGG(kraj."Název", '; ') WITHIN GROUP (ORDER BY kraj."Název")) from (select "Název",id_projekt from isum.V_BI_UMZPRJUMISTENIKRAJ where id_projekt=p.id and TYP='Dopad' group by "Název",id_projekt) kraj) as kraj,
+	kin1."Název" as "Kat. intervencí",
+	rez."Název" as REZIM,
+	kat."Název" as KATEGORIE,
+	pod."Název" as PODKATEGORIE,
+	st."Rok" as ROK, 
+	st."Celkem" as CELKEM,
+	st."Pøíspìvek EU" as EU,
+	st."Pøíspìvek SR" as SR,
+	st."Pøíspìvek ostatní" as OST,
+	100- m11."PROC_EU" as "Spolufinancování"
+	--PROC_SOUKR+PROC_SOUKR_NAR
+FROM isum.V_BI_UMZVYZVA v
+	inner join isum.V_BI_UMZPROJEKT p on p.id_vyzva=v.id
+	inner join isum.V_BI_UMZPRJGGVS vs on vs.id_prjgg=p.id and vs.ID_TYPSUBJEKTUEDIT in (:subjekt)
+	inner join isum.V_BI_UMZPRJKI ki1 on ki1.ID_PROJEKT=p.id and ki1."Typ kategorie intervencí" ='1' and ki1.GENEROVANO='N'
+	inner join isum.V_BI_UMSCISZAKLADNI  kin1 on kin1.id=ki1.ID_KI
+	inner join isum.V_BI_UMFPFCELKEM m11 on m11.ID_PROJEKT=p.id and m11.id_faze=99991000000000011
+	inner join isum.v_bi_UMSSubjektDeMinimis m on m.id_projekt =p.ID and m."Platnost"='A'
+	inner join isum.v_bi_UMSRdMPodpora ppra on ppra.id_nositel=m.id_nositel and ppra.ID_REZIMPODPORY=1196332
+	inner join isum.V_BI_UMSCISZAKLADNI rez on rez.id=ppra.ID_REZIMPODPORY
+	inner join isum.V_BI_UMSCISZAKLADNI pod on pod.id=ppra.ID_PODKATEGORIE
+	inner join isum.V_BI_UMSCISZAKLADNI kat on kat.id=ppra.ID_KATEGPODPGBER
+	inner join isum.V_BI_UMSRDMSKUTECNOST st on st.ID_PODPORA=ppra.id and st."Rok" in (:rok)
+WHERE p."Registraèní èíslo projektu" is not null
+and (v.id=:v or :vyzall=1)
+and v.id_prg=:op
+and (p."Registraèní èíslo projektu" = :p or :p is null)

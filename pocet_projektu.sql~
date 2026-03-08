@@ -1,0 +1,7 @@
+SELECT count(p.id)
+
+FROM isum.v_bi_UmzProjekt p
+
+WHERE p."Registraèní èíslo projektu" is not null
+AND p.kodwfstav in ('PP20','PP21','PP22','PP23a','PP23b','PP27a','PP27b','PP29','PU21','PU27','V2','V5','Z1','Z3')
+AND p.KodPrioritniOsa in ('01.1', '01.2', '01.3', '01.4') 

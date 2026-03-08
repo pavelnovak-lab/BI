@@ -1,0 +1,9 @@
+SELECT pf.*
+
+
+FROM isum.v_bi_UmzVyzva v 
+INNER JOIN isum.v_bi_UMFPomeryHlavicka pf ON pf.ID_NOSITELPOMPF = v.id 
+
+
+where pf."Název" like 'NPO%'
+-- pf.id = 2098793244

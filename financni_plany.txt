@@ -1,0 +1,19 @@
+SELECT p."Registraèní èíslo projektu" ,
+       p.kodwfstav "Stav projektu",
+       v."Název výzvy" ,
+       v."Èíslo výzvy" ,
+       platba.wfstav "Stav ®oP",
+       platba."PORADI#Poøadí finanèního plánu" ,
+       platba."VYUCTPLAN#Vyúètování plán",
+       platba."Datum pøedlo¾ení"
+
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva
+INNER JOIN isum.v_bi_UmpPlatbaPrj platba ON p.id=platba.id_NositelPlatby 
+
+WHERE p."Registraèní èíslo projektu" is not null
+AND v."Èíslo výzvy" in ('31_22_011','31_22_014','31_22_015')
+-- AND p."Registraèní èíslo projektu" = 'CZ.31.2.0/0.0/0.0/22_014/0005483'
+AND platba.SOUCTOVYRADEK is null 
+
+

@@ -1,0 +1,25 @@
+SELECT 	SUBSTR(p.kompetencniutvar, 6 ) AS "Program podpory",
+	p."Registraèní èíslo projektu",
+	p.zadatel ,
+	-- p."Název projektu CZ" ,
+	sd."VLASTNIK#Správce pøístupù",
+	sd."Ètenáø",
+	sd."Editor",
+	sd."Signatáø",
+	sd."Zástupce správce pøístupù",
+	u.uzivatel
+
+
+       
+FROM isum.v_bi_UmzProjekt p 
+INNER JOIN isum.v_bi_UMZPrjGGSdileni sd ON sd.id_nositelsdil = p.id
+INNER JOIN isum.v_bi_CUzivatel u ON u.id = sd.id_uzivatel
+
+
+WHERE
+-- AND sd.hodnoceni <> 'A'
+p."Registraèní èíslo projektu" is not null
+
+AND u.username in ('GUNEZTOM','HQBROZDE','IBDOBLUD','LUPALOND','QRBROZDE','WLKOTKAR')
+
+ORDER BY u.uzivatel

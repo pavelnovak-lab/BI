@@ -1,0 +1,73 @@
+SELECT p."Registraèní èíslo projektu",
+       v."Èíslo výzvy" ,
+       v."Název výzvy",
+       sum(s.VYDAJESCHVAL) "Stroje a zaøízení",
+       pol."Kód" "Kód polo¾ky",
+       pol."Název" "Název polo¾ky"
+
+       
+FROM isum.v_bi_UmzProjekt p
+INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva
+INNER JOIN isum.V_BI_UMFSOUPISKADOKLADPRJ s ON s.id_projekt = p.id
+INNER JOIN isum.V_BI_UMFROZPolozky pol ON pol.id = s.id_polozka
+
+
+
+
+
+
+WHERE p."Registraèní èíslo projektu" = 'CZ.01.3.10/0.0/0.0/15_010/0000365'
+AND s."Souètový øádek" is null
+-- AND sd.id = 585089617
+-- ORDER BY substr(p."Registraèní èíslo projektu",-5,5) ASC
+
+-- AND (UPPER(pol."Název") LIKE ('%STAVBY%') OR
+     -- UPPER(pol."Název") LIKE ('%STAVEB%') OR
+     -- UPPER(pol."Název") LIKE ('%VÝSTAVBA%') ) 
+
+AND UPPER(pol."Název") LIKE ('%STROJ%')
+
+-- AND UPPER(pol."Název") LIKE ('%Energetický posudek%')
+
+GROUP BY p."Registraèní èíslo projektu",
+       v."Èíslo výzvy" ,
+       v."Název výzvy",
+       pol."Kód" ,
+       pol."Název"
+
+
+
+-------------------------------------------------------
+
+-- SELECT v."Název výzvy" ,
+--        v."Èíslo výzvy",
+--        pol."Kód" "Kód polo¾ky",
+--        pol."Název" "Název polo¾ky"
+--        -- cis."Název" "Èíselníkový název",
+--        -- v.ID_UTVARKOMP
+       
+-- FROM isum.v_bi_UmzVyzva v -- ON v.id=p.id_vyzva
+-- INNER JOIN isum.v_bi_UmzVyzvaMD md ON md.id_vyzva = v.id
+-- INNER JOIN isum.v_bi_UmsCisZakladni ci ON ci.id = md.id_ciszakladni
+-- INNER JOIN isum.v_bi_UmfRozSkupina sk ON sk."Kód" = ci."Kód" AND sk."Název skupiny rozpoètu" = ci."Název" 
+-- INNER JOIN isum.v_bi_UmfRozSkupinaPol pol ON pol.id_predpis = sk.id
+-- -- LEFT JOIN isum.v_bi_UmsCisZakladni cis ON cis.id = pol.id_verejnapodpora  
+
+
+
+
+-- WHERE md."Platnost" = 'A'
+
+-- AND v."Èíslo výzvy" = '01_19_255'
+
+-- AND pol."Platnost" = 'A'
+-- AND pol."Listová" = 'A'
+-- AND (pol."Nezpùsobilé výdaje" = 'N' OR pol."Nezpùsobilé výdaje" is null)
+-- AND v."Èíslo výzvy" in ('01_15_024','01_15_026','01_15_039','01_16_060','01_16_062','01_16_065','01_16_132','01_16_133','01_16_063','01_15_025','01_15_027','01_15_028','01_17_096','01_16_130','01_16_061','01_16_129','01_16_131','01_15_010','01_15_042','01_15_043','01_16_064','01_15_067','01_15_068','01_15_069','01_17_097','01_17_095','01_17_134','01_17_135','01_17_136','01_17_137','01_15_040','01_15_041','01_17_100','01_17_099','01_17_159','01_17_160','01_17_098','01_17_152','01_17_153','01_17_154','01_17_138','01_17_158','01_17_208','01_17_209','01_17_210','01_17_211','01_17_101','01_18_183','01_18_188','01_18_231','01_18_233','01_18_234','01_18_180','01_17_178','01_18_191','01_18_179','01_18_181','01_18_245','01_18_182','01_18_235','01_18_236','01_18_246','01_18_184','01_18_185','01_18_242','01_18_186','01_18_187','01_19_303','01_19_304','01_19_305','01_19_306','01_19_307','01_19_308','01_19_253','01_18_189','01_19_251','01_19_316','01_19_302','01_18_190','01_19_252','01_19_255','01_19_254','01_20_356','01_20_371','01_20_370','01_20_345')
+
+-- AND (UPPER(pol."Název") LIKE ('%STAVBY%') OR
+--      UPPER(pol."Název") LIKE ('%STAVEB%') OR
+--      UPPER(pol."Název") LIKE ('%VÝSTAVBA%') ) 
+
+
+-- ORDER BY v."Èíslo výzvy" ASC, pol."Kód" ASC

@@ -1,0 +1,19 @@
+SELECT 	p."Registraèní èíslo projektu",
+	LISTAGG(vs."IÈ", '; ') AS  "IÈ partnerù",
+	vs.id_prjgg,
+	p.id,
+	platba.id_SchvaleneCastky,
+	castky.id as "ID Èástky",
+	platba.id_NositelPlatby
+
+
+FROM		isum.v_bi_UmpPlatbaPrj platba
+inner join	isum.v_bi_UmpCastkySchval castky ON platba.id_SchvaleneCastky=castky.id
+inner join  	isum.v_bi_UmzProjekt p ON p.id=platba.id_NositelPlatby
+inner join	isum.v_bi_UmzPrjGGvs vs ON vs.id_prjgg=p.id
+
+
+WHERE 	p."Registraèní èíslo projektu"='CZ.01.1.02/0.0/0.0/15_019/0004353'
+
+GROUP BY p."Registraèní èíslo projektu", vs.id_prjgg, p.id, platba.id_SchvaleneCastky, castky.id, platba.id_NositelPlatby
+
