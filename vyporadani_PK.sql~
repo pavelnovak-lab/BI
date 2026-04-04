@@ -1,5 +1,0 @@
-SELECT *
-
-FROM isum.v_bi_UMVHodnVyporadaniVK
-
-WHERE id = 1176571024

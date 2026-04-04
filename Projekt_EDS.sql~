@@ -1,9 +1,0 @@
-SELECT p."Registrační číslo projektu" ,
-       v."Název výzvy" ,
-       eds.*
-
-
-FROM isum.v_bi_UmzProjekt p
-INNER JOIN isum.v_bi_UmzVyzva v ON v.id=p.id_vyzva
-INNER JOIN isum.v_bi_UMZISPeProjekt eds
-inner join isum.V_BI_UMZISPeBilance e on e.id_eprojekt=pp.id

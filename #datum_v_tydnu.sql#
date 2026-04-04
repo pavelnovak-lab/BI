@@ -1,4 +1,0 @@
-SELECT your_date_column,
-       TO_CHAR(your_date_column, 'DY') AS day_of_week,
-       CASE WHEN TO_CHAR(your_date_column, 'DY') IN ('SAT', 'SUN') THEN 'Víkend' ELSE 'Pracovní den' END AS weekend_indicator
-FROM your_table;

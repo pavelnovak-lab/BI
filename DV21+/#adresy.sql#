@@ -1,9 +1,0 @@
-SELECT p."Registrační číslo projektu" ,
-       s."Název subjektu",
-       a.*
-
-FROM projekt p
-INNER JOIN subjekt s ON s.id_prjgg = p.id AND id_typsubjektuedit = 413462
-INNER JOIN verze_adresy a ON s.id_oficialniadresa = a.id
-
-AND p."Registrační číslo projektu" = 'CZ.01.01.01/01/22_002/0000322'

@@ -1,0 +1,49 @@
+SELECT	arbitr."Registrační číslo projektu",
+	arbitr.kodwfstav,
+	arbitr.pocetbodu AS "Arbitr body",
+	max(ih.pocetbodu) AS "1. IH body",
+	min(ih.pocetbodu) AS "2. IH body",
+	max(ih.pocetbodu)-min(ih.pocetbodu) AS "Rozdíl bodů IH",
+	arbitr."Bodů celkem"	
+
+FROM
+
+(SELECT  p."Registrační číslo projektu",
+	 p.kodwfstav,
+ 	 h.id_krokvechodn,
+	 h.pocetbodu,
+	 h.id_noshodnoceni,
+	 h.id_kolohodnoceni,
+	 stat.pocetbodu AS "Bodů celkem",
+	 stat.id_krokvechodn as krok_vecka,
+	 stat.id_kolohodnoceni AS kolo_vecka
+
+FROM		isum.v_bi_umzprojekt p
+INNER JOIN	isum.v_bi_umvhodnoceni h ON h.id_noshodnoceni=p.id
+INNER JOIN 	isum.v_bi_umvhodnstatusDH stat ON stat.id_noshodnoceni=p.id
+
+WHERE 	p.kodwfstav in ('PP23a', 'PN23a', 'PP23b', 'PP27a', 'PP27b', 'PU27', 'PN27', 'PP29', 'PN29', 'PP30', 'PP36', 'PP37', 'PP40', 'PP41', 'PP42')
+
+AND	h.druhhodn = 'Věcné hodnocení' 
+AND	h.platnost = 'A'
+AND	h.typhodnotitele = 'Arbitr' ) arbitr
+
+INNER JOIN 
+
+(SELECT	 h.id_krokvechodn,
+	 h.pocetbodu,
+	 h.id_kolohodnoceni,
+	 h.id_noshodnoceni	
+
+FROM	isum.v_bi_umvhodnoceni h 
+
+WHERE 	h.druhhodn = 'Věcné hodnocení' 
+AND	h.platnost = 'A'
+AND	h.typhodnotitele = 'Řádný hodnotitel') ih
+
+ON arbitr.id_kolohodnoceni=ih.id_kolohodnoceni and ih.id_krokvechodn=arbitr.id_krokvechodn and 
+
+ih.id_noshodnoceni=arbitr.id_noshodnoceni and ih.id_krokvechodn=arbitr.krok_vecka and ih.id_kolohodnoceni=arbitr.kolo_vecka
+
+GROUP BY arbitr."Registrační číslo projektu", arbitr.pocetbodu, arbitr.kodwfstav, arbitr."Bodů celkem"
+

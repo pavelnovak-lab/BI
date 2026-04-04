@@ -1,0 +1,106 @@
+SELECT 	fn."Registrační číslo fondu fondů",
+	fn."Název fondu fondů",
+	kp."Jméno nebo Název",
+	typ."Název" AS "Typ konečného příjemce",
+	kp."Identifikační údaj smlouvy",
+	kp."Datum podpisu smlouvy",
+	datspl."Datum předp splacení úvěru",
+	datselh."Datum selhání úvěru",
+	datspl."Datum splacení úvěru",
+	vysuv."Sjednaná výše úvěru",
+	jist."Výše spl. jist. kumulativní",
+	urp."Úroky z prodlení",
+	uu."Uhrazené úroky",
+	sn."Vymožené sankce",
+	tp."Vyplaceno na TP",
+	uhu."Na úhradu úroků k záruce",
+	vc."Výše čerpání úvěru"
+	
+FROM 		isum.v_bi_UMPFinNastroj fn 
+INNER JOIN	isum.v_bi_UMPFNPrehledKP kp ON kp.id_finnastroj=fn.id
+INNER JOIN	isum.v_bi_UmsCisZakladni typ ON typ.id=kp.id_typprijemce
+INNER JOIN
+(SELECT		rzfin."Datum" AS "Datum předp splacení úvěru",
+		rzfin.ID_PREHLEDKP
+ FROM		isum.V_BI_UmpFNRozpisFin rzfin 
+ INNER JOIN 	isum.v_BI_UmsCISZakladni nazev ON nazev.id=rzfin.id_typ
+ WHERE nazev."Kód" = 'PKP0401' /* Datum předpokládaného splacení úvěru */) datspl ON datspl.ID_PREHLEDKP=kp.id
+INNER JOIN 
+(SELECT		rzfin."Datum" AS "Datum selhání úvěru",
+		rzfin.ID_PREHLEDKP
+ FROM		isum.V_BI_UmpFNRozpisFin rzfin 
+ INNER JOIN 	isum.v_BI_UmsCISZakladni nazev ON nazev.id=rzfin.id_typ
+ WHERE nazev."Název" = 'Datum selhání úvěru') datselh ON datselh.ID_PREHLEDKP=kp.id
+INNER JOIN 
+(SELECT		rzfin."Datum" AS "Datum splacení úvěru",
+		rzfin.ID_PREHLEDKP
+ FROM		isum.V_BI_UmpFNRozpisFin rzfin 
+ INNER JOIN 	isum.v_BI_UmsCISZakladni nazev ON nazev.id=rzfin.id_typ
+ WHERE nazev."Název" = 'Datum splacení úvěru' /* Datum splacení úvěru */) datspl ON datspl.ID_PREHLEDKP=kp.id
+INNER JOIN 
+(SELECT		rzfin."Celkové způsobilé výdaje" AS "Sjednaná výše úvěru",
+		rzfin.ID_PREHLEDKP
+ FROM		isum.V_BI_UmpFNRozpisFin rzfin 
+ INNER JOIN 	isum.v_BI_UmsCISZakladni nazev ON nazev.id=rzfin.id_typ
+ WHERE nazev."Název" = 'Sjednaná výše úvěru' /* Sjednaná výše úvěru */) vysuv ON vysuv.ID_PREHLEDKP=kp.id
+INNER JOIN 
+(SELECT		rzfin."Celková částka pro odměny" AS "Výše spl. jist. kumulativní",
+		rzfin.ID_PREHLEDKP
+ FROM		isum.V_BI_UmpFNRozpisFin rzfin 
+ INNER JOIN 	isum.v_BI_UmsCISZakladni nazev ON nazev.id=rzfin.id_typ
+ WHERE nazev."Název" = 'Výše splacené jistiny úvěru kumulativní' ) jist ON jist.ID_PREHLEDKP=kp.id
+INNER JOIN 
+(SELECT		rzfin."Celková částka pro odměny" AS "Úroky z prodlení",
+		rzfin.ID_PREHLEDKP
+ FROM		isum.V_BI_UmpFNRozpisFin rzfin 
+ INNER JOIN 	isum.v_BI_UmsCISZakladni nazev ON nazev.id=rzfin.id_typ
+ WHERE nazev."Název" = 'Výše uhrazených úroků z prodlení, sankcí a vymožených nákladů soudních řízen' ) urp ON urp.ID_PREHLEDKP=kp.id
+INNER JOIN 
+(SELECT		rzfin."Celková částka pro odměny" AS "Uhrazené úroky",
+		rzfin.ID_PREHLEDKP
+ FROM		isum.V_BI_UmpFNRozpisFin rzfin 
+ INNER JOIN 	isum.v_BI_UmsCISZakladni nazev ON nazev.id=rzfin.id_typ
+ WHERE nazev."Název" = 'Výše uhrazených úroků z úvěru kumulativní' ) uu ON uu.ID_PREHLEDKP=kp.id
+INNER JOIN 
+(SELECT		rzfin."Celkové způsobilé výdaje" AS "Vymožené sankce",
+		rzfin.ID_PREHLEDKP
+ FROM		isum.V_BI_UmpFNRozpisFin rzfin 
+ INNER JOIN 	isum.v_BI_UmsCISZakladni nazev ON nazev.id=rzfin.id_typ
+ WHERE nazev."Název" = 'Výše vymožených sankcí a nákladů soudních řízení vztahujících se k příspěvku na úhradu úroků / k ceně záruky' ) sn ON sn.ID_PREHLEDKP=kp.id
+INNER JOIN 
+(SELECT		rzfin."Celkové způsobilé výdaje" AS "Vyplaceno na TP",
+		rzfin.ID_PREHLEDKP
+ FROM		isum.V_BI_UmpFNRozpisFin rzfin 
+ INNER JOIN 	isum.v_BI_UmsCISZakladni nazev ON nazev.id=rzfin.id_typ
+ WHERE nazev."Název" = 'Výše vyplaceného příspěvku na technickou podporu' ) tp ON tp.ID_PREHLEDKP=kp.id
+INNER JOIN 
+(SELECT		rzfin."Celkové způsobilé výdaje" AS "Na úhradu úroků k záruce",
+		rzfin.ID_PREHLEDKP
+ FROM		isum.V_BI_UmpFNRozpisFin rzfin 
+ INNER JOIN 	isum.v_BI_UmsCISZakladni nazev ON nazev.id=rzfin.id_typ
+ WHERE nazev."Název" = 'Výše vyplaceného příspěvku na úhradu úroků / k ceně záruky' ) uhu ON uhu.ID_PREHLEDKP=kp.id
+INNER JOIN 
+(SELECT		rzfin."Celkové způsobilé výdaje" AS "Výše čerpání úvěru",
+		rzfin.ID_PREHLEDKP
+ FROM		isum.V_BI_UmpFNRozpisFin rzfin 
+ INNER JOIN 	isum.v_BI_UmsCISZakladni nazev ON nazev.id=rzfin.id_typ
+ WHERE nazev."Název" = 'Výše čerpání úvěru' ) vc ON vc.ID_PREHLEDKP=kp.id
+
+
+WHERE fn."Registrační číslo fondu fondů" = 'FN_2017_001'
+-- in ('FN_2018_005','FN_2017_001','FN_2017_002')
+
+-- AND kp."Identifikační údaj smlouvy" = '2017-1460-E2'
+
+-- SELECT * FROM isum.v_bi_umpfnrozpisfin 
+-- ORDER BY fn."Kód", kp."Jméno nebo Název", nazev."Název"
+AND kp.id = 1044163459
+
+
+-- SELECT	 typ."Název", typ."Kód", rzfin.Datum
+-- FROM 		isum.v_bi_UMPFinNastroj fn 
+-- INNER JOIN	isum.v_bi_UMPFNPrehledKP kp ON kp.id_finnastroj=fn.id
+-- INNER JOIN	isum.v_bi_UmsCisZakladni typ ON typ.id=kp.id_typprijemce
+-- INNER JOIN	isum.V_BI_UmpFNRozpisFin rzfin ON rzfin.ID_PREHLEDKP=kp.id
+
+-- AND kp.id = 1044163459

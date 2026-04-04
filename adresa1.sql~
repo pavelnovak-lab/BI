@@ -1,7 +1,0 @@
-SELECT p."Registraèní èíslo projektu" ,
-       va.*
-
-INNER JOIN subjekt s ON s.id_prjgg = p.id
-INNER JOIN isum.v_bi_  va ON va.id_verzesubjektu = s.id
-
-WHERE va."Typ adresy" = 'Adresa místa realizace'

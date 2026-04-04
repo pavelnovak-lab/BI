@@ -1,0 +1,77 @@
+select	 pl.wfstav,
+	 pl."Číslo žádosti o platbu",
+	 prj.wfstav as wfstav_1,
+	 prj."Registrační číslo projektu",
+	 pl.kodwfstav,
+	 pl."Datum předložení",
+	 pl.schvalil1stdatum,
+	 pl.schvalil1stjmeno,
+	 pl."Verze ŽoP",
+	 pl."VYUCTPLAN#Vyúčtování plán",
+	 pl.vyuctskut,
+	 pl."Datum změny stavu",
+	 pl."Závěrečná platba",
+	 vy."Číslo výzvy",
+	 vy."Název výzvy",
+	 prj.zadatel,
+	 prj."IČ",
+	 prj.velikostpodniku,
+	 cas.vyuctdotbezjppcelk,
+	 castky.castkapozadovanadotace,
+	 prj.kodprioritniosa,
+	 prj.prioritniosa,
+	 pl.datumcertifikace,
+	 pl.stavcertifikace,
+	 pl.zarazenidocert,
+	 pl.schvalil2stdatum,
+	 pl.schvalil2stjmeno,
+	 pl.kurz,
+	 castky.castkaschvalenadotace,
+	 cas.vyuctczvcelk,
+	 pl.datproplacenaprij,
+	 castky.castkapozadovanaczv,
+	 castky.castkaschvaleczv,
+	 castky.castkaschvalenaprocesif,
+	blok_1.datumod,
+	blok_1."Unikátní kód stavu do"
+
+
+from 		isum.v_bi_umzprojekt prj
+inner join 	isum.v_bi_umzvyzva vy on vy.id=prj.id_vyzva
+left outer join isum.v_bi_umpplatbaprj pl on pl.id_nositelplatby=prj.id
+inner join	isum.v_bi_umpcastky cas on pl.id_schvalenecastky=cas.id
+inner join	
+
+(select rf.id_platba,
+	max(decode(cis."Kód",'10a',rf.castkaschvalena)) as castkaschvalenadotace,
+	max(decode(cis."Kód",'10a',rf.castkapozadovana)) as castkapozadovanadotace,
+	max(decode(cis."Kód",'2',rf.castkapozadovana)) as castkapozadovanaczv,
+	max(decode(cis."Kód",'2',rf.castkaschvalena)) as castkaschvaleczv,
+	max(decode(cis."Kód",'10b',rf.castkaschvalena)) as castkaschvalenaprocesif
+
+from isum.v_bi_umprozpisfin rf
+inner join isum.v_bi_umsciszakladni cis on rf.id_ukazatel=cis.id
+
+where cis."Kód" in ('10a','2','10b')
+
+group by rf.id_platba) castky
+
+on pl.id_schvalenecastky=castky.id_platba
+
+left outer join
+
+(select	 pla."Číslo žádosti o platbu",
+	 min( hi.datumod) as datumod,
+	 hi."Unikátní kód stavu do" 
+
+from 		isum."V_BI_UMSWFHISTORIESTAVU" hi 
+inner join 	isum."V_BI_UMPPLATBAPRJ" pla on hi."NOSITELID"=pla."ID"
+
+where 	 pla."Číslo žádosti o platbu" is not null 
+  and	 hi."Unikátní kód stavu do" ='F1_P4'
+  group by pla."Číslo žádosti o platbu",hi."Unikátní kód stavu do") blok_1
+
+on pl."Číslo žádosti o platbu"=blok_1."Číslo žádosti o platbu"
+
+where	pl."Číslo žádosti o platbu" is not null
+and	prj."Registrační číslo projektu" is not null

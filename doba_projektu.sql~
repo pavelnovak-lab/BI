@@ -1,6 +1,0 @@
-SELECT p."Datum 
-       p.kodwfstav , 
-       SUBSTR(p."Registraèní èíslo projektu", 6, 2) AS "Program podpory" 
-FROM isum.v_bi_UmzProjekt p
-
-WHERE p."Registraèní èíslo projektu" like 'CZ.31.%'

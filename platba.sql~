@@ -1,5 +1,0 @@
-SELECT platba.*
-
-FROM isum.v_bi_UmpPlatbaPrj platba
-
-WHERE platba."»Ìslo æ·dosti o platbu" = 'CZ.01.1.02/0.0/0.0/15_002/0000007/2018/001/POST'

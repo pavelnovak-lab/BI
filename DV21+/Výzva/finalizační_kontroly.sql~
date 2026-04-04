@@ -1,9 +1,0 @@
-    SELECT v."Èíslo výzvy",
-           v."Název výzvy",
-           fk."Kód",
-           md."Platný"
-    FROM (vyzva AS v
-    INNER JOIN vyzva_matricni_data AS md ON md.id_vyzva = v.id)
-    INNER JOIN ciselnik_podminky_prechodu_stavu_workflow AS fk ON fk.id = md.id_ciszakladni
-
-WHERE (fk."Kód" = '930' AND md."Platný" = 'A');
